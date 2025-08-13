@@ -30,8 +30,17 @@ const correctCircle = document.getElementById("correctCircle");
 
 const correctSound = new Audio("./sounds/small-bell-ring-01a.mp3");
 correctSound.volume = 0.5;
+correctSound.preload = "auto";
+correctSound.load();
+
 const incorrectSound = new Audio("./sounds/button-44.mp3");
+incorrectSound.preload = "auto";
+incorrectSound.load();
+
 const pillCompleteSound = new Audio("./sounds/bell-ringing-05.mp3");
+pillCompleteSound.preload = "auto";
+pillCompleteSound.load();
+
 
 let checkTimeout;
 
