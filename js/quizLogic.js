@@ -26,7 +26,7 @@ shuffle(filteredQuizList);
 
 // Limitar a máximo 15 símbolos
 if (filteredQuizList.length > 15) {
-    filteredQuizList = filteredQuizList.slice(0, 1);
+    filteredQuizList = filteredQuizList.slice(0, 15);
 }
 
 let index = 0;
