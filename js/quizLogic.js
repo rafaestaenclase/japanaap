@@ -18,9 +18,9 @@ function shuffle(array) {
 }
 shuffle(filteredQuizList);
 
-// Limitar a máximo 15 símbolos
-if (filteredQuizList.length > 15) {
-    filteredQuizList = filteredQuizList.slice(0, 2);
+// Limitar a máximo 10 símbolos
+if (filteredQuizList.length > 10) {
+    filteredQuizList = filteredQuizList.slice(0, 1);
 }
 
 let index = 0;
@@ -50,6 +50,11 @@ function nextQuestion() {
   } else {
     questionEl.textContent = "¡Completado!";
     answerEl.style.display = "none";
+    correctCircle.classList.add("show", "complete");
+    correctCircle.addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
+
     hideShowAnswer();
 
     //Guardar progreso

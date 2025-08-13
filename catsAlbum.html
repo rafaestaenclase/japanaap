@@ -258,7 +258,7 @@
       </div>
     </div>
   </div>
-
+<script src="./js/catsList.js"></script>
 <script>
 /* ============================
    Datos de ejemplo (puedes reemplazar por tu localStorage)
@@ -268,39 +268,6 @@ const PLACEHOLDER_SVG = `
     <path d="M66 70c-8-19-26-30-38-32 6 14 7 29 5 42-3 17-14 38-14 57 0 53 47 91 109 91s109-38 109-91c0-19-11-40-14-57-2-13-1-28 5-42-12 2-30 13-38 32-13-8-31-12-62-12s-49 4-62 12zM96 140a12 12 0 11-12-12 12 12 0 0112 12zm88-12a12 12 0 1012 12 12 12 0 00-12-12z"/>
   </svg>
 `;
-
-const CATS = {
-  hiragana: [
-    {src:"https://placecats.com/300/199", name:"Neko あ"},
-    {src:"https://placecats.com/300/200", name:"Neko い"},
-    {src:"https://placecats.com/300/201", name:"Neko う"},
-    {src:"https://placecats.com/300/207", name:"Neko え"},
-    {src:"https://placecats.com/300/202", name:"Neko お"},
-    {src:"https://placecats.com/300/205", name:"Neko か"},
-  ],
-  katakana: [
-    {src:"https://placecats.com/300/210", name:"Neko ア"},
-    {src:"https://placecats.com/300/211", name:"Neko イ"},
-  ],
-  kanji: [
-    // Vacío a propósito para ver el placeholder
-  ],
-  comida: [
-    {src:"https://placecats.com/300/212", name:"Chef Neko 🍣"},
-    {src:"https://placecats.com/300/213", name:"Ramen Neko 🍜"},
-    {src:"https://placecats.com/300/214", name:"Matcha Neko 🍵"},
-    {src:"https://placecats.com/300/215", name:"Mochi Neko 🍡"},
-    {src:"https://placecats.com/300/216", name:"Onigiri Neko 🍙"},
-  ],
-};
-
-
-const CATEGORIES = [
-  { id:"hiragana", label:"ひらがな Hiragana" },
-  { id:"katakana", label:"カタカナ Katakana" },
-  { id:"kanji",    label:"漢字 Kanji" },
-  { id:"comida",   label:"たべもの Vocabulario (Comida)" },
-];
 
 /* ============================
    Estado
@@ -353,7 +320,19 @@ function render(){
     x.classList.toggle("active", x.textContent === CATEGORIES.find(c=>c.id===currentCat).label);
   });
 
-  currentList = CATS[currentCat] ?? [];
+  // Obtener gatos guardados en localStorage
+  let savedCats = [];
+  try {
+    const raw = localStorage.getItem("catsInAlbum");
+    if (raw) savedCats = JSON.parse(raw); // solo parsea si hay algo
+  } catch(e) {
+    console.error("Error leyendo catsInAlbum", e);
+    savedCats = [];
+  }
+
+  // Filtrar los gatos de la categoría actual
+  currentList = (CATS[currentCat] ?? []).filter(cat => savedCats.includes(cat.catId));
+
 
   const {totalPages, items} = paginate(currentList, page, PAGE_SIZE);
   page = Math.min(page, totalPages);

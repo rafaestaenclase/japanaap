@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
   <title>Practicar Japonés</title>
   <style>
     body {
@@ -46,7 +46,7 @@
       flex-wrap: wrap;
     }
 
-    .playButton {
+    .playButton, .completedButton {
       flex: 1 1 calc(33.333% - 10px);
       background: #3498db;
       border: none;
@@ -113,6 +113,75 @@
       }
     }
 
+    /* GET PRIZE CARD */
+    .hidden { display: none !important; }
+
+    #prizeModal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .modal-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 20px;
+      max-width: 300px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      animation: popIn 0.5s ease;
+    }
+
+    /* Pop-in de la tarjeta */
+    @keyframes popIn {
+      0% { transform: scale(0.7); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes popOut {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(0.7); opacity: 0; }
+    }
+
+    .modal-card.pop-out {
+      animation: popOut 0.4s ease forwards;
+    }
+
+
+    /* Shake de la imagen */
+    @keyframes shake {
+      0% { transform: translate(0,0); }
+      25% { transform: translateX(-8px); }
+      50% { transform: translateX(8px); }
+      75% { transform: translateX(-8px); }
+      100% { transform: translate(0,0); }
+    }
+
+    /* Clase para activar shake */
+    .shake {
+      animation: shake 0.5s;
+    }
+
+    /* Estrellas alrededor */
+    .stars::before, .stars::after, .stars span {
+      content: "⭐";
+      position: absolute;
+      font-size: 1.2rem;
+      top: 50%;
+      left: 50%;
+      animation: starFall 1s linear infinite;
+      --x: calc(200px * (rand() - 0.5));
+      --y: calc(200px * (rand() - 0.5));
+    }
+    @keyframes starFall {
+      0% { transform: translate(0,0) scale(0.5); opacity:1; }
+      100% { transform: translate(var(--x), var(--y)) scale(0.2); opacity:0; }
+    }
 
 
 
@@ -126,6 +195,17 @@
       Álbum de Gatos 🐱
     </button>
   </header>
+
+  <div id="prizeModal" class="hidden">
+    <div class="modal-card">
+      <div class="stars"></div>
+      <img id="catImg" src="" alt="">
+      <h2 id="catName"></h2>
+      <p id="catCategory"></p>
+      <button id="petBtn">Acariciar</button>
+    </div>
+  </div>
+
   
 
   <div class="section" id="hiraganaSection">
@@ -164,6 +244,7 @@
     </div>
   </div>
 
+<script src="./js/catsList.js"></script>
 <script src="./js/hiraganaList.js"></script>
 <script src="./js/katakanaList.js"></script>
 <script src="./js/vocabularioSaludoList.js"></script>
@@ -294,8 +375,6 @@ function animatePillCompletion(symbols, containerId, total, completedBtn, playBt
     setTimeout(() => {
       completedBtn.style.background = "gold";
       completedBtn.style.opacity = 0;
-      
-
       setTimeout(() => {
         const audioPrize = new Audio("https://www.soundjay.com/misc/sounds/magic-chime-07.mp3");
         audioPrize.play();
@@ -307,16 +386,69 @@ function animatePillCompletion(symbols, containerId, total, completedBtn, playBt
         completedBtn.style.opacity = 1;
       }, 1000);
       completedBtn.addEventListener('click', () => {
-        alert("¡Has recogido tu regalo!");
-        // Reset botón a "Practicar"
-        completedBtn.remove();
-        if (playBtn) playBtn.style.display = 'block';
 
+        //OBTENER PREMIO POR CATEGORIA
+        showPrizeFromCategory("hiragana"); // Aquí puedes pasar la categoría actual
+        completedBtn.remove();
+        if(playBtn) playBtn.style.display = 'block';
         resetPills(containerId, symbols, total);
+
+
       }, { once: true });
     }, lastTimeout + 1200); // 1.2s extra para que las estrellitas terminen
 }
 
+    // Función que muestra el premio usando el modal HTML
+    function showPrizeFromCategory(currentCat) {
+      let savedCats = [];
+      try {
+        const raw = localStorage.getItem("catsInAlbum");
+        if(raw) savedCats = JSON.parse(raw);
+      } catch(e) { savedCats = []; }
+
+      const availableCats = (CATS[currentCat] ?? []).filter(cat => !savedCats.includes(cat.catId));
+      if(availableCats.length === 0) {
+        alert("¡No hay gatos nuevos!");
+        return;
+      }
+
+      const randomCat = availableCats[Math.floor(Math.random() * availableCats.length)];
+
+      // Guardar catId en localStorage
+      let savedCatsLocalStorage = [];
+      try {
+        const raw = localStorage.getItem("catsInAlbum");
+        if (raw) savedCatsLocalStorage = JSON.parse(raw);
+      } catch(e) {
+        savedCatsLocalStorage = [];
+      }
+
+      // Añadimos el nuevo catId solo si no está ya
+      if (!savedCatsLocalStorage.includes(randomCat.catId)) {
+        savedCatsLocalStorage.push(randomCat.catId);
+      }
+
+      // Guardamos de nuevo
+      localStorage.setItem("catsInAlbum", JSON.stringify(savedCatsLocalStorage));
+
+      const modal = document.getElementById("prizeModal");
+      const catImg = document.getElementById("catImg");
+      document.getElementById("catName").textContent = randomCat.name;
+      document.getElementById("catCategory").textContent = "Categoría: " + currentCat;
+      catImg.src = randomCat.src;
+      catImg.alt = randomCat.name;
+
+      modal.classList.remove("hidden");
+
+      const petBtn = document.getElementById("petBtn");
+      petBtn.onclick = () => {
+        catImg.classList.add("shake");
+        catImg.addEventListener("animationend", () => {
+          catImg.classList.remove("shake");
+          modal.classList.add("hidden");
+        }, { once: true });
+      };
+    }
 
 
 
