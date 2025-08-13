@@ -1,5 +1,5 @@
 var vocabularioComidaList = [
-  { q: "agua", a: "みず" },
+  { q: "agua", a: "みず" }/*,
   { q: "arroz", a: "ごはん" },
   { q: "pan", a: "パン" },
   { q: "sopa", a: "スープ" },
@@ -48,5 +48,5 @@ var vocabularioComidaList = [
   { q: "dulce", a: "あまい" },
   { q: "salado", a: "しおからい" },
   { q: "amargo", a: "にがい" },
-  { q: "ácido", a: "すっぱい" }
+  { q: "ácido", a: "すっぱい" }*/
 ];

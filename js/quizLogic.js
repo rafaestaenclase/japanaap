@@ -1,19 +1,13 @@
 // Cargar correctSymbols de localStorage (o array vacío si no existe)
-let correctSymbolsStoraged = JSON.parse(localStorage.getItem("correctSymbols")) || [];
+let correctSymbolsStoraged = [];
+try {
+  correctSymbolsStoraged = JSON.parse(localStorage.getItem("correctSymbols") || "[]");
+} catch {
+  correctSymbolsStoraged = [];
+}
 
 // Filtrar quizList para eliminar los que ya están en correctSymbols
 let filteredQuizList = quizList.filter(item => !correctSymbolsStoraged.includes(item.a));
-
-if (filteredQuizList.length === 0) {
-    let correctSymbolsStoraged = JSON.parse(localStorage.getItem("correctSymbols")) || [];
-
-    // Filtramos para eliminar del localStorage solo los símbolos presentes en quizList
-    correctSymbolsStoraged = correctSymbolsStoraged.filter(symbol => 
-        !quizList.some(item => item.a === symbol)
-    );
-
-    localStorage.setItem("correctSymbols", JSON.stringify(correctSymbolsStoraged));
-}
 
 // Barajar la lista filtrada
 function shuffle(array) {
@@ -26,7 +20,7 @@ shuffle(filteredQuizList);
 
 // Limitar a máximo 15 símbolos
 if (filteredQuizList.length > 15) {
-    filteredQuizList = filteredQuizList.slice(0, 15);
+    filteredQuizList = filteredQuizList.slice(0, 2);
 }
 
 let index = 0;
@@ -59,7 +53,12 @@ function nextQuestion() {
     hideShowAnswer();
 
     //Guardar progreso
-    let prevSymbols = JSON.parse(localStorage.getItem("correctSymbols")) || [];
+    let prevSymbols = [];
+    try {
+      prevSymbols = JSON.parse(localStorage.getItem("correctSymbols") || "[]");
+    } catch {
+      prevSymbols = [];
+    }
     let newSymbols = prevSymbols.concat(correctSymbols);
     localStorage.setItem("correctSymbols", JSON.stringify(newSymbols));
   }

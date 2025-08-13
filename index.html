@@ -54,7 +54,7 @@
       font-weight: 600;
       border-radius: 8px;
       cursor: pointer;
-      transition: background-color 0.25s ease;
+      transition: background-color 1.5s ease, opacity 1.5s;
     }
 
     button:hover { background: #2980b9; }
@@ -78,7 +78,7 @@
       height: 100%;
       background: #4caf50;
       width: 0%;
-      transition: width 0.3s ease;
+      transition: width 0.3s ease, background 1.5s ease;
     }
 
     /* Subsection style */
@@ -87,17 +87,45 @@
       padding-top: 10px;
       border-top: 1px solid #ddd;
     }
+
+
+    /* Animación de estrellitas PILDORAS COMPLETAS */
+    .star {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: gold;
+      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+      animation: starAnim 1s ease-out forwards;
+      pointer-events: none;
+    }
+
+    @keyframes starAnim {
+      0% {
+        transform: translate(0, 0) scale(0.5);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--x), var(--y)) scale(1);
+        opacity: 0;
+      }
+    }
+
+
+
+
+
   </style>
 </head>
 <body>
 
   <h1>Practicar Japonés</h1>
 
-  <div class="section" id="alphabetSection">
+  <div class="section" id="hiraganaSection">
     <div class="section-title">Hiragana</div>
     <div class="pills" id="hiraganaPills"></div>
     <div class="button-row">
-      <button data-type="hiragana">Practicar</button>
+      <button class="playButton" data-type="hiragana">Practicar</button>
     </div>
   </div>
 
@@ -105,7 +133,7 @@
     <div class="section-title">Katakana</div>
     <div class="pills" id="katakanaPills"></div>
     <div class="button-row">
-      <button data-type="katakana">Practicar</button>
+      <button class="playButton" data-type="katakana">Practicar</button>
     </div>
   </div>
 
@@ -116,7 +144,7 @@
       <div class="section-title">Saludos</div>
       <div class="pills" id="vocabularioSaludoPills"></div>
       <div class="button-row">
-        <button data-type="vocabularioSaludo">Practicar Saludos</button>
+        <button class="playButton" data-type="vocabularioSaludo">Practicar Saludos</button>
       </div>
     </div>
 
@@ -124,7 +152,7 @@
       <div class="section-title">Comida</div>
       <div class="pills" id="vocabularioComidaPills"></div>
       <div class="button-row">
-        <button data-type="vocabularioComida">Practicar Comida</button>
+        <button class="playButton" data-type="vocabularioComida">Practicar Comida</button>
       </div>
     </div>
   </div>
@@ -139,7 +167,6 @@
   const TOTAL_KATAKANA = katakanaList.length;
   const TOTAL_VOCABULARIO_SALUDO = vocabularioSaludoList.length;
   const TOTAL_VOCABULARIO_COMIDA = vocabularioComidaList.length;
-  console.log(TOTAL_VOCABULARIO_COMIDA);
   const PILLS_PER_SECTION = 5;
 
   function createPills(containerId) {
@@ -172,8 +199,127 @@
     }
   }
 
+function resetPills(containerId, symbols, total) {
+  let correctSymbolsStoraged = JSON.parse(localStorage.getItem("correctSymbols")) || [];
+
+  // Filtramos los símbolos de correctSymbols que NO estén en symbols
+  correctSymbolsStoraged = correctSymbolsStoraged.filter(symbol => 
+      !symbols.includes(symbol)
+  );
+
+  localStorage.setItem("correctSymbols", JSON.stringify(correctSymbolsStoraged));
+
+  updatePills(containerId, 0, total);
+}
+
+
+function pillsCompleted(containerId, symbols, total) {
+  if (symbols.length >= total) {
+    const section = document.getElementById(containerId).closest('.subsection, .section');
+
+    if (!section) return;
+
+    // Ocultar botón "Practicar"
+    const playBtn = section.querySelector('.playButton');
+    if (playBtn) playBtn.style.display = 'none';
+
+    // Crear botón "Completado"
+    let completedBtn = section.querySelector('.completedButton');
+    if (!completedBtn) {
+      completedBtn = document.createElement('button');
+      completedBtn.className = 'completedButton';
+      completedBtn.textContent = 'Completado';
+      completedBtn.style.background = '#4caf50';
+      completedBtn.style.color = '#fff';
+      completedBtn.style.marginTop = '10px';
+      completedBtn.style.cursor = 'pointer';
+      section.querySelector('.button-row').appendChild(completedBtn);
+
+      completedBtn.addEventListener('click', () => {
+        completedBtn.style.pointerEvents = "none";
+        animatePillCompletion(symbols, containerId, total, completedBtn, playBtn);
+      });
+    }
+  }
+}
+
+function animatePillCompletion(symbols, containerId, total, completedBtn, playBtn) {
+  const container = document.getElementById(containerId);
+  container.style.position = "relative";
+
+  const pills = container.querySelectorAll('.pill-fill');
+
+    const audioPills = new Audio("https://www.soundjay.com/misc/sounds/magic-chime-03.mp3");
+    audioPills.play();
+
+    let lastTimeout = 0;
+
+    pills.forEach((pill, idx) => {
+      const delay = idx * 200;
+      lastTimeout = delay;
+
+      setTimeout(() => {
+        pill.style.background = "gold";
+
+        for (let i = 0; i < 3; i++) {
+          const star = document.createElement("div");
+          star.className = "star";
+
+          const x = (Math.random() - 0.5) * 80 + "px";
+          const y = -50 + Math.random() * -50 + "px";
+
+          star.style.setProperty('--x', x);
+          star.style.setProperty('--y', y);
+
+          const pillRect = pill.getBoundingClientRect();
+          const containerRect = container.getBoundingClientRect();
+
+          star.style.left = (pillRect.left - containerRect.left + pillRect.width/2 - 5) + "px";
+          star.style.top = (pillRect.top - containerRect.top + pillRect.height/2 - 5) + "px";
+
+          container.appendChild(star);
+          star.addEventListener('animationend', () => star.remove());
+        }
+      }, delay);
+    });
+
+    // Después de que todas las animaciones de las píldoras terminen
+    setTimeout(() => {
+      completedBtn.style.background = "gold";
+      completedBtn.style.opacity = 0;
+      
+
+      setTimeout(() => {
+        const audioPrize = new Audio("https://www.soundjay.com/misc/sounds/magic-chime-07.mp3");
+        audioPrize.play();
+      }, 800);
+
+      setTimeout(() => {
+        completedBtn.style.pointerEvents = "auto";
+        completedBtn.textContent = "Recoger Regalo";
+        completedBtn.style.opacity = 1;
+      }, 1000);
+      completedBtn.addEventListener('click', () => {
+        alert("¡Has recogido tu regalo!");
+        // Reset botón a "Practicar"
+        completedBtn.remove();
+        if (playBtn) playBtn.style.display = 'block';
+
+        resetPills(containerId, symbols, total);
+      }, { once: true });
+    }, lastTimeout + 1200); // 1.2s extra para que las estrellitas terminen
+}
+
+
+
+
   // Simulación de carga desde localStorage
-  let correctSymbols = JSON.parse(localStorage.getItem("correctSymbols")) || [];
+  let correctSymbols = [];
+  try {
+    correctSymbols = JSON.parse(localStorage.getItem("correctSymbols") || "[]");
+  } catch {
+    correctSymbols = [];
+  }
 
   // Filtra símbolos para hiragana y katakana
   const hiraganaSymbols = correctSymbols.filter(sym => isHiragana(sym));
@@ -185,15 +331,19 @@
   // Crear y actualizar píldoras
   createPills("hiraganaPills");
   updatePills("hiraganaPills", hiraganaSymbols.length, TOTAL_HIRAGANA);
+  pillsCompleted("hiraganaPills", hiraganaSymbols, TOTAL_HIRAGANA);
 
   createPills("katakanaPills");
   updatePills("katakanaPills", katakanaSymbols.length, TOTAL_KATAKANA);
+  pillsCompleted("katakanaPills", katakanaSymbols, TOTAL_KATAKANA);
 
   createPills("vocabularioSaludoPills");
   updatePills("vocabularioSaludoPills", vocabularioSaludoSymbols.length, TOTAL_VOCABULARIO_SALUDO);
+  pillsCompleted("vocabularioSaludoPills", vocabularioSaludoSymbols, TOTAL_VOCABULARIO_SALUDO);
 
   createPills("vocabularioComidaPills");
   updatePills("vocabularioComidaPills", vocabularioComidaSymbols.length, TOTAL_VOCABULARIO_COMIDA);
+  pillsCompleted("vocabularioComidaPills", vocabularioComidaSymbols, TOTAL_VOCABULARIO_COMIDA);
 
   // Funciones de detección basadas en Unicode
   function isHiragana(char) {
@@ -218,6 +368,8 @@
       }
     });
   });
+
+
 </script>
 
 </body>
