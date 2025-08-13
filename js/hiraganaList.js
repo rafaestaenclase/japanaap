@@ -1,6 +1,6 @@
 var hiraganaList = [
   // Vocales
-  { q: "a", a: "あ" }/*,
+  { q: "a", a: "あ" },
   { q: "i", a: "い" },
   { q: "u", a: "う" },
   { q: "e", a: "え" },
@@ -155,5 +155,5 @@ var hiraganaList = [
   { q: "ju", a: "ぢゅ", alt: true }, // variante
   { q: "jo", a: "じょ" },
   { q: "jo", a: "ぢょ", alt: true } // variante
-  */
+
 ];

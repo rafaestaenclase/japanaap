@@ -139,7 +139,7 @@ function showIncorrect() {
 
 showQuestion();
 
-// mostrar respuesta
+// mostrar respuesta help ayuda
 const questionDiv = document.getElementById("question");
 const showAnswerBtn = document.getElementById("showAnswerBtn");
 
@@ -148,6 +148,9 @@ function showAnswer() {
     hideShowAnswer();
   } else {
     showAnswerBtn.textContent = filteredQuizList[index].a;
+    if (filteredQuizList[index].r != undefined) {
+      showAnswerBtn.textContent += "\n" +  filteredQuizList[index].r;
+    }
   }
   
 }
