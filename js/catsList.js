@@ -2,10 +2,7 @@ const CATS = {
   hiragana: [
     {catId: "h_1", src:"https://placecats.com/300/199", name:"Neko あ"},
     {catId: "h_2", src:"https://placecats.com/300/200", name:"Neko い"},
-    {catId: "h_3", src:"https://placecats.com/300/201", name:"Neko う"},
-    {catId: "h_4", src:"https://placecats.com/300/207", name:"Neko え"},
-    {catId: "h_5", src:"https://placecats.com/300/202", name:"Neko お"},
-    {catId: "h_6", src:"https://placecats.com/300/205", name:"Neko か"},
+    {catId: "h_3", src:"https://placecats.com/300/201", name:"Neko う"}
   ],
   katakana: [
     {catId: "k_1", src:"https://placecats.com/300/210", name:"Neko ア"},

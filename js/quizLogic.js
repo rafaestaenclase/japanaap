@@ -28,6 +28,7 @@ const questionEl = document.getElementById("question");
 const answerEl = document.getElementById("answer");
 const correctCircle = document.getElementById("correctCircle");
 
+// Pre-cargar AUDIOS
 const correctSound = new Audio("./sounds/small-bell-ring-01a.mp3");
 correctSound.volume = 0.5;
 correctSound.preload = "auto";
@@ -41,6 +42,18 @@ const pillCompleteSound = new Audio("./sounds/bell-ringing-05.mp3");
 pillCompleteSound.preload = "auto";
 pillCompleteSound.load();
 
+// Desbloquear audios en el primer toque
+function unlockAudio() {
+  correctSound.play().then(() => correctSound.pause()).catch(()=>{});
+  incorrectSound.play().then(() => incorrectSound.pause()).catch(()=>{});
+  pillCompleteSound.play().then(() => pillCompleteSound.pause()).catch(()=>{});
+
+  document.removeEventListener('touchstart', unlockAudio);
+  document.removeEventListener('click', unlockAudio);
+}
+
+document.addEventListener('touchstart', unlockAudio, { once: true });
+document.addEventListener('click', unlockAudio, { once: true });
 
 let checkTimeout;
 
@@ -192,6 +205,13 @@ answerEl.addEventListener("blur", () => {
   setTimeout(keepFocus, 0);
 });
 keepFocus();
+
+function enableFocusOnInput() {
+  answerEl.focus();
+}
+
+document.addEventListener('touchstart', enableFocusOnInput, { once: true });
+document.addEventListener('click', enableFocusOnInput, { once: true });
 
 
 //PILDORAS

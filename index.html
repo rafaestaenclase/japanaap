@@ -190,7 +190,7 @@
 </head>
 <body>
   <header>
-    Japanaap V0.0.1
+    Japanaap V0.0.2
     <button onclick="window.location.href='catsAlbum.html'">
       Álbum de Gatos 🐱
     </button>
@@ -337,6 +337,20 @@ audioPills.load();
 const audioPrize = new Audio("./sounds/magic-chime-07.mp3");
 audioPrize.preload = "auto";
 audioPrize.load();
+
+// Desbloquear todos los audios en el primer toque/click
+function unlockAudio() {
+  const allAudios = [audioPills, audioPrize];
+  allAudios.forEach(aud => {
+    aud.play().then(() => aud.pause()).catch(() => {});
+  });
+
+  document.removeEventListener('touchstart', unlockAudio);
+  document.removeEventListener('click', unlockAudio);
+}
+
+document.addEventListener('touchstart', unlockAudio, { once: true });
+document.addEventListener('click', unlockAudio, { once: true });
 
 
 function animatePillCompletion(symbols, containerId, total, completedBtn, playBtn) {
