@@ -1,4 +1,4 @@
-var quizList = [
+var vocabularioComidaList = [
   { q: "agua", a: "みず" },
   { q: "arroz", a: "ごはん" },
   { q: "pan", a: "パン" },

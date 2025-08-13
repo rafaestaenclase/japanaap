@@ -112,49 +112,34 @@
   <div class="section" id="vocabularioSection">
     <div class="section-title">Vocabulario</div>
 
-    <div class="subsection" id="saludoSubsection">
+    <div class="subsection" id="vocabularioSaludoSubsection">
       <div class="section-title">Saludos</div>
-      <div class="pills" id="saludoPills"></div>
+      <div class="pills" id="vocabularioSaludoPills"></div>
       <div class="button-row">
-        <button data-type="saludo">Practicar Saludos</button>
+        <button data-type="vocabularioSaludo">Practicar Saludos</button>
       </div>
     </div>
 
-    <div class="subsection" id="comidaSubsection">
+    <div class="subsection" id="vocabularioComidaSubsection">
       <div class="section-title">Comida</div>
-      <div class="pills" id="comidaPills"></div>
+      <div class="pills" id="vocabularioComidaPills"></div>
       <div class="button-row">
-        <button data-type="comida">Practicar Comida</button>
+        <button data-type="vocabularioComida">Practicar Comida</button>
       </div>
     </div>
   </div>
 
 <script src="./js/hiraganaList.js"></script>
-<script>
-  window.hiraganaQuiz = window.quizList; // alias antes de cargar el siguiente
-</script>
-
 <script src="./js/katakanaList.js"></script>
-<script>
-  window.katakanaQuiz = window.quizList; // alias antes de cargar el siguiente
-</script>
-
 <script src="./js/vocabularioSaludoList.js"></script>
-<script>
-  window.vocabularioSaludoQuiz = window.quizList;
-</script>
-
 <script src="./js/vocabularioComidaList.js"></script>
-<script>
-  window.vocabularioComidaQuiz = window.quizList;
-</script>
 
 <script>
-  const TOTAL_HIRAGANA = window.hiraganaQuiz.length;
-  const TOTAL_KATAKANA = window.katakanaQuiz.length;
-  const TOTAL_VOCABULARIO_SALUDO = window.vocabularioSaludoQuiz.length;
-  const TOTAL_VOCABULARIO_COMIDA = window.vocabularioComidaQuiz.length;
-
+  const TOTAL_HIRAGANA = hiraganaList.length;
+  const TOTAL_KATAKANA = katakanaList.length;
+  const TOTAL_VOCABULARIO_SALUDO = vocabularioSaludoList.length;
+  const TOTAL_VOCABULARIO_COMIDA = vocabularioComidaList.length;
+  console.log(TOTAL_VOCABULARIO_COMIDA);
   const PILLS_PER_SECTION = 5;
 
   function createPills(containerId) {
@@ -194,8 +179,8 @@
   const hiraganaSymbols = correctSymbols.filter(sym => isHiragana(sym));
   const katakanaSymbols = correctSymbols.filter(sym => isKatakana(sym));
   // Para vocabulario, asumiremos correctSymbols guarda palabras (strings) exactas en japonés
-  const saludoSymbols = correctSymbols.filter(sym => window.vocabularioSaludoQuiz.some(q => q.a === sym));
-  const comidaSymbols = correctSymbols.filter(sym => window.vocabularioComidaQuiz.some(q => q.a === sym));
+  const vocabularioSaludoSymbols = correctSymbols.filter(sym => vocabularioSaludoList.some(q => q.a === sym));
+  const vocabularioComidaSymbols = correctSymbols.filter(sym => vocabularioComidaList.some(q => q.a === sym));
 
   // Crear y actualizar píldoras
   createPills("hiraganaPills");
@@ -204,11 +189,11 @@
   createPills("katakanaPills");
   updatePills("katakanaPills", katakanaSymbols.length, TOTAL_KATAKANA);
 
-  createPills("saludoPills");
-  updatePills("saludoPills", saludoSymbols.length, TOTAL_VOCABULARIO_SALUDO);
+  createPills("vocabularioSaludoPills");
+  updatePills("vocabularioSaludoPills", vocabularioSaludoSymbols.length, TOTAL_VOCABULARIO_SALUDO);
 
-  createPills("comidaPills");
-  updatePills("comidaPills", comidaSymbols.length, TOTAL_VOCABULARIO_COMIDA);
+  createPills("vocabularioComidaPills");
+  updatePills("vocabularioComidaPills", vocabularioComidaSymbols.length, TOTAL_VOCABULARIO_COMIDA);
 
   // Funciones de detección basadas en Unicode
   function isHiragana(char) {
@@ -223,13 +208,13 @@
     btn.addEventListener("click", () => {
       const type = btn.dataset.type;
       if (type === "hiragana") {
-        location.href = "playHiragana.html";
+        location.href = "playGround.html?play=hiraganaList";
       } else if (type === "katakana") {
-        location.href = "playKatakana.html";
-      } else if (type === "saludo") {
-        location.href = "playVocabularioSaludo.html";
-      } else if (type === "comida") {
-        location.href = "playVocabularioComida.html";
+        location.href = "playGround.html?play=katakanaList";
+      } else if (type === "vocabularioSaludo") {
+        location.href = "playGround.html?play=vocabularioSaludoList";
+      } else if (type === "vocabularioComida") {
+        location.href = "playGround.html?play=vocabularioComidaList";
       }
     });
   });

@@ -1,4 +1,4 @@
-var quizList = [
+var katakanaList = [
   // Vocales
   { q: "a", a: "ア" },
   { q: "i", a: "イ" },

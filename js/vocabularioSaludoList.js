@@ -1,4 +1,4 @@
-var quizList = [
+var vocabularioSaludoList = [
   { q: "hola", a: "こんにちは" },
   { q: "buenos días", a: "おはようございます" }, // forma más formal y común
   { q: "buenas noches", a: "こんばんは" },

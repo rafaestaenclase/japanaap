@@ -26,7 +26,7 @@ shuffle(filteredQuizList);
 
 // Limitar a máximo 15 símbolos
 if (filteredQuizList.length > 15) {
-    filteredQuizList = filteredQuizList.slice(0, 15);
+    filteredQuizList = filteredQuizList.slice(0, 1);
 }
 
 let index = 0;
@@ -56,6 +56,7 @@ function nextQuestion() {
   } else {
     questionEl.textContent = "¡Completado!";
     answerEl.style.display = "none";
+    hideShowAnswer();
 
     //Guardar progreso
     let prevSymbols = JSON.parse(localStorage.getItem("correctSymbols")) || [];
@@ -108,6 +109,8 @@ function showCorrect() {
   correctSound.currentTime = 0;
   correctSound.play();
 
+  resetShowAnswer();  // resetear boton de ayuda
+
   addCorrectSymbol(filteredQuizList[index].a); // Guardar en array
 
   setTimeout(() => {
@@ -136,6 +139,34 @@ function showIncorrect() {
 
 
 showQuestion();
+
+// mostrar respuesta
+const questionDiv = document.getElementById("question");
+const showAnswerBtn = document.getElementById("showAnswerBtn");
+
+function showAnswer() {
+  if (filteredQuizList[index] == undefined) {
+    hideShowAnswer();
+  } else {
+    showAnswerBtn.textContent = filteredQuizList[index].a;
+  }
+  
+}
+
+function resetShowAnswer() {
+  showAnswerBtn.textContent = "Ver respuesta";
+}
+
+function hideShowAnswer() {
+  showAnswerBtn.style.display = "none";
+}
+
+showAnswerBtn.addEventListener("click", () => {
+  showAnswer();
+});
+
+
+
 
 // Mantener foco en el input
 function keepFocus() {
