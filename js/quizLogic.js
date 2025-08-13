@@ -1,28 +1,3 @@
-// Cargar correctSymbols de localStorage (o array vacío si no existe)
-let correctSymbolsStoraged = [];
-try {
-  correctSymbolsStoraged = JSON.parse(localStorage.getItem("correctSymbols") || "[]");
-} catch {
-  correctSymbolsStoraged = [];
-}
-
-// Filtrar quizList para eliminar los que ya están en correctSymbols
-let filteredQuizList = quizList.filter(item => !correctSymbolsStoraged.includes(item.a));
-
-// Barajar la lista filtrada
-function shuffle(array) {
-  for (let i = array.length -1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-}
-shuffle(filteredQuizList);
-
-// Limitar a máximo 10 símbolos
-if (filteredQuizList.length > 10) {
-    filteredQuizList = filteredQuizList.slice(0, 1);
-}
-
 let index = 0;
 const questionEl = document.getElementById("question");
 const answerEl = document.getElementById("answer");
@@ -70,6 +45,38 @@ function nextQuestion() {
   if(index < filteredQuizList.length) {
     showQuestion();
   } else {
+
+
+// Guardar progreso
+let levelCompleted;
+try {
+  levelCompleted = JSON.parse(localStorage.getItem("levelCompleted") || "[]");
+} catch {
+  levelCompleted = [];
+}
+
+
+let playingCategory = quizList["category"];
+
+// Buscar si ya existe el nivel en la categoría
+let existing = levelCompleted.find(l => l.category === playingCategory && l.levelId === String(playingLevel));
+
+if (existing) {
+  existing.completedTimes += 1; // Aumenta el contador
+} else {
+  levelCompleted.push({
+    category: playingCategory,
+    levelId: String(playingLevel),
+    completedTimes: 1
+  });
+}
+
+// Guardar de nuevo en localStorage
+localStorage.setItem("levelCompleted", JSON.stringify(levelCompleted));
+
+
+
+
     questionEl.textContent = "¡Completado!";
     answerEl.style.display = "none";
     correctCircle.classList.add("show", "complete");
@@ -78,16 +85,6 @@ function nextQuestion() {
     });
 
     hideShowAnswer();
-
-    //Guardar progreso
-    let prevSymbols = [];
-    try {
-      prevSymbols = JSON.parse(localStorage.getItem("correctSymbols") || "[]");
-    } catch {
-      prevSymbols = [];
-    }
-    let newSymbols = prevSymbols.concat(correctSymbols);
-    localStorage.setItem("correctSymbols", JSON.stringify(newSymbols));
   }
 }
 
@@ -116,14 +113,6 @@ answerEl.addEventListener("input", () => {
   }, 3000);
 });
 
-const correctSymbols = [];
-
-function addCorrectSymbol(symbol) {
-  if (!correctSymbols.includes(symbol)) {
-    correctSymbols.push(symbol);
-  }
-}
-
 // Animación correcto
 function showCorrect() {
   questionEl.style.color = "green";
@@ -136,8 +125,6 @@ function showCorrect() {
   correctSound.play();
 
   resetShowAnswer();  // resetear boton de ayuda
-
-  addCorrectSymbol(filteredQuizList[index].a); // Guardar en array
 
   setTimeout(() => {
     correctCircle.classList.remove("show");
