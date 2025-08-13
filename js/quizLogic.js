@@ -28,10 +28,10 @@ const questionEl = document.getElementById("question");
 const answerEl = document.getElementById("answer");
 const correctCircle = document.getElementById("correctCircle");
 
-const correctSound = new Audio("https://www.soundjay.com/misc/sounds/small-bell-ring-01a.mp3");
+const correctSound = new Audio("./sounds/small-bell-ring-01a.mp3");
 correctSound.volume = 0.5;
-const incorrectSound = new Audio("https://www.soundjay.com/buttons/sounds/button-44.mp3");
-const pillCompleteSound = new Audio("https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3");
+const incorrectSound = new Audio("./sounds/button-44.mp3");
+const pillCompleteSound = new Audio("./sounds/bell-ringing-05.mp3");
 
 let checkTimeout;
 

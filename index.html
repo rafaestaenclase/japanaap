@@ -337,7 +337,7 @@ function animatePillCompletion(symbols, containerId, total, completedBtn, playBt
 
   const pills = container.querySelectorAll('.pill-fill');
 
-    const audioPills = new Audio("https://www.soundjay.com/misc/sounds/magic-chime-03.mp3");
+    const audioPills = new Audio("./sounds/magic-chime-03.mp3");
     audioPills.play();
 
     let lastTimeout = 0;
@@ -376,7 +376,7 @@ function animatePillCompletion(symbols, containerId, total, completedBtn, playBt
       completedBtn.style.background = "gold";
       completedBtn.style.opacity = 0;
       setTimeout(() => {
-        const audioPrize = new Audio("https://www.soundjay.com/misc/sounds/magic-chime-07.mp3");
+        const audioPrize = new Audio("./sounds/magic-chime-07.mp3");
         audioPrize.play();
       }, 800);
 
