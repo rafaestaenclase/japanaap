@@ -184,6 +184,167 @@
     }
 
 
+/* Carrusel */
+.carousel {
+  position: relative;
+  overflow: hidden;
+}
+
+.carousel-track-container {
+  overflow: hidden;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.3s ease;
+}
+
+.carousel-item {
+  flex: 0 0 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+/* Botones de navegación grandes a los lados */
+.carousel .prevBtn,
+.carousel .nextBtn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(52, 152, 219, 0.8);
+  color: #fff;
+  font-size: 2rem;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: background 0.3s;
+}
+
+.carousel .prevBtn:hover,
+.carousel .nextBtn:hover {
+  background: rgba(41, 128, 185, 0.9);
+}
+
+.carousel .prevBtn { left: 10px; }
+.carousel .nextBtn { right: 10px; }
+
+/* Píldoras */
+.pills {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.pill {
+  flex: 1;
+  height: 15px;
+  background: #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.pill-fill {
+  height: 100%;
+  background: #4caf50;
+  width: 0%;
+  transition: width 0.3s ease, background 1.5s ease;
+}
+
+/* Botones Practicar / Completado */
+.button-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.playButton,
+.completedButton {
+  flex: 1 1 calc(50% - 10px);
+  background: #3498db;
+  border: none;
+  color: white;
+  padding: 12px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 1.5s ease, opacity 1.5s;
+}
+
+button:hover {
+  background: #2980b9;
+}
+
+/* Animaciones y modal */
+.star {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: gold;
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  animation: starAnim 1s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes starAnim {
+  0% { transform: translate(0, 0) scale(0.5); opacity: 1; }
+  100% { transform: translate(var(--x), var(--y)) scale(1); opacity: 0; }
+}
+
+.hidden { display: none !important; }
+
+#prizeModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 20px;
+  max-width: 300px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  animation: popIn 0.5s ease;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.7); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes popOut {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.7); opacity: 0; }
+}
+
+.pop-out { animation: popOut 0.4s ease forwards; }
+
+@keyframes shake {
+  0% { transform: translate(0,0); }
+  25% { transform: translateX(-8px); }
+  50% { transform: translateX(8px); }
+  75% { transform: translateX(-8px); }
+  100% { transform: translate(0,0); }
+}
+
+.shake { animation: shake 0.5s; }
 
 
   </style>
@@ -191,9 +352,11 @@
 <body>
   <header>
     Japanaap V0.0.3
+    <!--
     <button onclick="window.location.href='catsAlbum.html'">
       Álbum de Gatos 🐱
     </button>
+    -->
   </header>
 
   <div id="prizeModal" class="hidden">
@@ -208,41 +371,35 @@
 
   
 
-  <div class="section" id="hiraganaSection">
-    <div class="section-title">Hiragana</div>
-    <div class="pills" id="hiraganaPills"></div>
-    <div class="button-row">
-      <button class="playButton" data-type="hiragana">Practicar</button>
-    </div>
+<!-- Secciones con carrusel -->
+<div class="section" id="hiraganaSection">
+  <div class="section-title">
+    Hiragana
+    <button class="examButton" onclick="alert('examenHaciendose')">Examen</button>
   </div>
-
-  <div class="section" id="katakanaSection">
-    <div class="section-title">Katakana</div>
-    <div class="pills" id="katakanaPills"></div>
-    <div class="button-row">
-      <button class="playButton" data-type="katakana">Practicar</button>
+  <div class="carousel" id="hiragana">
+    <button class="prevBtn">‹</button>
+    <div class="carousel-track-container">
+      <div class="carousel-track"></div>
     </div>
+    <button class="nextBtn">›</button>
   </div>
+</div>
 
-  <div class="section" id="vocabularioSection">
-    <div class="section-title">Vocabulario</div>
-
-    <div class="subsection" id="vocabularioSaludoSubsection">
-      <div class="section-title">Saludos</div>
-      <div class="pills" id="vocabularioSaludoPills"></div>
-      <div class="button-row">
-        <button class="playButton" data-type="vocabularioSaludo">Practicar Saludos</button>
-      </div>
-    </div>
-
-    <div class="subsection" id="vocabularioComidaSubsection">
-      <div class="section-title">Comida</div>
-      <div class="pills" id="vocabularioComidaPills"></div>
-      <div class="button-row">
-        <button class="playButton" data-type="vocabularioComida">Practicar Comida</button>
-      </div>
-    </div>
+<!-- Secciones con carrusel -->
+<div class="section" id="katakanaSection">
+  <div class="section-title">
+    Hiragana
+    <button class="examButton" onclick="alert('examenHaciendose')">Examen</button>
   </div>
+  <div class="carousel" id="katakana">
+    <button class="prevBtn">‹</button>
+    <div class="carousel-track-container">
+      <div class="carousel-track"></div>
+    </div>
+    <button class="nextBtn">›</button>
+  </div>
+</div>
 
 <script src="./js/catsList.js"></script>
 <script src="./js/hiraganaList.js"></script>
@@ -255,52 +412,145 @@
   const TOTAL_KATAKANA = katakanaList.length;
   const TOTAL_VOCABULARIO_SALUDO = vocabularioSaludoList.length;
   const TOTAL_VOCABULARIO_COMIDA = vocabularioComidaList.length;
-  const PILLS_PER_SECTION = 5;
+  const PILLS_PER_LEVEL = 2;
 
-  function createPills(containerId) {
-    const container = document.getElementById(containerId);
-    container.innerHTML = "";
-    for (let i = 0; i < PILLS_PER_SECTION; i++) {
-      const pill = document.createElement("div");
-      pill.className = "pill";
-      const fill = document.createElement("div");
-      fill.className = "pill-fill";
-      pill.appendChild(fill);
-      container.appendChild(pill);
+
+
+  function createCarousel(containerId, levelsList) {
+    const carousel = document.getElementById(containerId);
+    const track = carousel.querySelector(".carousel-track");
+    track.innerHTML = "";
+
+    levelsList.forEach((level, index) => {
+        const slide = document.createElement("div");
+        slide.className = "carousel-item";
+
+        // Título del nivel
+        const title = document.createElement("h3");
+        title.textContent = level.name;
+        slide.appendChild(title);
+
+        // Píldoras
+        const pillsContainer = document.createElement("div");
+        pillsContainer.className = "pills";
+        for (let p = 0; p < PILLS_PER_LEVEL; p++) {
+            const pill = document.createElement("div");
+            pill.className = "pill";
+            const fill = document.createElement("div");
+            fill.className = "pill-fill";
+            pill.appendChild(fill);
+            pillsContainer.appendChild(pill);
+        }
+        slide.appendChild(pillsContainer);
+
+        // Botón Practicar
+        const buttonRow = document.createElement("div");
+        buttonRow.className = "button-row";
+        const playBtn = document.createElement("button");
+        playBtn.className = "playButton";
+        playBtn.textContent = "Practicar";
+        buttonRow.appendChild(playBtn);
+        slide.appendChild(buttonRow);
+
+        track.appendChild(slide);
+
+        // Actualizar píldoras según localStorage
+        const storage = JSON.parse(localStorage.getItem("levelCompleted") || "[]");
+
+        // Por ejemplo, index del slide actual
+
+        // Filtrar por categoría y levelId
+        const currentLevelStorage = storage.filter(item => 
+            item.category === containerId && Number(item.levelId) === index
+        );
+
+        if (currentLevelStorage[0] != undefined) {
+          const completedTimes = currentLevelStorage[0]["completedTimes"] || 0;
+          const fills = pillsContainer.querySelectorAll(".pill-fill");
+          fills.forEach((fill, i) => {
+              let width;
+              if (completedTimes > i) {
+                  // Píldora completamente llena
+                  width = 100;
+              } else {
+                  // Píldora vacía
+                  width = 0;
+              }
+              fill.style.width = `${width}%`;
+          });
+        }
+
+        // Click Practicar
+        playBtn.onclick = () => {
+            location.href = `playGround.html?play=${containerId}List&level=${level.level}`;
+        };
+    });
+
+    // Carrusel navegación
+    const slides = track.children;
+    let currentIndex = 0;
+
+    // Recuperar posición guardada
+    const savedPositions = JSON.parse(localStorage.getItem("carouselPositions") || "{}");
+    if (savedPositions[containerId] !== undefined) {
+        currentIndex = savedPositions[containerId];
+        updateCarousel(true); // 'true' = instantáneo
+    } else {
+        updateCarousel(); // primera vez, animado normal
     }
+
+    // Función para actualizar carrusel y guardar posición
+    function updateCarousel(instant = false) {
+        if (instant) {
+            // Desactivar transición temporalmente
+            track.style.transition = "none";
+        } else {
+            // Restaurar transición
+            track.style.transition = "transform 0.3s ease";
+        }
+
+        // Aplicar posición
+        track.style.transform = `translateX(-${currentIndex * 100}%)`;
+
+        // Guardar posición
+        const carouselPositions = JSON.parse(localStorage.getItem("carouselPositions") || "{}");
+        carouselPositions[containerId] = currentIndex;
+        localStorage.setItem("carouselPositions", JSON.stringify(carouselPositions));
+
+        if (instant) {
+            // Forzar reflow para que el navegador aplique el cambio sin animación
+            track.offsetHeight; 
+            // Restaurar transición para futuras animaciones
+            track.style.transition = "transform 0.3s ease";
+        }
+    }
+    
+
+    // Botones
+    const prevBtn = carousel.querySelector(".prevBtn");
+    const nextBtn = carousel.querySelector(".nextBtn");
+
+    prevBtn.onclick = () => { 
+        if (currentIndex > 0) { 
+            currentIndex--; 
+            updateCarousel(); // animado
+        } 
+    };
+    nextBtn.onclick = () => { 
+        if (currentIndex < slides.length - 1) { 
+            currentIndex++; 
+            updateCarousel(); // animado
+        } 
+    };
+
+
   }
 
-  function updatePills(containerId, completed, total) {
-    const pills = document.getElementById(containerId).children;
-    const blockSize = total / PILLS_PER_SECTION;
+// Crear todos los carruseles
+createCarousel("hiragana", hiraganaList.levels);
+createCarousel("katakana", katakanaList.levels);
 
-    for (let i = 0; i < pills.length; i++) {
-      const fill = pills[i].querySelector(".pill-fill");
-      if (completed >= (i + 1) * blockSize) {
-        fill.style.width = "100%";
-      } else if (completed > i * blockSize) {
-        const partial = ((completed - i * blockSize) / blockSize) * 100;
-        fill.style.width = partial + "%";
-      } else {
-        fill.style.width = "0%";
-      }
-    }
-  }
-
-function resetPills(containerId, symbols, total) {
-  let correctSymbolsStoraged = JSON.parse(localStorage.getItem("correctSymbols")) || [];
-
-  // Filtramos los símbolos de correctSymbols que NO estén en symbols
-  correctSymbolsStoraged = correctSymbolsStoraged.filter(symbol => 
-      !symbols.includes(symbol)
-  );
-
-  localStorage.setItem("correctSymbols", JSON.stringify(correctSymbolsStoraged));
-
-  updatePills(containerId, 0, total);
-}
-
-
+/*
 function pillsCompleted(containerId, symbols, total) {
   if (symbols.length >= total) {
     const section = document.getElementById(containerId).closest('.subsection, .section');
@@ -412,7 +662,6 @@ function animatePillCompletion(symbols, containerId, total, completedBtn, playBt
         showPrizeFromCategory("hiragana"); // Aquí puedes pasar la categoría actual
         completedBtn.remove();
         if(playBtn) playBtn.style.display = 'block';
-        resetPills(containerId, symbols, total);
 
 
       }, { once: true });
@@ -489,21 +738,9 @@ function animatePillCompletion(symbols, containerId, total, completedBtn, playBt
   const vocabularioComidaSymbols = correctSymbols.filter(sym => vocabularioComidaList.some(q => q.a === sym));
 
   // Crear y actualizar píldoras
-  createPills("hiraganaPills");
-  updatePills("hiraganaPills", hiraganaSymbols.length, TOTAL_HIRAGANA);
-  pillsCompleted("hiraganaPills", hiraganaSymbols, TOTAL_HIRAGANA);
+  //updatePills("hiraganaPills", hiraganaSymbols.length, TOTAL_HIRAGANA);
+  //pillsCompleted("hiraganaPills", hiraganaSymbols, TOTAL_HIRAGANA);
 
-  createPills("katakanaPills");
-  updatePills("katakanaPills", katakanaSymbols.length, TOTAL_KATAKANA);
-  pillsCompleted("katakanaPills", katakanaSymbols, TOTAL_KATAKANA);
-
-  createPills("vocabularioSaludoPills");
-  updatePills("vocabularioSaludoPills", vocabularioSaludoSymbols.length, TOTAL_VOCABULARIO_SALUDO);
-  pillsCompleted("vocabularioSaludoPills", vocabularioSaludoSymbols, TOTAL_VOCABULARIO_SALUDO);
-
-  createPills("vocabularioComidaPills");
-  updatePills("vocabularioComidaPills", vocabularioComidaSymbols.length, TOTAL_VOCABULARIO_COMIDA);
-  pillsCompleted("vocabularioComidaPills", vocabularioComidaSymbols, TOTAL_VOCABULARIO_COMIDA);
 
   // Funciones de detección basadas en Unicode
   function isHiragana(char) {
@@ -528,7 +765,7 @@ function animatePillCompletion(symbols, containerId, total, completedBtn, playBt
       }
     });
   });
-
+*/
 
 </script>
 

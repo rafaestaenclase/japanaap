@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+<title>Practicar Japonés</title>
+<style>
+body { font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; background: #f5f7fa; margin: 0; padding: 0px 20px; display: flex; flex-direction: column; align-items: center; }
+header { display: flex; justify-content: space-between; align-content: center; width: 100%; }
+.section { width: 100%; max-width: 450px; margin-bottom: 30px; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+.section-title { font-weight: bold; font-size: 1.2rem; margin-bottom: 15px; color: #34495e; }
+
+/* Carrusel */
+.carousel { position: relative; overflow: hidden; }
+.carousel-track { display: flex; transition: transform 0.3s ease; }
+.carousel-item { flex: 0 0 100%; display: flex; flex-direction: column; gap: 10px; }
+
+/* Botones de navegación carrusel */
+.carousel-buttons { display: flex; justify-content: space-between; margin-bottom: 10px; }
+.carousel-buttons button { background: #3498db; border: none; color: white; padding: 8px 12px; font-size: 0.9rem; border-radius: 6px; cursor: pointer; }
+.carousel-buttons button:hover { background: #2980b9; }
+
+/* Píldoras */
+.pills { display: flex; gap: 5px; margin-bottom: 10px; }
+.pill { flex: 1; height: 15px; background: #ddd; border-radius: 10px; overflow: hidden; }
+.pill-fill { height: 100%; background: #4caf50; width: 0%; transition: width 0.3s ease, background 1.5s ease; }
+
+/* Botones Practicar / Completado */
+.button-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.playButton, .completedButton { flex: 1 1 calc(50% - 10px); background: #3498db; border: none; color: white; padding: 12px 0; font-size: 1rem; font-weight: 600; border-radius: 8px; cursor: pointer; transition: background-color 1.5s ease, opacity 1.5s; }
+button:hover { background: #2980b9; }
+
+/* Animaciones y modal */
+.star { position: absolute; width: 10px; height: 10px; background: gold; clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); animation: starAnim 1s ease-out forwards; pointer-events: none; }
+@keyframes starAnim { 0% { transform: translate(0, 0) scale(0.5); opacity: 1; } 100% { transform: translate(var(--x), var(--y)) scale(1); opacity: 0; } }
+.hidden { display: none !important; }
+#prizeModal { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 9999; }
+.modal-card { background: #fff; border-radius: 20px; padding: 20px; max-width: 300px; text-align: center; position: relative; overflow: hidden; animation: popIn 0.5s ease; }
+@keyframes popIn { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes popOut { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(0.7); opacity: 0; } }
+.pop-out { animation: popOut 0.4s ease forwards; }
+@keyframes shake { 0% { transform: translate(0,0); } 25% { transform: translateX(-8px); } 50% { transform: translateX(8px); } 75% { transform: translateX(-8px); } 100% { transform: translate(0,0); } }
+.shake { animation: shake 0.5s; }
+</style>
+</head>
+<body>
+<header>
+  Japanaap V0.0.3
+  <button onclick="window.location.href='catsAlbum.html'"> Álbum de Gatos 🐱 </button>
+</header>
+
+<!-- Modal Premio -->
+<div id="prizeModal" class="hidden">
+  <div class="modal-card">
+    <div class="stars"></div>
+    <img id="catImg" src="" alt="">
+    <h2 id="catName"></h2>
+    <p id="catCategory"></p>
+    <button id="petBtn">Acariciar</button>
+  </div>
+</div>
+
+<!-- Secciones con carrusel -->
+<div class="section" id="hiraganaSection">
+  <div class="section-title">Hiragana</div>
+  <div class="carousel" id="hiragana">
+    <button class="prevBtn">‹</button>
+    <div class="carousel-track-container">
+      <div class="carousel-track"></div>
+    </div>
+    <button class="nextBtn">›</button>
+  </div>
+</div>
+
+<script src="./js/catsList.js"></script>
+<script src="./js/hiraganaList.js"></script>
+<script src="./js/katakanaList.js"></script>
+<script src="./js/vocabularioSaludoList.js"></script>
+<script src="./js/vocabularioComidaList.js"></script>
+<script>
+// Constantes
+const PILLS_PER_LEVEL = 2;
+
+// Función para crear carrusel de niveles
+function createCarousel(containerId, levelsList, localKey) {
+    const carousel = document.getElementById(containerId);
+    const track = carousel.querySelector(".carousel-track");
+    track.innerHTML = "";
+    console.log(levelsList)
+    levelsList.forEach((level, index) => {
+        const slide = document.createElement("div");
+        slide.className = "carousel-item";
+
+        // Título del nivel
+        const title = document.createElement("h3");
+        title.textContent = level.name;
+        slide.appendChild(title);
+
+        // Píldoras
+        const pillsContainer = document.createElement("div");
+        pillsContainer.className = "pills";
+        for (let p = 0; p < PILLS_PER_LEVEL; p++) {
+            const pill = document.createElement("div");
+            pill.className = "pill";
+            const fill = document.createElement("div");
+            fill.className = "pill-fill";
+            pill.appendChild(fill);
+            pillsContainer.appendChild(pill);
+        }
+        slide.appendChild(pillsContainer);
+
+        // Botón Practicar
+        const buttonRow = document.createElement("div");
+        buttonRow.className = "button-row";
+        const playBtn = document.createElement("button");
+        playBtn.className = "playButton";
+        playBtn.textContent = "Practicar";
+        buttonRow.appendChild(playBtn);
+        slide.appendChild(buttonRow);
+
+        track.appendChild(slide);
+
+        // Actualizar píldoras según localStorage
+        const storage = JSON.parse(localStorage.getItem(localKey) || "{}");
+        const completedTimes = storage[level.level] || 0;
+        const fills = pillsContainer.querySelectorAll(".pill-fill");
+        fills.forEach((fill, i) => {
+            const ratio = Math.min(completedTimes / PILLS_PER_LEVEL, 1);
+            fill.style.width = `${ratio * 100}%`;
+        });
+
+        console.log(level)
+
+        // Click Practicar
+        playBtn.onclick = () => {
+            location.href = `playGround.html?play=${containerId}List&level=${level.level}`;
+        };
+    });
+
+    // Carrusel navegación
+    const slides = track.children;
+    let currentIndex = 0;
+    const prevBtn = carousel.querySelector(".prevBtn");
+    const nextBtn = carousel.querySelector(".nextBtn");
+
+    function updateCarousel() {
+        track.style.transform = `translateX(-${currentIndex * 100}%)`;
+    }
+
+    prevBtn.onclick = () => { if (currentIndex > 0) { currentIndex--; updateCarousel(); } };
+    nextBtn.onclick = () => { if (currentIndex < slides.length - 1) { currentIndex++; updateCarousel(); } };
+}
+
+// Crear todos los carruseles
+createCarousel("hiragana", hiraganaList.levels, "hiraganaProgress");
+
+
+</script>
+</body>
+</html>
