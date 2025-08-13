@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ruleta de 10 premios</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --wheel-bg: #0e132b;
+      --accent: #ffcc00;
+      --text: #e7ecff;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(160deg, #0b1020, #111a3a);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      width: min(92vw, 680px);
+      margin: 24px auto;
+      text-align: center;
+    }
+    .canvas-wrap {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      width: 100%;
+      background: radial-gradient(circle at 50% 50%, #1b2448 0%, #0e132b 70%);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    }
+    #wheelCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border-radius: 12px;
+    }
+    .pointer {
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 18px solid transparent;
+      border-right: 18px solid transparent;
+      border-bottom: 28px solid var(--accent);
+      filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.5));
+    }
+    .controls {
+      margin-top: 16px;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    button {
+      background: var(--accent);
+      color: #1a1a1a;
+      border: none;
+      padding: 12px 18px;
+      font-weight: 700;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: transform 0.06s ease, box-shadow 0.2s ease;
+      box-shadow: 0 6px 16px rgba(255, 204, 0, 0.3);
+    }
+    button:active { transform: translateY(1px) scale(0.99); }
+    button[disabled] {
+      filter: grayscale(1) brightness(0.8);
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    #result { font-weight: 700; letter-spacing: 0.2px; }
+    .small { opacity: 0.85; font-size: 0.9rem; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="canvas-wrap">
+      <div class="pointer" aria-hidden="true"></div>
+      <canvas id="wheelCanvas"></canvas>
+    </div>
+    <div class="controls">
+      <button id="spinBtn">Girar</button>
+      <span id="result" aria-live="polite"></span>
+    </div>
+    <p class="small">Consejo: edita el array "premios" en el JS para personalizar la ruleta.</p>
+  </div>
+
+  <script>
+    (() => {
+      // Premios (10)
+      const premios = [
+        '💸 5€', '🍫 Chocolate', '☕ Café', '🎟️ Entrada', '📗 Libro',
+        '🎧 Auriculares', '🧢 Gorra', '🍕 Pizza', '🎲 Juego', '🧩 Sorpresa'
+      ];
+
+      // Colores por sector
+      const colores = [
+        '#5B8CFF','#5AD8A6','#5D7092','#F6BD16','#E8684A',
+        '#6DC8EC','#9270CA','#FF9D4D','#269A99','#FF6F91'
+      ];
+
+      const canvas = document.getElementById('wheelCanvas');
+      const ctx = canvas.getContext('2d', { alpha: false });
+
+      let dpi = window.devicePixelRatio || 1;
+      let W = 0, H = 0, cx = 0, cy = 0, r = 0;
+
+      // Rotación actual (radianes)
+      let rot = 0;
+
+      // Estado de animación
+      let anim = null;
+      const durMin = 2000, durMax = 3000;
+
+      // Ajuste de tamaño responsivo
+      function resize() {
+        const rect = canvas.getBoundingClientRect();
+        W = Math.floor(rect.width * dpi);
+        H = Math.floor(rect.height * dpi);
+        canvas.width = W;
+        canvas.height = H;
+        cx = W / 2;
+        cy = H / 2;
+        r = Math.min(W, H) * 0.45;
+        draw();
+      }
+
+      window.addEventListener('resize', () => {
+        dpi = window.devicePixelRatio || 1;
+        resize();
+      });
+
+      // Easing cúbico out
+      const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+
+      // Dibuja la ruleta con la rotación actual
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+
+        // Fondo
+        ctx.fillStyle = '#0e132b';
+        ctx.fillRect(0, 0, W, H);
+
+        const n = premios.length;
+        const arc = (Math.PI * 2) / n;
+
+        // Ruleta
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(rot);
+
+        for (let i = 0; i < n; i++) {
+          const start = i * arc;
+          const end = start + arc;
+
+          // Sector
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.arc(0, 0, r, start, end, false);
+          ctx.closePath();
+          ctx.fillStyle = colores[i % colores.length];
+          ctx.fill();
+
+          // Borde de sector
+          ctx.lineWidth = Math.max(2, r * 0.012);
+          ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+          ctx.stroke();
+
+          // Texto del premio
+          ctx.save();
+          const angle = start + arc / 2;
+          ctx.rotate(angle);
+          ctx.fillStyle = '#ffffff';
+          const fontSize = Math.max(14, Math.floor(r * 0.12));
+          ctx.font = `700 ${fontSize}px system-ui, -apple-system, Segoe UI, Roboto, Arial`;
+          ctx.textAlign = 'right';
+          ctx.textBaseline = 'middle';
+          ctx.shadowColor = 'rgba(0,0,0,.35)';
+          ctx.shadowBlur = fontSize * 0.2;
+          ctx.shadowOffsetY = 1;
+          ctx.fillText(premios[i], r - fontSize * 0.8, 0);
+          ctx.restore();
+        }
+
+        // Borde exterior
+        ctx.beginPath();
+        ctx.arc(0, 0, r, 0, Math.PI * 2);
+        ctx.lineWidth = Math.max(8, r * 0.06);
+        ctx.strokeStyle = '#ffffff';
+        ctx.globalAlpha = 0.15;
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+
+        // Centro
+        ctx.beginPath();
+        ctx.arc(0, 0, r * 0.12, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+
+        ctx.restore();
+
+        // Marca superior opcional (además del triángulo CSS)
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.beginPath();
+        ctx.rotate(-Math.PI / 2); // arriba
+        ctx.moveTo(r * 0.86, 0);
+        ctx.lineTo(r * 0.98, 0);
+        ctx.lineWidth = Math.max(3, r * 0.02);
+        ctx.strokeStyle = '#ffcc00';
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      // Función easing easeInOutCubic (suave inicio y fin)
+      const easeOutQuint = t => 1 - Math.pow(1 - t, 5);
+
+
+      function spin() {
+        if (anim) return;
+
+        const n = premios.length;
+        const arc = (Math.PI * 2) / n;
+
+        const idx = Math.floor(Math.random() * n);
+
+        const angleCenter = idx * arc + arc / 2;
+
+        // Reduce vueltas para que no empiece muy rápido
+        const vueltas = 3 + Math.floor(Math.random() * 2); // 3..4 vueltas
+
+        const rotTargetBase = (3 * Math.PI) / 2 - angleCenter;
+        let rotFinal = vueltas * (Math.PI * 2) + rotTargetBase;
+
+        const rotStart = rot % (Math.PI * 2);
+        rotFinal += rot - rotStart;
+
+        const duration = durMin + Math.random() * (durMax - durMin);
+        const t0 = performance.now();
+
+        spinBtn.disabled = true;
+        resultEl.textContent = 'Girando...';
+
+        anim = function frame(now) {
+          const t = Math.min(1, (now - t0) / duration);
+          const eased = easeOutQuint(t);
+          rot = rotStart + (rotFinal - rotStart) * eased;
+          draw();
+
+          if (t < 1) {
+            requestAnimationFrame(anim);
+          } else {
+            anim = null;
+            rot = rot % (Math.PI * 2);
+            const premio = premios[idx];
+            resultEl.textContent = `Resultado: ${premio}`;
+            spinBtn.disabled = false;
+          }
+        };
+
+        requestAnimationFrame(anim);
+      }
+
+      const spinBtn = document.getElementById('spinBtn');
+      const resultEl = document.getElementById('result');
+      spinBtn.addEventListener('click', spin);
+
+      // Inicialización
+      resize();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Practicar Japonés</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 2rem;
+      color: #2c3e50;
+    }
+
+    .section {
+      width: 100%;
+      max-width: 450px;
+      margin-bottom: 30px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    }
+
+    .section-title {
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      color: #34495e;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      flex: 1 1 calc(33.333% - 10px);
+      background: #3498db;
+      border: none;
+      color: white;
+      padding: 12px 0;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.25s ease;
+    }
+
+    button:hover { background: #2980b9; }
+
+    /* Píldoras de progreso */
+    .pills {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+
+    .pill {
+      flex: 1;
+      height: 15px;
+      background: #ddd;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .pill-fill {
+      height: 100%;
+      background: #4caf50;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* Subsection style */
+    .subsection {
+      margin-top: 15px;
+      padding-top: 10px;
+      border-top: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Practicar Japonés</h1>
+
+  <div class="section" id="alphabetSection">
+    <div class="section-title">Hiragana</div>
+    <div class="pills" id="hiraganaPills"></div>
+    <div class="button-row">
+      <button data-type="hiragana">Practicar</button>
+    </div>
+  </div>
+
+  <div class="section" id="katakanaSection">
+    <div class="section-title">Katakana</div>
+    <div class="pills" id="katakanaPills"></div>
+    <div class="button-row">
+      <button data-type="katakana">Practicar</button>
+    </div>
+  </div>
+
+  <div class="section" id="vocabularioSection">
+    <div class="section-title">Vocabulario</div>
+
+    <div class="subsection" id="saludoSubsection">
+      <div class="section-title">Saludos</div>
+      <div class="pills" id="saludoPills"></div>
+      <div class="button-row">
+        <button data-type="saludo">Practicar Saludos</button>
+      </div>
+    </div>
+
+    <div class="subsection" id="comidaSubsection">
+      <div class="section-title">Comida</div>
+      <div class="pills" id="comidaPills"></div>
+      <div class="button-row">
+        <button data-type="comida">Practicar Comida</button>
+      </div>
+    </div>
+  </div>
+
+<script src="./js/hiraganaList.js"></script>
+<script>
+  window.hiraganaQuiz = window.quizList; // alias antes de cargar el siguiente
+</script>
+
+<script src="./js/katakanaList.js"></script>
+<script>
+  window.katakanaQuiz = window.quizList; // alias antes de cargar el siguiente
+</script>
+
+<script src="./js/vocabularioSaludoList.js"></script>
+<script>
+  window.vocabularioSaludoQuiz = window.quizList;
+</script>
+
+<script src="./js/vocabularioComidaList.js"></script>
+<script>
+  window.vocabularioComidaQuiz = window.quizList;
+</script>
+
+<script>
+  const TOTAL_HIRAGANA = window.hiraganaQuiz.length;
+  const TOTAL_KATAKANA = window.katakanaQuiz.length;
+  const TOTAL_VOCABULARIO_SALUDO = window.vocabularioSaludoQuiz.length;
+  const TOTAL_VOCABULARIO_COMIDA = window.vocabularioComidaQuiz.length;
+
+  const PILLS_PER_SECTION = 5;
+
+  function createPills(containerId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = "";
+    for (let i = 0; i < PILLS_PER_SECTION; i++) {
+      const pill = document.createElement("div");
+      pill.className = "pill";
+      const fill = document.createElement("div");
+      fill.className = "pill-fill";
+      pill.appendChild(fill);
+      container.appendChild(pill);
+    }
+  }
+
+  function updatePills(containerId, completed, total) {
+    const pills = document.getElementById(containerId).children;
+    const blockSize = total / PILLS_PER_SECTION;
+
+    for (let i = 0; i < pills.length; i++) {
+      const fill = pills[i].querySelector(".pill-fill");
+      if (completed >= (i + 1) * blockSize) {
+        fill.style.width = "100%";
+      } else if (completed > i * blockSize) {
+        const partial = ((completed - i * blockSize) / blockSize) * 100;
+        fill.style.width = partial + "%";
+      } else {
+        fill.style.width = "0%";
+      }
+    }
+  }
+
+  // Simulación de carga desde localStorage
+  let correctSymbols = JSON.parse(localStorage.getItem("correctSymbols")) || [];
+
+  // Filtra símbolos para hiragana y katakana
+  const hiraganaSymbols = correctSymbols.filter(sym => isHiragana(sym));
+  const katakanaSymbols = correctSymbols.filter(sym => isKatakana(sym));
+  // Para vocabulario, asumiremos correctSymbols guarda palabras (strings) exactas en japonés
+  const saludoSymbols = correctSymbols.filter(sym => window.vocabularioSaludoQuiz.some(q => q.a === sym));
+  const comidaSymbols = correctSymbols.filter(sym => window.vocabularioComidaQuiz.some(q => q.a === sym));
+
+  // Crear y actualizar píldoras
+  createPills("hiraganaPills");
+  updatePills("hiraganaPills", hiraganaSymbols.length, TOTAL_HIRAGANA);
+
+  createPills("katakanaPills");
+  updatePills("katakanaPills", katakanaSymbols.length, TOTAL_KATAKANA);
+
+  createPills("saludoPills");
+  updatePills("saludoPills", saludoSymbols.length, TOTAL_VOCABULARIO_SALUDO);
+
+  createPills("comidaPills");
+  updatePills("comidaPills", comidaSymbols.length, TOTAL_VOCABULARIO_COMIDA);
+
+  // Funciones de detección basadas en Unicode
+  function isHiragana(char) {
+    return /[\u3040-\u309F]/.test(char);
+  }
+  function isKatakana(char) {
+    return /[\u30A0-\u30FF]/.test(char);
+  }
+
+  // Navegación botones
+  document.querySelectorAll("button[data-type]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const type = btn.dataset.type;
+      if (type === "hiragana") {
+        location.href = "playHiragana.html";
+      } else if (type === "katakana") {
+        location.href = "playKatakana.html";
+      } else if (type === "saludo") {
+        location.href = "playVocabularioSaludo.html";
+      } else if (type === "comida") {
+        location.href = "playVocabularioComida.html";
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
