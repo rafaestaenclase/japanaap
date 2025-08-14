@@ -66,6 +66,8 @@
       display: flex;
       gap: 5px;
       margin-bottom: 10px;
+      width: 60%;
+      margin: 0 auto;
     }
 
     .pill {
@@ -351,7 +353,7 @@ button:hover {
 </head>
 <body>
   <header>
-    Japanaap V0.0.3
+    Japanaap V0.0.4
     <!--
     <button onclick="window.location.href='catsAlbum.html'">
       Álbum de Gatos 🐱
@@ -389,7 +391,7 @@ button:hover {
 <!-- Secciones con carrusel -->
 <div class="section" id="katakanaSection">
   <div class="section-title">
-    Hiragana
+    Katakana
     <button class="examButton" onclick="alert('examenHaciendose')">Examen</button>
   </div>
   <div class="carousel" id="katakana">
@@ -461,8 +463,10 @@ button:hover {
 
         // Filtrar por categoría y levelId
         const currentLevelStorage = storage.filter(item => 
-            item.category === containerId && Number(item.levelId) === index
+            item.category == containerId && Number(item.levelId) == index
         );
+
+        console.log(storage);
 
         if (currentLevelStorage[0] != undefined) {
           const completedTimes = currentLevelStorage[0]["completedTimes"] || 0;
