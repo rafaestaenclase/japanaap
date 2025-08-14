@@ -83,6 +83,9 @@ localStorage.setItem("levelCompleted", JSON.stringify(levelCompleted));
     correctCircle.addEventListener("click", () => {
       window.location.href = "index.html";
     });
+    document.addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
 
     hideShowAnswer();
   }
@@ -90,7 +93,7 @@ localStorage.setItem("levelCompleted", JSON.stringify(levelCompleted));
 
 
 let isChecking = false; // bloqueo para evitar entradas durante animación
-
+let checkCorrectTime = 5000;
 answerEl.addEventListener("input", () => {
   if (isChecking) return; // ignorar entradas mientras está bloqueado
 
@@ -110,7 +113,7 @@ answerEl.addEventListener("input", () => {
       showIncorrect();
       answerEl.value = "";
     }
-  }, 3000);
+  }, checkCorrectTime);
 });
 
 // Animación correcto
