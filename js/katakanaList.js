@@ -4,7 +4,7 @@ var katakanaList = {
   levels: [
     {
       level: 0,
-      name: "Básico - Vocales",
+      name: "Vocales",
       items: [
         { q: "a", a: "ア" },
         { q: "i", a: "イ" },
@@ -15,7 +15,7 @@ var katakanaList = {
     },
     {
       level: 1,
-      name: "Básico - K",
+      name: "K",
       items: [
         { q: "ka", a: "カ" },
         { q: "ki", a: "キ" },
@@ -26,7 +26,7 @@ var katakanaList = {
     },
     {
       level: 2,
-      name: "Básico - S",
+      name: "S",
       items: [
         { q: "sa", a: "サ" },
         { q: "shi", a: "シ" },
@@ -37,7 +37,7 @@ var katakanaList = {
     },
     {
       level: 3,
-      name: "Básico - T",
+      name: "T",
       items: [
         { q: "ta", a: "タ" },
         { q: "chi", a: "チ" },
@@ -48,7 +48,7 @@ var katakanaList = {
     },
     {
       level: 4,
-      name: "Básico - N",
+      name: "N",
       items: [
         { q: "na", a: "ナ" },
         { q: "ni", a: "ニ" },
@@ -59,7 +59,7 @@ var katakanaList = {
     },
     {
       level: 5,
-      name: "Básico - H",
+      name: "H",
       items: [
         { q: "ha", a: "ハ" },
         { q: "hi", a: "ヒ" },
@@ -70,7 +70,7 @@ var katakanaList = {
     },
     {
       level: 6,
-      name: "Básico - M",
+      name: "M",
       items: [
         { q: "ma", a: "マ" },
         { q: "mi", a: "ミ" },
@@ -81,7 +81,7 @@ var katakanaList = {
     },
     {
       level: 7,
-      name: "Básico - Y",
+      name: "Y",
       items: [
         { q: "ya", a: "ヤ" },
         { q: "yu", a: "ユ" },
@@ -90,7 +90,7 @@ var katakanaList = {
     },
     {
       level: 8,
-      name: "Básico - R",
+      name: "R",
       items: [
         { q: "ra", a: "ラ" },
         { q: "ri", a: "リ" },
@@ -101,7 +101,7 @@ var katakanaList = {
     },
     {
       level: 9,
-      name: "Básico - W/N",
+      name: "W/N",
       items: [
         { q: "wa", a: "ワ" },
         { q: "wo", a: "ヲ" },
@@ -110,7 +110,7 @@ var katakanaList = {
     },
     {
       level: 10,
-      name: "Dakuon - G",
+      name: "G",
       items: [
         { q: "ga", a: "ガ" },
         { q: "gi", a: "ギ" },
@@ -121,7 +121,7 @@ var katakanaList = {
     },
     {
       level: 11,
-      name: "Dakuon - Z",
+      name: "Z",
       items: [
         { q: "za", a: "ザ" },
         { q: "ji", a: "ジ" },
@@ -134,7 +134,7 @@ var katakanaList = {
     },
     {
       level: 12,
-      name: "Dakuon - D",
+      name: "D",
       items: [
         { q: "da", a: "ダ" },
         { q: "de", a: "デ" },
@@ -143,7 +143,7 @@ var katakanaList = {
     },
     {
       level: 13,
-      name: "Dakuon - B",
+      name: "B",
       items: [
         { q: "ba", a: "バ" },
         { q: "bi", a: "ビ" },
@@ -154,7 +154,7 @@ var katakanaList = {
     },
     {
       level: 14,
-      name: "Handakuten - P",
+      name: "P",
       items: [
         { q: "pa", a: "パ" },
         { q: "pi", a: "ピ" },
@@ -165,7 +165,7 @@ var katakanaList = {
     },
     {
       level: 15,
-      name: "Yōon - K/S/T/N",
+      name: "K/S/T/N - Combinaciones",
       items: [
         { q: "kya", a: "キャ" },
         { q: "kyu", a: "キュ" },
@@ -183,7 +183,7 @@ var katakanaList = {
     },
     {
       level: 16,
-      name: "Yōon - H/B/P",
+      name: "H/B/P - Combinaciones",
       items: [
         { q: "hya", a: "ヒャ" },
         { q: "hyu", a: "ヒュ" },
@@ -198,7 +198,7 @@ var katakanaList = {
     },
     {
       level: 17,
-      name: "Yōon - M/R/G/J",
+      name: "M/R/G/J - Combinaciones",
       items: [
         { q: "mya", a: "ミャ" },
         { q: "myu", a: "ミュ" },
