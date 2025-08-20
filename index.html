@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
   <title>Practicar Japonés</title>
 <style>
-/* General */
+/* -------------------- General -------------------- */
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: #f5f7fa;
   margin: 0;
-  padding: 0 20px;
+  padding: 0 20px 70px; /* espacio abajo para botón fijo */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -27,138 +27,161 @@ header {
   color: #34495e;
 }
 
-/* Secciones */
+/* -------------------- Secciones -------------------- */
 .section {
   width: 100%;
   max-width: 960px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   background: #fff;
-  padding: 20px;
+  padding: 15px;
   border-radius: 16px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.08);
 }
 
 .section-title {
   font-weight: bold;
-  font-size: 1.3rem;
-  margin-bottom: 15px;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
   color: #2c3e50;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-/* Grid de niveles */
+/* -------------------- Grid de niveles -------------------- */
 .level-grid {
-  display: flex;
-  flex-wrap: wrap; 
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  gap: 4px; /* compacto */
+  justify-items: center;
   align-items: center;
 }
 
 .level-card {
-  width: 48px;
-  height: 48px;
+  width: 60px;
+  height: 60px;
   background: #fefefe;
   border-radius: 12px;
-  padding: 9px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
-  color: #000; /* texto negro por defecto */
+  display: grid;
+  place-items: center; /* centra el contenido */
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+  transition: transform 0.2s, box-shadow 0.2s, color 0.2s;
+  font-size: 14px;
+  color: #000;
   text-align: center;
+  cursor: pointer;
+}
+
+.level-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.12);
 }
 
 .level-card.selected {
   background: #3498db;
-  color: #fff; /* texto blanco al seleccionar */
-}
-
-.level-card.selected h3,
-.level-card.selected p {
   color: #fff;
 }
 
-.level-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
-}
-
-.level-card h3 {
-  margin: 0;
-  font-size: 12px;
-  color: #34495e;
-}
-
-.level-card p {
-  font-size: 0.95rem;
-  color: #7f8c8d;
-  margin: 0;
-}
-
-/* Botón Practicar */
-.playButton {
-  background: #3498db;
-  border: none;
-  color: white;
-  padding: 10px 0;
-  font-size: 0.95rem;
-  font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
-}
-
-.playButton:hover {
-  background: #2980b9;
-  transform: scale(1.05);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-}
-
+/* -------------------- Botón Practicar / Comenzar -------------------- */
 #fixedPlayButton {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 200px;
+  height: 48px;
+  padding: 0 15px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 12px;
+  border: none;
   background: #bdc3c7;
   color: #fff;
-  padding: 12px 0;
-  border: none;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: 600;
   cursor: not-allowed;
-  transition: background 0.3s, transform 0.2s;
-  z-index: 100;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s, box-shadow 0.2s;
 }
 
 #fixedPlayButton.active {
   background: #3498db;
   cursor: pointer;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
 }
 
-.level-card.selected {
-  background: #3498db;
+/* -------------------- Botón Examen -------------------- */
+#examToggleButton {
+  height: 48px;
+  padding: 0 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 12px;
+  border: none;
+  background: #2ecc71; /* verde */
   color: #fff;
+  cursor: pointer;
+  transition: background 0.3s, box-shadow 0.2s;
+}
+
+#examToggleButton.active {
+  background: #27ae60;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+}
+
+/* -------------------- Texto veces completado -------------------- */
+#completedTimes {
+  font-size: 12px;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+/* -------------------- Contenedor fijo de práctica -------------------- */
+#practiceContainer {
+  position: fixed;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  padding: 10px 15px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 100;
+  min-width: 250px;
+  justify-content: space-between;
+}
+
+/* -------------------- Botones examen internos -------------------- */
+.examButton {
+  background: #ecf0f1;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.examButton:hover {
+  background: #d0d7de;
+}
+
+/* -------------------- Tipografía de tarjetas -------------------- */
+.level-card h3 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.level-card p {
+  margin: 0;
+  font-size: 12px;
+  color: #7f8c8d;
 }
 </style>
-
-
 </head>
 <body>
-  <header>
-    Japanaap V0.0.9
-    <!--
-    <button onclick="window.location.href='catsAlbum.html'">
-      Álbum de Gatos 🐱
-    </button>
-    -->
-  </header>
+<header>
+  Japanaap V0.0.9
+</header>
 
 <!-- Sección Hiragana -->
 <div class="section" id="hiraganaSection">
@@ -187,7 +210,12 @@ header {
   <div id="vocabularyBasic" class="level-container"></div>
 </div>
 
-<button id="fixedPlayButton">Practicar</button>
+<!-- Contenedor fijo de práctica -->
+<div id="practiceContainer">
+  <button id="fixedPlayButton">Practicar</button>
+  <button id="examToggleButton">Examen</button>
+  <span id="completedTimes">Completado 0 veces</span>
+</div>
 
 <script src="./js/catsList.js"></script>
 <script src="./js/hiraganaList.js"></script>
@@ -195,7 +223,13 @@ header {
 <script src="./js/vocabularyBasicList.js"></script>
 
 <script>
+const fixedPlayButton = document.getElementById("fixedPlayButton");
+const examToggleButton = document.getElementById("examToggleButton");
+const completedTimesSpan = document.getElementById("completedTimes");
+
 let selectedCard = null;
+let examMode = false;
+let examSelection = []; // array para exam
 
 function createGrid(containerId, levelsList) {
     const container = document.getElementById(containerId);
@@ -209,32 +243,54 @@ function createGrid(containerId, levelsList) {
         card.className = "level-card";
         card.dataset.category = containerId;
         card.dataset.level = level.level;
+        card.dataset.index = index;
 
         const title = document.createElement("h3");
         title.textContent = level.name;
         card.appendChild(title);
 
-        const storage = JSON.parse(localStorage.getItem("levelCompleted") || "[]");
-        const currentLevelStorage = storage.find(item =>
-            item.category == containerId && Number(item.levelId) == index
-        );
-        const completedTimes = currentLevelStorage ? currentLevelStorage.completedTimes || 0 : 0;
-
-        const completedText = document.createElement("p");
-        completedText.textContent = `Completado ${completedTimes} veces`;
-        //card.appendChild(completedText);
-
-        // Click para seleccionar/deseleccionar
         card.addEventListener("click", () => {
-            if(selectedCard === card) {
-                card.classList.remove("selected");
-                selectedCard = null;
-                fixedPlayButton.classList.remove("active");
+            const storage = JSON.parse(localStorage.getItem("levelCompleted") || "[]");
+            const currentLevelStorage = storage.find(item =>
+                item.category == containerId && Number(item.levelId) == index
+            );
+            const completedTimes = currentLevelStorage ? currentLevelStorage.completedTimes || 0 : 0;
+
+            if(examMode){
+                // Examen: selección múltiple
+                if(examSelection.includes(card)){
+                    card.classList.remove("selected");
+                    examSelection = examSelection.filter(c => c !== card);
+                } else {
+                    card.classList.add("selected");
+                    examSelection.push(card);
+                }
+                fixedPlayButton.classList.toggle("active", examSelection.length>0);
+                
+                // Actualizar completados sumando todos seleccionados
+                const sumCompleted = examSelection.reduce((sum,c) => {
+                    const idx = Number(c.dataset.index);
+                    const cat = c.dataset.category;
+                    const st = JSON.parse(localStorage.getItem("levelCompleted") || "[]");
+                    const lvl = st.find(i => i.category==cat && Number(i.levelId)==idx);
+                    return sum + (lvl ? lvl.completedTimes || 0 : 0);
+                }, 0);
+                completedTimesSpan.textContent = `Completado ${sumCompleted} veces`;
+
             } else {
-                if(selectedCard) selectedCard.classList.remove("selected");
-                card.classList.add("selected");
-                selectedCard = card;
-                fixedPlayButton.classList.add("active");
+                // Modo normal: selección única
+                if(selectedCard === card){
+                    card.classList.remove("selected");
+                    selectedCard = null;
+                    fixedPlayButton.classList.remove("active");
+                    completedTimesSpan.textContent = `Completado 0 veces`;
+                } else {
+                    if(selectedCard) selectedCard.classList.remove("selected");
+                    card.classList.add("selected");
+                    selectedCard = card;
+                    fixedPlayButton.classList.add("active");
+                    completedTimesSpan.textContent = `Completado ${completedTimes} veces`;
+                }
             }
         });
 
@@ -244,10 +300,27 @@ function createGrid(containerId, levelsList) {
     container.appendChild(grid);
 }
 
-// Botón fijo
-const fixedPlayButton = document.getElementById("fixedPlayButton");
+// Toggle examen
+examToggleButton.addEventListener("click", () => {
+    examMode = !examMode;
+    examToggleButton.classList.toggle("active", examMode);
+    fixedPlayButton.textContent = examMode ? "Comenzar" : "Practicar";
+
+    if(!examMode){
+        examSelection.forEach(card => card.classList.remove("selected"));
+        examSelection = [];
+        fixedPlayButton.classList.remove("active");
+        completedTimesSpan.textContent = `Completado 0 veces`;
+    }
+});
+
+// Botón principal
 fixedPlayButton.addEventListener("click", () => {
-    if(selectedCard) {
+    if(examMode && examSelection.length>0){
+        // GET con múltiples niveles
+        const query = examSelection.map(c => `${c.dataset.category}List-${c.dataset.level}`).join(",");
+        location.href = `playGround.html?exam=${query}`;
+    } else if(!examMode && selectedCard){
         const category = selectedCard.dataset.category;
         const level = selectedCard.dataset.level;
         location.href = `playGround.html?play=${category}List&level=${level}`;
@@ -259,6 +332,5 @@ createGrid("hiragana", hiraganaList.levels);
 createGrid("katakana", katakanaList.levels);
 createGrid("vocabularyBasic", vocabularyBasicList.levels);
 </script>
-
 </body>
 </html>
