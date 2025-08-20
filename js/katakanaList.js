@@ -1,5 +1,6 @@
 var katakanaList = {
   category: "katakana",
+  saveCategory: "katakana",
   levels: [
     {
       level: 0,

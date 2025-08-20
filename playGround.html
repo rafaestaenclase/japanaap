@@ -54,8 +54,7 @@
 
   <script src="js/hiraganaList.js"></script>
   <script src="js/katakanaList.js"></script>
-  <script src="js/vocabularioSaludoList.js"></script>
-  <script src="js/vocabularioComidaList.js"></script>
+  <script src="js/vocabularyBasicList.js"></script>
 
   <script>
     const params = new URLSearchParams(window.location.search);
@@ -66,10 +65,8 @@
       quizList = hiraganaList || [];
     } else if (play === "katakanaList") {
       quizList = katakanaList || [];
-    } else if (play === "vocabularioSaludoList") {
-      quizList = vocabularioSaludoList || [];
-    } else if (play === "vocabularioComidaList") {
-      quizList = vocabularioComidaList || [];
+    } else if (play === "vocabularyBasicList") {
+      quizList = vocabularyBasicList || [];
     } else {
       console.error("No se ha especificado un tipo de juego válido");
     }

@@ -60,7 +60,7 @@ try {
 }
 
 
-let playingCategory = quizList["category"];
+let playingCategory = quizList["saveCategory"];
 
 // Buscar si ya existe el nivel en la categoría
 let existing = levelCompleted.find(l => l.category === playingCategory && l.levelId === String(playingLevel));

@@ -403,17 +403,30 @@ button:hover {
   </div>
 </div>
 
+<!-- Secciones con carrusel -->
+<div class="section" id="vocabularyBasicSection">
+  <div class="section-title">
+    Vocabulario Básico
+    <button class="examButton" onclick="alert('examenHaciendose')">Examen</button>
+  </div>
+  <div class="carousel" id="vocabularyBasic">
+    <button class="prevBtn">‹</button>
+    <div class="carousel-track-container">
+      <div class="carousel-track"></div>
+    </div>
+    <button class="nextBtn">›</button>
+  </div>
+</div>
+
 <script src="./js/catsList.js"></script>
 <script src="./js/hiraganaList.js"></script>
 <script src="./js/katakanaList.js"></script>
-<script src="./js/vocabularioSaludoList.js"></script>
-<script src="./js/vocabularioComidaList.js"></script>
+<script src="./js/vocabularyBasicList.js"></script>
 
 <script>
   const TOTAL_HIRAGANA = hiraganaList.length;
   const TOTAL_KATAKANA = katakanaList.length;
-  const TOTAL_VOCABULARIO_SALUDO = vocabularioSaludoList.length;
-  const TOTAL_VOCABULARIO_COMIDA = vocabularioComidaList.length;
+  const TOTAL_VOCABULARY_BASIC = vocabularyBasicList.length;
   const PILLS_PER_LEVEL = 2;
 
 
@@ -552,6 +565,7 @@ button:hover {
 // Crear todos los carruseles
 createCarousel("hiragana", hiraganaList.levels);
 createCarousel("katakana", katakanaList.levels);
+createCarousel("vocabularyBasic", vocabularyBasicList.levels);
 
 /*
 function pillsCompleted(containerId, symbols, total) {
