@@ -73,24 +73,6 @@
       startBtn.style.display = "none";
     });
 
-    // Función para ocultar/mostrar botón según altura del viewport
-    function handleViewport() {
-      if (window.visualViewport.height < window.innerHeight - 100) {
-        // teclado abierto
-        startBtn.style.display = "none";
-      } else {
-        // teclado cerrado
-        setTimeout(() => {
-          startBtn.style.display = "inline-block";
-        }, 500); // medio segundo de retraso
-      }
-    }
-
-    // Escuchar cambios en el viewport (cuando el teclado aparece/desaparece)
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener("resize", handleViewport);
-    }
-
     // Test localStorage
     localStorage.setItem('mensaje', 'hola mundo');
     const valor = localStorage.getItem('mensaje');
