@@ -6,30 +6,6 @@
 <title>Práctica</title>
 <link rel="stylesheet" href="css/styles.css" />
 <style>
-  /* Botón japonés grande */
-  #startWritingBtn {
-    position: fixed;
-    bottom: 25%;
-    left: 0;
-    width: 90%;
-    padding: 18px;
-    font-size: 1.5rem;
-    text-align: center;
-    background-color: #f5f5f5;
-    border: none;
-    border-top: 2px solid #ddd;
-    font-family: "Noto Sans JP", sans-serif;
-    color: #333;
-    border-radius: 20px;
-    cursor: pointer;
-    margin-left: 50%;
-    transform: translateX(-50%);
-  }
-
-  #startWritingBtn:active {
-    background-color: #e0e0e0;
-  }
-
   #pageTitle {
     margin: 0;
     padding: 8px 12px;
@@ -50,27 +26,24 @@
   </header>
 
   <div class="question" id="question"></div>
-  <input id="answer" placeholder="Escribe en japonés" autocomplete="off" />
+  <input id="answer" placeholder="Escribe en japonés" autocomplete="off" autofocus />
   <div id="feedback"></div>
   <div class="correct-circle" id="correctCircle">〇</div>
   <div id="progressPills"></div>
   <button id="showAnswerBtn">Ver respuesta</button>
-
-  <!-- Botón japonés fijo abajo -->
-  <button id="startWritingBtn">✍ Comenzar</button>
 
   <script>
     document.getElementById("exitBtn").addEventListener("click", () => {
       window.location.href = "index.html";
     });
 
-    // Focus en input al pulsar el botón japonés
-    const startBtn = document.getElementById("startWritingBtn");
+    // Focus en input al pulsar cualquier parte de la pantalla
     const answerInput = document.getElementById("answer");
-
-    startBtn.addEventListener("click", () => {
-      answerInput.focus();
-      startBtn.style.display = "none";
+    document.body.addEventListener("click", (e) => {
+      // Evitamos que se vuelva a enfocar si se clickea sobre el input o el botón
+      if (e.target !== answerInput && e.target.id !== "startWritingBtn") {
+        answerInput.focus();
+      }
     });
 
     // Test localStorage
