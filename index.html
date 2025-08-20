@@ -46,8 +46,79 @@
       flex-wrap: wrap;
     }
 
-    .playButton, .completedButton {
-      flex: 1 1 calc(33.333% - 10px);
+
+    /* Subsection style */
+    .subsection {
+      margin-top: 15px;
+      padding-top: 10px;
+      border-top: 1px solid #ddd;
+    }
+
+    /* Carrusel */
+    .carousel {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .carousel-track-container {
+      overflow: hidden;
+    }
+
+    .carousel-track {
+      display: flex;
+      transition: transform 0.3s ease;
+    }
+
+    .carousel-item {
+      flex: 0 0 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    /* Botones de navegación grandes a los lados */
+    .carousel .prevBtn,
+    .carousel .nextBtn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(52, 152, 219, 0.8);
+      color: #fff;
+      font-size: 2rem;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      transition: background 0.3s;
+    }
+
+    .carousel .prevBtn:hover,
+    .carousel .nextBtn:hover {
+      background: rgba(41, 128, 185, 0.9);
+    }
+
+    .carousel .prevBtn { left: 10px; }
+    .carousel .nextBtn { right: 10px; }
+
+
+    /* Botones Practicar / Completado */
+    .button-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .playButton,
+    .completedButton {
+      flex: 1 1 calc(50% - 10px);
       background: #3498db;
       border: none;
       color: white;
@@ -59,294 +130,10 @@
       transition: background-color 1.5s ease, opacity 1.5s;
     }
 
-    button:hover { background: #2980b9; }
-
-    /* Píldoras de progreso */
-    .pills {
-      display: flex;
-      gap: 5px;
-      margin-bottom: 10px;
-      width: 60%;
-      margin: 0 auto;
+    button:hover {
+      background: #2980b9;
     }
 
-    .pill {
-      flex: 1;
-      height: 15px;
-      background: #ddd;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-
-    .pill-fill {
-      height: 100%;
-      background: #4caf50;
-      width: 0%;
-      transition: width 0.3s ease, background 1.5s ease;
-    }
-
-    /* Subsection style */
-    .subsection {
-      margin-top: 15px;
-      padding-top: 10px;
-      border-top: 1px solid #ddd;
-    }
-
-
-    /* Animación de estrellitas PILDORAS COMPLETAS */
-    .star {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      background: gold;
-      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-      animation: starAnim 1s ease-out forwards;
-      pointer-events: none;
-    }
-
-    @keyframes starAnim {
-      0% {
-        transform: translate(0, 0) scale(0.5);
-        opacity: 1;
-      }
-      100% {
-        transform: translate(var(--x), var(--y)) scale(1);
-        opacity: 0;
-      }
-    }
-
-    /* GET PRIZE CARD */
-    .hidden { display: none !important; }
-
-    #prizeModal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-    }
-
-    .modal-card {
-      background: #fff;
-      border-radius: 20px;
-      padding: 20px;
-      max-width: 300px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-      animation: popIn 0.5s ease;
-    }
-
-    /* Pop-in de la tarjeta */
-    @keyframes popIn {
-      0% { transform: scale(0.7); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    @keyframes popOut {
-      0% { transform: scale(1); opacity: 1; }
-      100% { transform: scale(0.7); opacity: 0; }
-    }
-
-    .modal-card.pop-out {
-      animation: popOut 0.4s ease forwards;
-    }
-
-
-    /* Shake de la imagen */
-    @keyframes shake {
-      0% { transform: translate(0,0); }
-      25% { transform: translateX(-8px); }
-      50% { transform: translateX(8px); }
-      75% { transform: translateX(-8px); }
-      100% { transform: translate(0,0); }
-    }
-
-    /* Clase para activar shake */
-    .shake {
-      animation: shake 0.5s;
-    }
-
-    /* Estrellas alrededor */
-    .stars::before, .stars::after, .stars span {
-      content: "⭐";
-      position: absolute;
-      font-size: 1.2rem;
-      top: 50%;
-      left: 50%;
-      animation: starFall 1s linear infinite;
-      --x: calc(200px * (rand() - 0.5));
-      --y: calc(200px * (rand() - 0.5));
-    }
-    @keyframes starFall {
-      0% { transform: translate(0,0) scale(0.5); opacity:1; }
-      100% { transform: translate(var(--x), var(--y)) scale(0.2); opacity:0; }
-    }
-
-
-/* Carrusel */
-.carousel {
-  position: relative;
-  overflow: hidden;
-}
-
-.carousel-track-container {
-  overflow: hidden;
-}
-
-.carousel-track {
-  display: flex;
-  transition: transform 0.3s ease;
-}
-
-.carousel-item {
-  flex: 0 0 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 10px;
-  box-sizing: border-box;
-}
-
-/* Botones de navegación grandes a los lados */
-.carousel .prevBtn,
-.carousel .nextBtn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: rgba(52, 152, 219, 0.8);
-  color: #fff;
-  font-size: 2rem;
-  font-weight: bold;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-  transition: background 0.3s;
-}
-
-.carousel .prevBtn:hover,
-.carousel .nextBtn:hover {
-  background: rgba(41, 128, 185, 0.9);
-}
-
-.carousel .prevBtn { left: 10px; }
-.carousel .nextBtn { right: 10px; }
-
-/* Píldoras */
-.pills {
-  display: flex;
-  gap: 5px;
-  margin-bottom: 10px;
-}
-
-.pill {
-  flex: 1;
-  height: 15px;
-  background: #ddd;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.pill-fill {
-  height: 100%;
-  background: #4caf50;
-  width: 0%;
-  transition: width 0.3s ease, background 1.5s ease;
-}
-
-/* Botones Practicar / Completado */
-.button-row {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.playButton,
-.completedButton {
-  flex: 1 1 calc(50% - 10px);
-  background: #3498db;
-  border: none;
-  color: white;
-  padding: 12px 0;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 1.5s ease, opacity 1.5s;
-}
-
-button:hover {
-  background: #2980b9;
-}
-
-/* Animaciones y modal */
-.star {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  background: gold;
-  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-  animation: starAnim 1s ease-out forwards;
-  pointer-events: none;
-}
-
-@keyframes starAnim {
-  0% { transform: translate(0, 0) scale(0.5); opacity: 1; }
-  100% { transform: translate(var(--x), var(--y)) scale(1); opacity: 0; }
-}
-
-.hidden { display: none !important; }
-
-#prizeModal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-}
-
-.modal-card {
-  background: #fff;
-  border-radius: 20px;
-  padding: 20px;
-  max-width: 300px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  animation: popIn 0.5s ease;
-}
-
-@keyframes popIn {
-  0% { transform: scale(0.7); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-@keyframes popOut {
-  0% { transform: scale(1); opacity: 1; }
-  100% { transform: scale(0.7); opacity: 0; }
-}
-
-.pop-out { animation: popOut 0.4s ease forwards; }
-
-@keyframes shake {
-  0% { transform: translate(0,0); }
-  25% { transform: translateX(-8px); }
-  50% { transform: translateX(8px); }
-  75% { transform: translateX(-8px); }
-  100% { transform: translate(0,0); }
-}
-
-.shake { animation: shake 0.5s; }
 
 
   </style>
@@ -432,357 +219,102 @@ button:hover {
 
 
   function createCarousel(containerId, levelsList) {
-    const carousel = document.getElementById(containerId);
-    const track = carousel.querySelector(".carousel-track");
-    track.innerHTML = "";
+      const carousel = document.getElementById(containerId);
+      const track = carousel.querySelector(".carousel-track");
+      track.innerHTML = "";
 
-    levelsList.forEach((level, index) => {
-        const slide = document.createElement("div");
-        slide.className = "carousel-item";
+      levelsList.forEach((level, index) => {
+          const slide = document.createElement("div");
+          slide.className = "carousel-item";
 
-        // Título del nivel
-        const title = document.createElement("h3");
-        title.textContent = level.name;
-        slide.appendChild(title);
+          // Título del nivel
+          const title = document.createElement("h3");
+          title.textContent = level.name;
+          slide.appendChild(title);
 
-        // Píldoras
-        const pillsContainer = document.createElement("div");
-        pillsContainer.className = "pills";
-        for (let p = 0; p < PILLS_PER_LEVEL; p++) {
-            const pill = document.createElement("div");
-            pill.className = "pill";
-            const fill = document.createElement("div");
-            fill.className = "pill-fill";
-            pill.appendChild(fill);
-            pillsContainer.appendChild(pill);
-        }
-        slide.appendChild(pillsContainer);
+          // Mostrar cuántas veces se ha completado
+          const storage = JSON.parse(localStorage.getItem("levelCompleted") || "[]");
+          const currentLevelStorage = storage.find(item => 
+              item.category == containerId && Number(item.levelId) == index
+          );
 
-        // Botón Practicar
-        const buttonRow = document.createElement("div");
-        buttonRow.className = "button-row";
-        const playBtn = document.createElement("button");
-        playBtn.className = "playButton";
-        playBtn.textContent = "Practicar";
-        buttonRow.appendChild(playBtn);
-        slide.appendChild(buttonRow);
+          const completedTimes = currentLevelStorage ? currentLevelStorage.completedTimes || 0 : 0;
 
-        track.appendChild(slide);
+          const completedText = document.createElement("p");
+          completedText.textContent = `Completado ${completedTimes} veces`;
+          completedText.style.marginBottom = "10px";
+          completedText.style.color = "#34495e";
+          slide.appendChild(completedText);
 
-        // Actualizar píldoras según localStorage
-        const storage = JSON.parse(localStorage.getItem("levelCompleted") || "[]");
+          // Botón Practicar
+          const buttonRow = document.createElement("div");
+          buttonRow.className = "button-row";
+          const playBtn = document.createElement("button");
+          playBtn.className = "playButton";
+          playBtn.textContent = "Practicar";
+          buttonRow.appendChild(playBtn);
+          slide.appendChild(buttonRow);
 
-        // Por ejemplo, index del slide actual
+          track.appendChild(slide);
 
-        // Filtrar por categoría y levelId
-        const currentLevelStorage = storage.filter(item => 
-            item.category == containerId && Number(item.levelId) == index
-        );
-        
+          // Click Practicar
+          playBtn.onclick = () => {
+              location.href = `playGround.html?play=${containerId}List&level=${level.level}`;
+          };
+      });
 
-        if (currentLevelStorage[0] != undefined) {
-          const completedTimes = currentLevelStorage[0]["completedTimes"] || 0;
-          const fills = pillsContainer.querySelectorAll(".pill-fill");
-          fills.forEach((fill, i) => {
-              let width;
-              if (completedTimes > i) {
-                  // Píldora completamente llena
-                  width = 100;
-              } else {
-                  // Píldora vacía
-                  width = 0;
-              }
-              fill.style.width = `${width}%`;
-          });
-        }
+      // Carrusel navegación
+      const slides = track.children;
+      let currentIndex = 0;
 
-        // Click Practicar
-        playBtn.onclick = () => {
-            location.href = `playGround.html?play=${containerId}List&level=${level.level}`;
-        };
-    });
+      // Recuperar posición guardada
+      const savedPositions = JSON.parse(localStorage.getItem("carouselPositions") || "{}");
+      if (savedPositions[containerId] !== undefined) {
+          currentIndex = savedPositions[containerId];
+          updateCarousel(true); // 'true' = instantáneo
+      } else {
+          updateCarousel(); // primera vez, animado normal
+      }
 
-    // Carrusel navegación
-    const slides = track.children;
-    let currentIndex = 0;
+      function updateCarousel(instant = false) {
+          if (instant) track.style.transition = "none";
+          else track.style.transition = "transform 0.3s ease";
 
-    // Recuperar posición guardada
-    const savedPositions = JSON.parse(localStorage.getItem("carouselPositions") || "{}");
-    if (savedPositions[containerId] !== undefined) {
-        currentIndex = savedPositions[containerId];
-        updateCarousel(true); // 'true' = instantáneo
-    } else {
-        updateCarousel(); // primera vez, animado normal
-    }
+          track.style.transform = `translateX(-${currentIndex * 100}%)`;
 
-    // Función para actualizar carrusel y guardar posición
-    function updateCarousel(instant = false) {
-        if (instant) {
-            // Desactivar transición temporalmente
-            track.style.transition = "none";
-        } else {
-            // Restaurar transición
-            track.style.transition = "transform 0.3s ease";
-        }
+          const carouselPositions = JSON.parse(localStorage.getItem("carouselPositions") || "{}");
+          carouselPositions[containerId] = currentIndex;
+          localStorage.setItem("carouselPositions", JSON.stringify(carouselPositions));
 
-        // Aplicar posición
-        track.style.transform = `translateX(-${currentIndex * 100}%)`;
+          if (instant) {
+              track.offsetHeight; // forzar reflow
+              track.style.transition = "transform 0.3s ease";
+          }
+      }
 
-        // Guardar posición
-        const carouselPositions = JSON.parse(localStorage.getItem("carouselPositions") || "{}");
-        carouselPositions[containerId] = currentIndex;
-        localStorage.setItem("carouselPositions", JSON.stringify(carouselPositions));
+      // Botones
+      const prevBtn = carousel.querySelector(".prevBtn");
+      const nextBtn = carousel.querySelector(".nextBtn");
 
-        if (instant) {
-            // Forzar reflow para que el navegador aplique el cambio sin animación
-            track.offsetHeight; 
-            // Restaurar transición para futuras animaciones
-            track.style.transition = "transform 0.3s ease";
-        }
-    }
-    
-
-    // Botones
-    const prevBtn = carousel.querySelector(".prevBtn");
-    const nextBtn = carousel.querySelector(".nextBtn");
-
-    prevBtn.onclick = () => { 
-        if (currentIndex > 0) { 
-            currentIndex--; 
-            updateCarousel(); // animado
-        } 
-    };
-    nextBtn.onclick = () => { 
-        if (currentIndex < slides.length - 1) { 
-            currentIndex++; 
-            updateCarousel(); // animado
-        } 
-    };
-
-
+      prevBtn.onclick = () => { 
+          if (currentIndex > 0) { 
+              currentIndex--; 
+              updateCarousel(); 
+          } 
+      };
+      nextBtn.onclick = () => { 
+          if (currentIndex < slides.length - 1) { 
+              currentIndex++; 
+              updateCarousel(); 
+          } 
+      };
   }
+
 
 // Crear todos los carruseles
 createCarousel("hiragana", hiraganaList.levels);
 createCarousel("katakana", katakanaList.levels);
 createCarousel("vocabularyBasic", vocabularyBasicList.levels);
-
-/*
-function pillsCompleted(containerId, symbols, total) {
-  if (symbols.length >= total) {
-    const section = document.getElementById(containerId).closest('.subsection, .section');
-
-    if (!section) return;
-
-    // Ocultar botón "Practicar"
-    const playBtn = section.querySelector('.playButton');
-    if (playBtn) playBtn.style.display = 'none';
-
-    // Crear botón "Completado"
-    let completedBtn = section.querySelector('.completedButton');
-    if (!completedBtn) {
-      completedBtn = document.createElement('button');
-      completedBtn.className = 'completedButton';
-      completedBtn.textContent = 'Completado';
-      completedBtn.style.background = '#4caf50';
-      completedBtn.style.color = '#fff';
-      completedBtn.style.marginTop = '10px';
-      completedBtn.style.cursor = 'pointer';
-      section.querySelector('.button-row').appendChild(completedBtn);
-
-      completedBtn.addEventListener('click', () => {
-        completedBtn.style.pointerEvents = "none";
-        animatePillCompletion(symbols, containerId, total, completedBtn, playBtn);
-      });
-    }
-  }
-}
-
-const audioPills = new Audio("./sounds/magic-chime-03.mp3");
-audioPills.preload = "auto";
-audioPills.load();
-const audioPrize = new Audio("./sounds/magic-chime-07.mp3");
-audioPrize.preload = "auto";
-audioPrize.load();
-
-// Desbloquear todos los audios en el primer toque/click
-function unlockAudio() {
-  const allAudios = [audioPills, audioPrize];
-  allAudios.forEach(aud => {
-    aud.play().then(() => aud.pause()).catch(() => {});
-  });
-
-  document.removeEventListener('touchstart', unlockAudio);
-  document.removeEventListener('click', unlockAudio);
-}
-
-document.addEventListener('touchstart', unlockAudio, { once: true });
-document.addEventListener('click', unlockAudio, { once: true });
-
-
-function animatePillCompletion(symbols, containerId, total, completedBtn, playBtn) {
-  const container = document.getElementById(containerId);
-  container.style.position = "relative";
-
-  const pills = container.querySelectorAll('.pill-fill');
-
-    audioPills.play();
-
-    let lastTimeout = 0;
-
-    pills.forEach((pill, idx) => {
-      const delay = idx * 200;
-      lastTimeout = delay;
-
-      setTimeout(() => {
-        pill.style.background = "gold";
-
-        for (let i = 0; i < 3; i++) {
-          const star = document.createElement("div");
-          star.className = "star";
-
-          const x = (Math.random() - 0.5) * 80 + "px";
-          const y = -50 + Math.random() * -50 + "px";
-
-          star.style.setProperty('--x', x);
-          star.style.setProperty('--y', y);
-
-          const pillRect = pill.getBoundingClientRect();
-          const containerRect = container.getBoundingClientRect();
-
-          star.style.left = (pillRect.left - containerRect.left + pillRect.width/2 - 5) + "px";
-          star.style.top = (pillRect.top - containerRect.top + pillRect.height/2 - 5) + "px";
-
-          container.appendChild(star);
-          star.addEventListener('animationend', () => star.remove());
-        }
-      }, delay);
-    });
-
-    // Después de que todas las animaciones de las píldoras terminen
-    setTimeout(() => {
-      completedBtn.style.background = "gold";
-      completedBtn.style.opacity = 0;
-      setTimeout(() => {
-        
-        audioPrize.play();
-      }, 800);
-
-      setTimeout(() => {
-        completedBtn.style.pointerEvents = "auto";
-        completedBtn.textContent = "Recoger Regalo";
-        completedBtn.style.opacity = 1;
-      }, 1000);
-      completedBtn.addEventListener('click', () => {
-
-        //OBTENER PREMIO POR CATEGORIA
-        showPrizeFromCategory("hiragana"); // Aquí puedes pasar la categoría actual
-        completedBtn.remove();
-        if(playBtn) playBtn.style.display = 'block';
-
-
-      }, { once: true });
-    }, lastTimeout + 1200); // 1.2s extra para que las estrellitas terminen
-}
-
-    // Función que muestra el premio usando el modal HTML
-    function showPrizeFromCategory(currentCat) {
-      let savedCats = [];
-      try {
-        const raw = localStorage.getItem("catsInAlbum");
-        if(raw) savedCats = JSON.parse(raw);
-      } catch(e) { savedCats = []; }
-
-      const availableCats = (CATS[currentCat] ?? []).filter(cat => !savedCats.includes(cat.catId));
-      if(availableCats.length === 0) {
-        alert("¡No hay gatos nuevos!");
-        return;
-      }
-
-      const randomCat = availableCats[Math.floor(Math.random() * availableCats.length)];
-
-      // Guardar catId en localStorage
-      let savedCatsLocalStorage = [];
-      try {
-        const raw = localStorage.getItem("catsInAlbum");
-        if (raw) savedCatsLocalStorage = JSON.parse(raw);
-      } catch(e) {
-        savedCatsLocalStorage = [];
-      }
-
-      // Añadimos el nuevo catId solo si no está ya
-      if (!savedCatsLocalStorage.includes(randomCat.catId)) {
-        savedCatsLocalStorage.push(randomCat.catId);
-      }
-
-      // Guardamos de nuevo
-      localStorage.setItem("catsInAlbum", JSON.stringify(savedCatsLocalStorage));
-
-      const modal = document.getElementById("prizeModal");
-      const catImg = document.getElementById("catImg");
-      document.getElementById("catName").textContent = randomCat.name;
-      document.getElementById("catCategory").textContent = "Categoría: " + currentCat;
-      catImg.src = randomCat.src;
-      catImg.alt = randomCat.name;
-
-      modal.classList.remove("hidden");
-
-      const petBtn = document.getElementById("petBtn");
-      petBtn.onclick = () => {
-        catImg.classList.add("shake");
-        catImg.addEventListener("animationend", () => {
-          catImg.classList.remove("shake");
-          modal.classList.add("hidden");
-        }, { once: true });
-      };
-    }
-
-
-
-  // Simulación de carga desde localStorage
-  let correctSymbols = [];
-  try {
-    correctSymbols = JSON.parse(localStorage.getItem("correctSymbols") || "[]");
-  } catch {
-    correctSymbols = [];
-  }
-
-  // Filtra símbolos para hiragana y katakana
-  const hiraganaSymbols = correctSymbols.filter(sym => isHiragana(sym));
-  const katakanaSymbols = correctSymbols.filter(sym => isKatakana(sym));
-  // Para vocabulario, asumiremos correctSymbols guarda palabras (strings) exactas en japonés
-  const vocabularioSaludoSymbols = correctSymbols.filter(sym => vocabularioSaludoList.some(q => q.a === sym));
-  const vocabularioComidaSymbols = correctSymbols.filter(sym => vocabularioComidaList.some(q => q.a === sym));
-
-  // Crear y actualizar píldoras
-  //updatePills("hiraganaPills", hiraganaSymbols.length, TOTAL_HIRAGANA);
-  //pillsCompleted("hiraganaPills", hiraganaSymbols, TOTAL_HIRAGANA);
-
-
-  // Funciones de detección basadas en Unicode
-  function isHiragana(char) {
-    return /[\u3040-\u309F]/.test(char);
-  }
-  function isKatakana(char) {
-    return /[\u30A0-\u30FF]/.test(char);
-  }
-
-  // Navegación botones
-  document.querySelectorAll("button[data-type]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const type = btn.dataset.type;
-      if (type === "hiragana") {
-        location.href = "playGround.html?play=hiraganaList";
-      } else if (type === "katakana") {
-        location.href = "playGround.html?play=katakanaList";
-      } else if (type === "vocabularioSaludo") {
-        location.href = "playGround.html?play=vocabularioSaludoList";
-      } else if (type === "vocabularioComida") {
-        location.href = "playGround.html?play=vocabularioComidaList";
-      }
-    });
-  });
-*/
 
 </script>
 
