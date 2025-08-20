@@ -37,9 +37,9 @@ function showQuestion() {
   questionEl.style.color = "";
   answerEl.value = "";
 
-  // ⚡ Solución: resetear el teclado predictivo
-  answerEl.blur();
-  setTimeout(() => answerEl.focus(), 50);
+  // ⚡ Solución: resetear el teclado predictivo Para Iphone
+  //answerEl.blur();
+  //setTimeout(() => answerEl.focus(), 50);
 }
 
 function nextQuestion() {
