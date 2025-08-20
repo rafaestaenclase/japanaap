@@ -353,7 +353,7 @@ button:hover {
 </head>
 <body>
   <header>
-    Japanaap V0.0.4
+    Japanaap V0.0.5
     <!--
     <button onclick="window.location.href='catsAlbum.html'">
       Álbum de Gatos 🐱
@@ -465,8 +465,7 @@ button:hover {
         const currentLevelStorage = storage.filter(item => 
             item.category == containerId && Number(item.levelId) == index
         );
-
-        console.log(storage);
+        
 
         if (currentLevelStorage[0] != undefined) {
           const completedTimes = currentLevelStorage[0]["completedTimes"] || 0;

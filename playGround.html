@@ -5,10 +5,47 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
 <title>Práctica</title>
 <link rel="stylesheet" href="css/styles.css" />
+<style>
+  /* Botón japonés grande */
+  #startWritingBtn {
+    position: fixed;
+    bottom: 15%;
+    left: 0;
+    width: 90%;
+    padding: 18px;
+    font-size: 1.5rem;
+    text-align: center;
+    background-color: #f5f5f5;
+    border: none;
+    border-top: 2px solid #ddd;
+    font-family: "Noto Sans JP", sans-serif;
+    color: #333;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+
+  #startWritingBtn:active {
+    background-color: #e0e0e0;
+  }
+
+  #pageTitle {
+    margin: 0;
+    padding: 8px 12px;
+  }
+
+  #pageTitle .subsection {
+    font-weight: normal;
+    font-size: 0.7em;
+    color: #555;
+  }
+
+</style>
 </head>
 <body>
   <header>
-    <h1>Práctica</h1>
+    <h1 id="pageTitle">Práctica</h1>
     <button id="exitBtn">Salir</button>
   </header>
 
@@ -19,14 +56,25 @@
   <div id="progressPills"></div>
   <button id="showAnswerBtn">Ver respuesta</button>
 
+  <!-- Botón japonés fijo abajo -->
+  <button id="startWritingBtn">✍ Comenzar</button>
+
   <script>
     document.getElementById("exitBtn").addEventListener("click", () => {
       window.location.href = "index.html";
     });
-          localStorage.setItem('mensaje', 'hola mundo');
-      const valor = localStorage.getItem('mensaje');
-      console.log(valor); // muestra: hola mundo
+
+    // Focus en input al pulsar el botón japonés
+    document.getElementById("startWritingBtn").addEventListener("click", () => {
+      document.getElementById("answer").focus();
+    });
+
+    // Test localStorage
+    localStorage.setItem('mensaje', 'hola mundo');
+    const valor = localStorage.getItem('mensaje');
+    console.log(valor); // muestra: hola mundo
   </script>
+
   <script src="js/hiraganaList.js"></script>
   <script src="js/katakanaList.js"></script>
   <script src="js/vocabularioSaludoList.js"></script>
@@ -42,7 +90,7 @@
     } else if (play === "katakanaList") {
       quizList = katakanaList || [];
     } else if (play === "vocabularioSaludoList") {
-    quizList = vocabularioSaludoList || [];
+      quizList = vocabularioSaludoList || [];
     } else if (play === "vocabularioComidaList") {
       quizList = vocabularioComidaList || [];
     } else {
@@ -64,6 +112,14 @@
       }
     }
     shuffle(filteredQuizList);
+
+    const section = quizList["category"];                 // Ej: "Hiragana"
+    const subSection = quizList["levels"][playingLevel]["name"]; // Ej: "Vocales"
+
+    document.getElementById("pageTitle").innerHTML = `
+      ${section} <span class="subsection">[${subSection}]</span>
+    `;
+
 
   </script>
   <script src="js/quizLogic.js"></script>

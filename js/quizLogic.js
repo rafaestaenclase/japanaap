@@ -36,6 +36,10 @@ function showQuestion() {
   questionEl.textContent = filteredQuizList[index].q;
   questionEl.style.color = "";
   answerEl.value = "";
+
+  // ⚡ Solución: resetear el teclado predictivo
+  answerEl.blur();
+  setTimeout(() => answerEl.focus(), 50);
 }
 
 function nextQuestion() {
@@ -93,7 +97,7 @@ localStorage.setItem("levelCompleted", JSON.stringify(levelCompleted));
 
 
 let isChecking = false; // bloqueo para evitar entradas durante animación
-let checkCorrectTime = 5000;
+let checkCorrectTime = 2000;
 answerEl.addEventListener("input", () => {
   if (isChecking) return; // ignorar entradas mientras está bloqueado
 
@@ -111,7 +115,6 @@ answerEl.addEventListener("input", () => {
   checkTimeout = setTimeout(() => {
     if (answerEl.value.trim().normalize('NFC') !== filteredQuizList[index].a.normalize('NFC')) {
       showIncorrect();
-      answerEl.value = "";
     }
   }, checkCorrectTime);
 });
