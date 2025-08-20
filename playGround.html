@@ -9,7 +9,7 @@
   /* Botón japonés grande */
   #startWritingBtn {
     position: fixed;
-    bottom: 15%;
+    bottom: 20%;
     left: 0;
     width: 90%;
     padding: 18px;
@@ -67,6 +67,14 @@
     // Focus en input al pulsar el botón japonés
     document.getElementById("startWritingBtn").addEventListener("click", () => {
       document.getElementById("answer").focus();
+    });
+
+    window.visualViewport.addEventListener("resize", () => {
+      if (window.visualViewport.height < window.innerHeight - 100) {
+        btn.style.display = "none"; // ocultar
+      } else {
+        btn.style.display = "block"; // mostrar
+      }
     });
 
     // Test localStorage
