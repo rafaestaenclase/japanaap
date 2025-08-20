@@ -9,7 +9,7 @@
   /* Botón japonés grande */
   #startWritingBtn {
     position: fixed;
-    bottom: 20%;
+    bottom: 25%;
     left: 0;
     width: 90%;
     padding: 18px;
@@ -65,17 +65,31 @@
     });
 
     // Focus en input al pulsar el botón japonés
-    document.getElementById("startWritingBtn").addEventListener("click", () => {
-      document.getElementById("answer").focus();
+    const startBtn = document.getElementById("startWritingBtn");
+    const answerInput = document.getElementById("answer");
+
+    startBtn.addEventListener("click", () => {
+      answerInput.focus();
+      startBtn.style.display = "none";
     });
 
-    window.visualViewport.addEventListener("resize", () => {
+    // Función para ocultar/mostrar botón según altura del viewport
+    function handleViewport() {
       if (window.visualViewport.height < window.innerHeight - 100) {
-        btn.style.display = "none"; // ocultar
+        // teclado abierto
+        startBtn.style.display = "none";
       } else {
-        btn.style.display = "block"; // mostrar
+        // teclado cerrado
+        setTimeout(() => {
+          startBtn.style.display = "inline-block";
+        }, 500); // medio segundo de retraso
       }
-    });
+    }
+
+    // Escuchar cambios en el viewport (cuando el teclado aparece/desaparece)
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", handleViewport);
+    }
 
     // Test localStorage
     localStorage.setItem('mensaje', 'hola mundo');
