@@ -203,7 +203,7 @@ header {
 </head>
 <body>
 <header>
-  Japanaap V0.1.0
+  Japanaap V0.1.1
   <button id="examToggleButton">Examen</button>
 </header>
 
@@ -360,6 +360,21 @@ fixedPlayButton.addEventListener("click", () => {
 createGrid("hiragana", hiraganaList.levels);
 createGrid("katakana", katakanaList.levels);
 createGrid("vocabularyBasic", vocabularyBasicList.levels);
+
+
+// Guardar scroll al salir de la página
+window.addEventListener("beforeunload", () => {
+    localStorage.setItem("lastScrollPosition", window.scrollY);
+});
+
+// Restaurar scroll al entrar
+window.addEventListener("load", () => {
+    const lastScroll = localStorage.getItem("lastScrollPosition");
+    if (lastScroll) {
+        window.scrollTo(0, Number(lastScroll));
+    }
+});
+
 </script>
 </body>
 </html>
