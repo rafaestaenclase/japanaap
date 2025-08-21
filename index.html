@@ -8,9 +8,8 @@
 /* -------------------- General -------------------- */
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: #f5f7fa;
   margin: 0;
-  padding: 0 20px 70px; /* espacio abajo para botón fijo */
+  padding: 0 20px 120px; /* espacio abajo para botón fijo */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -35,7 +34,7 @@ header {
   background: #fff;
   padding: 15px;
   border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  background: #ecf7ff;
 }
 
 .section-title {
@@ -51,20 +50,21 @@ header {
 /* -------------------- Grid de niveles -------------------- */
 .level-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(30%, 1fr));
   gap: 4px; /* compacto */
   justify-items: center;
   align-items: center;
 }
 
 .level-card {
-  width: 60px;
+  width: calc(100% - 30px);
   height: 60px;
+  padding: 15px;
   background: #fefefe;
   border-radius: 12px;
   display: grid;
   place-items: center; /* centra el contenido */
-  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
   transition: transform 0.2s, box-shadow 0.2s, color 0.2s;
   font-size: 14px;
   color: #000;
@@ -85,6 +85,7 @@ header {
 /* -------------------- Botón Practicar / Comenzar -------------------- */
 #fixedPlayButton {
   height: 48px;
+  width: 100%;
   padding: 0 15px;
   font-size: 12px;
   font-weight: 600;
@@ -97,6 +98,7 @@ header {
   align-items: center;
   justify-content: center;
   transition: background 0.3s, box-shadow 0.2s;
+  font-size: 16px;
 }
 
 #fixedPlayButton.active {
@@ -116,11 +118,11 @@ header {
   background: #2ecc71; /* verde */
   color: #fff;
   cursor: pointer;
-  transition: background 0.3s, box-shadow 0.2s;
+  transition: background 0.5s, box-shadow 0.2s;
 }
 
 #examToggleButton.active {
-  background: #27ae60;
+  background: #cc2e2e;
   box-shadow: 0 3px 10px rgba(0,0,0,0.15);
 }
 
@@ -131,7 +133,27 @@ header {
   font-weight: 500;
 }
 
+#completedTimes.instruction {
+  color: #7f8c8d;
+  font-style: italic;
+}
+
+
 /* -------------------- Contenedor fijo de práctica -------------------- */
+
+#practiceContainerBack {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 125px;
+
+  background: linear-gradient(to top, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 50%);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  z-index: 100;
+}
+
+
 #practiceContainer {
   position: fixed;
   bottom: 15px;
@@ -140,13 +162,14 @@ header {
   background: #fff;
   padding: 10px 15px;
   border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+  box-shadow: 0 5px 19px 1px rgb(0 0 0 / 28%);
   display: flex;
   align-items: center;
   gap: 10px;
   z-index: 100;
   min-width: 250px;
   justify-content: space-between;
+  flex-direction: column;
 }
 
 /* -------------------- Botones examen internos -------------------- */
@@ -180,14 +203,14 @@ header {
 </head>
 <body>
 <header>
-  Japanaap V0.0.9
+  Japanaap V0.1.0
+  <button id="examToggleButton">Examen</button>
 </header>
 
 <!-- Sección Hiragana -->
 <div class="section" id="hiraganaSection">
   <div class="section-title">
     Hiragana
-    <button class="examButton" onclick="alert('examenHaciendose')">Examen</button>
   </div>
   <div id="hiragana" class="level-container"></div>
 </div>
@@ -196,7 +219,6 @@ header {
 <div class="section" id="katakanaSection">
   <div class="section-title">
     Katakana
-    <button class="examButton" onclick="alert('examenHaciendose')">Examen</button>
   </div>
   <div id="katakana" class="level-container"></div>
 </div>
@@ -205,15 +227,14 @@ header {
 <div class="section" id="vocabularyBasicSection">
   <div class="section-title">
     Vocabulario Básico
-    <button class="examButton" onclick="alert('examenHaciendose')">Examen</button>
   </div>
   <div id="vocabularyBasic" class="level-container"></div>
 </div>
 
 <!-- Contenedor fijo de práctica -->
+<div id="practiceContainerBack"></div>
 <div id="practiceContainer">
   <button id="fixedPlayButton">Practicar</button>
-  <button id="examToggleButton">Examen</button>
   <span id="completedTimes">Completado 0 veces</span>
 </div>
 
@@ -256,40 +277,39 @@ function createGrid(containerId, levelsList) {
             );
             const completedTimes = currentLevelStorage ? currentLevelStorage.completedTimes || 0 : 0;
 
-            if(examMode){
+            if (examMode) {
                 // Examen: selección múltiple
-                if(examSelection.includes(card)){
+                if (examSelection.includes(card)) {
                     card.classList.remove("selected");
                     examSelection = examSelection.filter(c => c !== card);
                 } else {
                     card.classList.add("selected");
                     examSelection.push(card);
                 }
-                fixedPlayButton.classList.toggle("active", examSelection.length>0);
-                
-                // Actualizar completados sumando todos seleccionados
-                const sumCompleted = examSelection.reduce((sum,c) => {
-                    const idx = Number(c.dataset.index);
-                    const cat = c.dataset.category;
-                    const st = JSON.parse(localStorage.getItem("levelCompleted") || "[]");
-                    const lvl = st.find(i => i.category==cat && Number(i.levelId)==idx);
-                    return sum + (lvl ? lvl.completedTimes || 0 : 0);
-                }, 0);
-                completedTimesSpan.textContent = `Completado ${sumCompleted} veces`;
+                fixedPlayButton.classList.toggle("active", examSelection.length > 0);
 
+                // Mostrar SIEMPRE instrucción en examen
+                if (examSelection.length === 0) {
+                    completedTimesSpan.textContent = "Selecciona los módulos a añadir al examen";
+                } else {
+                    completedTimesSpan.textContent = "Listo para comenzar el examen";
+                }
+                completedTimesSpan.classList.add("instruction");
             } else {
                 // Modo normal: selección única
-                if(selectedCard === card){
+                if (selectedCard === card) {
                     card.classList.remove("selected");
                     selectedCard = null;
                     fixedPlayButton.classList.remove("active");
                     completedTimesSpan.textContent = `Completado 0 veces`;
+                    completedTimesSpan.classList.remove("instruction");
                 } else {
-                    if(selectedCard) selectedCard.classList.remove("selected");
+                    if (selectedCard) selectedCard.classList.remove("selected");
                     card.classList.add("selected");
                     selectedCard = card;
                     fixedPlayButton.classList.add("active");
                     completedTimesSpan.textContent = `Completado ${completedTimes} veces`;
+                    completedTimesSpan.classList.remove("instruction");
                 }
             }
         });
@@ -300,19 +320,28 @@ function createGrid(containerId, levelsList) {
     container.appendChild(grid);
 }
 
+
 // Toggle examen
 examToggleButton.addEventListener("click", () => {
     examMode = !examMode;
     examToggleButton.classList.toggle("active", examMode);
     fixedPlayButton.textContent = examMode ? "Comenzar" : "Practicar";
+    examToggleButton.textContent = examMode ? "Cancelar" : "Examen";
 
-    if(!examMode){
+    if(examMode){
+        // mostrar instrucción en vez de contador
+        completedTimesSpan.textContent = "Selecciona los módulos a añadir al examen";
+        completedTimesSpan.classList.add("instruction");
+    } else {
+        // volver a contador normal
         examSelection.forEach(card => card.classList.remove("selected"));
         examSelection = [];
         fixedPlayButton.classList.remove("active");
         completedTimesSpan.textContent = `Completado 0 veces`;
+        completedTimesSpan.classList.remove("instruction");
     }
 });
+
 
 // Botón principal
 fixedPlayButton.addEventListener("click", () => {
