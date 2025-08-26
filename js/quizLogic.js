@@ -31,8 +31,15 @@ document.addEventListener('touchstart', unlockAudio, { once: true });
 document.addEventListener('click', unlockAudio, { once: true });
 
 let checkTimeout;
+const pageTitleEl = document.getElementById("pageTitle");
+const subsectionEl = pageTitleEl.querySelector(".subsection");
 
 function showQuestion() {
+  //PARA SABER EN QUE PARTE DEL EXAMEN ESTÁ (HIRAGANA/KATAKANA...)
+  const currentItem = filteredQuizList[index];
+  questionEl.innerHTML = currentItem.q;
+  subsectionEl.textContent = `[${currentItem.origin}: ${currentItem.sublevel}]`;
+
   questionEl.textContent = filteredQuizList[index].q;
   questionEl.style.color = "";
   answerEl.value = "";
@@ -45,42 +52,37 @@ function showQuestion() {
 function nextQuestion() {
   index++;
   updatePills(index);
-
+  console.log(filteredQuizList.length + " " + index);
   if(index < filteredQuizList.length) {
     showQuestion();
   } else {
+    /*
+    // Guardar progreso
+    let levelCompleted;
+    try {
+      levelCompleted = JSON.parse(localStorage.getItem("levelCompleted") || "[]");
+    } catch {
+      levelCompleted = [];
+    }
 
+    let playingCategory = quizList["saveCategory"];
 
-// Guardar progreso
-let levelCompleted;
-try {
-  levelCompleted = JSON.parse(localStorage.getItem("levelCompleted") || "[]");
-} catch {
-  levelCompleted = [];
-}
+    // Buscar si ya existe el nivel en la categoría
+    let existing = levelCompleted.find(l => l.category === playingCategory && l.levelId === String(playingLevel));
 
+    if (existing) {
+      existing.completedTimes += 1; // Aumenta el contador
+    } else {
+      levelCompleted.push({
+        category: playingCategory,
+        levelId: String(playingLevel),
+        completedTimes: 1
+      });
+    }
 
-let playingCategory = quizList["saveCategory"];
-
-// Buscar si ya existe el nivel en la categoría
-let existing = levelCompleted.find(l => l.category === playingCategory && l.levelId === String(playingLevel));
-
-if (existing) {
-  existing.completedTimes += 1; // Aumenta el contador
-} else {
-  levelCompleted.push({
-    category: playingCategory,
-    levelId: String(playingLevel),
-    completedTimes: 1
-  });
-}
-
-// Guardar de nuevo en localStorage
-localStorage.setItem("levelCompleted", JSON.stringify(levelCompleted));
-
-
-
-
+    // Guardar de nuevo en localStorage
+    localStorage.setItem("levelCompleted", JSON.stringify(levelCompleted));
+    */
     questionEl.textContent = "¡Completado!";
     answerEl.style.display = "none";
     correctCircle.classList.add("show", "complete");
@@ -92,6 +94,7 @@ localStorage.setItem("levelCompleted", JSON.stringify(levelCompleted));
     });
 
     hideShowAnswer();
+    
   }
 }
 

@@ -348,11 +348,11 @@ fixedPlayButton.addEventListener("click", () => {
     if(examMode && examSelection.length>0){
         // GET con múltiples niveles
         const query = examSelection.map(c => `${c.dataset.category}List-${c.dataset.level}`).join(",");
-        location.href = `playGround.html?exam=${query}`;
+        location.href = `examGround.html?exam=${query}`;
     } else if(!examMode && selectedCard){
         const category = selectedCard.dataset.category;
         const level = selectedCard.dataset.level;
-        location.href = `playGround.html?play=${category}List&level=${level}`;
+        location.href = `practiceGround.html?play=${category}List&level=${level}`;
     }
 });
 
