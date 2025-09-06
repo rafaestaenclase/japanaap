@@ -38,7 +38,12 @@ function showQuestion() {
   //PARA SABER EN QUE PARTE DEL EXAMEN ESTÁ (HIRAGANA/KATAKANA...)
   const currentItem = filteredQuizList[index];
   questionEl.innerHTML = currentItem.q;
-  subsectionEl.textContent = `[${currentItem.origin}: ${currentItem.sublevel}]`;
+  //subsectionEl.textContent = c
+  console.log(filteredQuizList);
+  if (currentItem.sublevel != undefined) {
+    subsectionEl.textContent = `[${currentItem.origin}: ${currentItem.sublevel}]`; 
+  }
+  
 
   questionEl.textContent = filteredQuizList[index].q;
   questionEl.style.color = "";
@@ -117,7 +122,7 @@ answerEl.addEventListener("input", () => {
 
   checkTimeout = setTimeout(() => {
     if (answerEl.value.trim().normalize('NFC') !== filteredQuizList[index].a.normalize('NFC')) {
-      showIncorrect();
+      //showIncorrect();
     }
   }, checkCorrectTime);
 });

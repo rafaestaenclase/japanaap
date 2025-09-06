@@ -10,13 +10,11 @@
     margin: 0;
     padding: 8px 12px;
   }
-
   #pageTitle .subsection {
     font-weight: normal;
     font-size: 0.7em;
     color: #555;
   }
-
 </style>
 </head>
 <body>
@@ -40,7 +38,6 @@
     // Focus en input al pulsar cualquier parte de la pantalla
     const answerInput = document.getElementById("answer");
     document.body.addEventListener("click", (e) => {
-      // Evitamos que se vuelva a enfocar si se clickea sobre el input o el botón
       if (e.target !== answerInput && e.target.id !== "startWritingBtn") {
         answerInput.focus();
       }
@@ -53,44 +50,98 @@
 
   <script>
     const params = new URLSearchParams(window.location.search);
-    const play = params.get("play");
+    let play = params.get("play");
+    let exam = params.get("exam");
     const playingLevel = params.get("level");
 
-    if (play === "hiraganaList") {
-      quizList = hiraganaList || [];
-    } else if (play === "katakanaList") {
-      quizList = katakanaList || [];
-    } else if (play === "vocabularyBasicList") {
-      quizList = vocabularyBasicList || [];
-    } else {
-      console.error("No se ha especificado un tipo de juego válido");
-    }
+    let filteredQuizList = [];
+    let section = "";
+    let subSection = "";
+    let subSectionNames = [];
 
-    if (playingLevel != undefined) {
-    } else {
-      console.error("No se ha especificado un nivel de juego válido");
-    }
-
-    filteredQuizList = quizList["levels"][playingLevel]["items"];
-
-    // Barajar la lista filtrada
+    // Función para barajar
     function shuffle(array) {
-      for (let i = array.length -1; i > 0; i--) {
+      for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
       }
     }
-    shuffle(filteredQuizList);
 
-    const section = quizList["category"];                 // Ej: "Hiragana"
-    const subSection = quizList["levels"][playingLevel]["name"]; // Ej: "Vocales"
+    if (exam) {
+      // --------- MODO EXAMEN ---------
+      const selections = exam.split(",");
+      let subLists = [];
+      const maxPreguntas = 10;
 
-    document.getElementById("pageTitle").innerHTML = `
-      ${section} <span class="subsection">[${subSection}]</span>
-    `;
+      selections.forEach(sel => {
+        const [listName, levelStr] = sel.split("-");
+        const level = parseInt(levelStr);
 
+        let currentList;
+        if (listName === "hiraganaList") currentList = hiraganaList;
+        else if (listName === "katakanaList") currentList = katakanaList;
+        else if (listName === "vocabularyBasicList") currentList = vocabularyBasicList;
+        else {
+          console.error("Tipo de lista no válido:", listName);
+          return;
+        }
 
+        if (!section) section = currentList.category;
+
+        const levelData = currentList.levels.find(l => l.level === level);
+        if (levelData) {
+          const markedItems = levelData.items.map(it => ({
+            ...it,
+            origin: currentList.category,
+            sublevel: levelData.name
+          }));
+          subLists.push(markedItems);
+          subSectionNames.push(`${currentList.category}: ${levelData.name}`);
+        } else {
+          console.error(`Nivel ${level} no encontrado en ${listName}`);
+        }
+      });
+
+      // Repartir preguntas de forma equilibrada
+      const totalListas = subLists.length;
+      const base = Math.floor(maxPreguntas / totalListas);
+      const resto = maxPreguntas % totalListas;
+
+      subLists.forEach((lista, i) => {
+        let cantidad = base + (i < resto ? 1 : 0);
+        let seleccionadas = lista.sort(() => 0.5 - Math.random()).slice(0, cantidad);
+        filteredQuizList.push(...seleccionadas);
+      });
+
+      shuffle(filteredQuizList);
+      document.getElementById("pageTitle").innerHTML =
+        `Examen <span class="subsection">[${subSectionNames.join(", ")}]</span>`;
+
+    } else if (play) {
+      // --------- MODO LISTA NORMAL ---------
+      let quizList;
+      if (play === "hiraganaList") quizList = hiraganaList;
+      else if (play === "katakanaList") quizList = katakanaList;
+      else if (play === "vocabularyBasicList") quizList = vocabularyBasicList;
+      else console.error("No se ha especificado un tipo de juego válido");
+
+      if (!playingLevel) {
+        console.error("No se ha especificado un nivel de juego válido");
+      } else {
+        filteredQuizList = quizList.levels[playingLevel].items;
+        shuffle(filteredQuizList);
+
+        section = quizList.category;
+        subSection = quizList.levels[playingLevel].name;
+
+        document.getElementById("pageTitle").innerHTML =
+          `${section} <span class="subsection">[${subSection}]</span>`;
+      }
+    } else {
+      console.error("No se ha especificado un modo válido (ni play ni exam).");
+    }
   </script>
+
   <script src="js/quizLogic.js"></script>
 </body>
 </html>
