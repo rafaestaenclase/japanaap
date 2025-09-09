@@ -1,5 +1,5 @@
 var vocabularyBasicList = {
-  listName: "vocabulario básico",
+  listName: "vocabularyBasic",
   category: "vocabulary",
   levels: [
     {
