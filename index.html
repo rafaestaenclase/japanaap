@@ -8,12 +8,13 @@
   body {
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
-    padding: 0 20px 120px;
+    padding: 0;
+    padding-bottom: 120px;
     display: flex;
     flex-direction: column;
     align-items: center;
   }
-  
+
   #sectionsContainer {
     width: 100%;
     max-width: 960px;
@@ -85,7 +86,7 @@
     backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); z-index: 100;
   }
   #practiceContainer {
-    position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
+    position: fixed; bottom: 60px; left: 50%; transform: translateX(-50%);
     background: #fff; padding: 10px 15px; border-radius: 12px;
     box-shadow: 0 5px 19px 1px rgba(0,0,0,.28); display: flex; gap: 10px;
     z-index: 100; min-width: 250px; justify-content: space-between;
@@ -95,6 +96,15 @@
     border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background .2s;
   }
   .examButton:hover { background: #d0d7de; }
+
+  #categoryMenu {
+    position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
+    background: #fff; padding: 10px 15px; border-radius: 12px;
+    box-shadow: 0 5px 19px 1px rgba(0,0,0,.28); display: flex; gap: 10px;
+    z-index: 101; min-width: 250px; justify-content: space-between;
+  }
+
+
   .level-card h3 { margin:0; font-size:14px; }
   .level-card p { margin:0; font-size:12px; color:#7f8c8d; }
 </style>
@@ -216,7 +226,7 @@
 const uniqueCategories = [...new Set(allList.map(l => l.category))];
 uniqueCategories.forEach(cat => {
   const btn = document.createElement("button");
-  btn.className = "examButton";
+  btn.className = "categoryButton";
   btn.textContent = cat;
   btn.onclick = () => {
     document.querySelectorAll(".section").forEach(section => {

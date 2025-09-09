@@ -4,7 +4,7 @@ var hiraganaList = {
   levels: [
     {
       level: 0,
-      name: "Básico - Vocales",
+      name: "Vocales",
       items: [
         { q: "a", a: "あ" },
         { q: "i", a: "い" },
@@ -15,7 +15,7 @@ var hiraganaList = {
     },
     {
       level: 1,
-      name: "Básico - K",
+      name: "K",
       items: [
         { q: "ka", a: "か" },
         { q: "ki", a: "き" },
@@ -26,7 +26,7 @@ var hiraganaList = {
     },
     {
       level: 2,
-      name: "Básico - S",
+      name: "S",
       items: [
         { q: "sa", a: "さ" },
         { q: "shi", a: "し" },
@@ -37,7 +37,7 @@ var hiraganaList = {
     },
     {
       level: 3,
-      name: "Básico - T",
+      name: "T",
       items: [
         { q: "ta", a: "た" },
         { q: "chi", a: "ち" },
@@ -48,7 +48,7 @@ var hiraganaList = {
     },
     {
       level: 4,
-      name: "Básico - N",
+      name: "N",
       items: [
         { q: "na", a: "な" },
         { q: "ni", a: "に" },
@@ -59,7 +59,7 @@ var hiraganaList = {
     },
     {
       level: 5,
-      name: "Básico - H",
+      name: "H",
       items: [
         { q: "ha", a: "は" },
         { q: "hi", a: "ひ" },
@@ -70,7 +70,7 @@ var hiraganaList = {
     },
     {
       level: 6,
-      name: "Básico - M",
+      name: "M",
       items: [
         { q: "ma", a: "ま" },
         { q: "mi", a: "み" },
@@ -81,7 +81,7 @@ var hiraganaList = {
     },
     {
       level: 7,
-      name: "Básico - Y",
+      name: "Y",
       items: [
         { q: "ya", a: "や" },
         { q: "yu", a: "ゆ" },
@@ -90,7 +90,7 @@ var hiraganaList = {
     },
     {
       level: 8,
-      name: "Básico - R",
+      name: "R",
       items: [
         { q: "ra", a: "ら" },
         { q: "ri", a: "り" },
@@ -101,7 +101,7 @@ var hiraganaList = {
     },
     {
       level: 9,
-      name: "Básico - W/N",
+      name: "W/N",
       items: [
         { q: "wa", a: "わ" },
         { q: "wo", a: "を" },
@@ -110,7 +110,7 @@ var hiraganaList = {
     },
     {
       level: 10,
-      name: "Dakuon - G",
+      name: "G",
       items: [
         { q: "ga", a: "が" },
         { q: "gi", a: "ぎ" },
@@ -121,7 +121,7 @@ var hiraganaList = {
     },
     {
       level: 11,
-      name: "Dakuon - Z",
+      name: "Z",
       items: [
         { q: "za", a: "ざ" },
         { q: "ji", a: "じ" },
@@ -134,7 +134,7 @@ var hiraganaList = {
     },
     {
       level: 12,
-      name: "Dakuon - D",
+      name: "D",
       items: [
         { q: "da", a: "だ" },
         { q: "de", a: "で" },
@@ -143,7 +143,7 @@ var hiraganaList = {
     },
     {
       level: 13,
-      name: "Dakuon - B",
+      name: "B",
       items: [
         { q: "ba", a: "ば" },
         { q: "bi", a: "び" },
@@ -154,7 +154,7 @@ var hiraganaList = {
     },
     {
       level: 14,
-      name: "Handakuten - P",
+      name: "P",
       items: [
         { q: "pa", a: "ぱ" },
         { q: "pi", a: "ぴ" },
@@ -165,7 +165,7 @@ var hiraganaList = {
     },
     {
       level: 15,
-      name: "Yōon - K/S/T/N",
+      name: "K/S/T/N",
       items: [
         { q: "kya", a: "きゃ" },
         { q: "kyu", a: "きゅ" },
@@ -183,7 +183,7 @@ var hiraganaList = {
     },
     {
       level: 16,
-      name: "Yōon - H/B/P",
+      name: "H/B/P",
       items: [
         { q: "hya", a: "ひゃ" },
         { q: "hyu", a: "ひゅ" },
@@ -198,7 +198,7 @@ var hiraganaList = {
     },
     {
       level: 17,
-      name: "Yōon - M/R/G/J",
+      name: "M/R/G/J",
       items: [
         { q: "mya", a: "みゃ" },
         { q: "myu", a: "みゅ" },

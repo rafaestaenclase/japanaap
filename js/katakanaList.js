@@ -166,7 +166,7 @@ var katakanaList = {
     },
     {
       level: 15,
-      name: "K/S/T/N - Combi",
+      name: "K/S/T/N",
       items: [
         { q: "kya", a: "キャ" },
         { q: "kyu", a: "キュ" },
@@ -184,7 +184,7 @@ var katakanaList = {
     },
     {
       level: 16,
-      name: "H/B/P - Combi",
+      name: "H/B/P",
       items: [
         { q: "hya", a: "ヒャ" },
         { q: "hyu", a: "ヒュ" },
@@ -199,7 +199,7 @@ var katakanaList = {
     },
     {
       level: 17,
-      name: "M/R/G/J - Combi",
+      name: "M/R/G/J",
       items: [
         { q: "mya", a: "ミャ" },
         { q: "myu", a: "ミュ" },
