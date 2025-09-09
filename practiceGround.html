@@ -4,124 +4,467 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
 <title>Práctica</title>
-<link rel="stylesheet" href="css/styles.css" />
 <style>
-  #pageTitle {
+  /* ---------- RESET & BASE ---------- */
+  body {
+    font-family: sans-serif;
     margin: 0;
+    padding: 5px 10px;
+    text-align: center;
+    overflow-x: hidden;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(1.2rem, 5vw, 2rem);
+  }
+
+  #pageTitle {
     padding: 8px 12px;
   }
+
   #pageTitle .subsection {
     font-weight: normal;
     font-size: 0.7em;
     color: #555;
   }
+
+  button, input {
+    border: none;
+    outline: none;
+  }
+
+  button {
+    cursor: pointer;
+    background: none;
+    font-size: 1.2rem;
+    padding: 8px 12px;
+    white-space: pre-line;
+  }
+
+  input {
+    width: 100%;
+    max-width: 300px;
+    padding: 8px;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  /* ---------- QUESTION ---------- */
+  .question {
+    margin: 20px 0;
+    font-size: clamp(1.8rem, 8vw, 3rem);
+    transition: color 0.3s ease;
+  }
+
+  @keyframes shake {
+    25%,75% {
+      transform: translateX(-8px);
+    }
+    50% {
+      transform: translateX(8px);
+    }
+  }
+
+  /* ---------- CORRECT CIRCLE ---------- */
+  .correct-circle {
+    font-size: clamp(4rem, 20vw, 10rem);
+    color: #4caf50;
+    opacity: 0;
+    transform: scale(0.7);
+    filter: drop-shadow(0 0 5px #4caf50);
+    transition: opacity 0.3s, transform 0.3s;
+    position: relative;
+    user-select: none;
+  }
+
+  .correct-circle.show {
+    opacity: 1;
+    transform: scale(1);
+    animation: glowPulse .8s ease forwards;
+  }
+
+  @keyframes glowPulse {
+    50% {
+      filter: drop-shadow(0 0 20px #a5d6a7);
+    }
+  }
+
+  .correct-circle::before,
+  .correct-circle::after,
+  .correct-circle span {
+    content: "";
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #a5d6a7;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #a5d6a7;
+    opacity: 0;
+    animation: sparkle .8s ease forwards;
+  }
+
+  .correct-circle::before {
+    top: 10%;
+    left: 15%;
+    animation-delay: .1s;
+  }
+
+  .correct-circle::after {
+    top: 25%;
+    right: 15%;
+    animation-delay: .3s;
+  }
+
+  .correct-circle span {
+    bottom: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    animation-delay: .5s;
+  }
+
+  @keyframes sparkle {
+    0%,100% {
+      opacity: 0;
+      transform: scale(.3);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* ---------- PROGRESS PILLS ---------- */
+  #progressPills {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin: 15px auto 30px;
+    max-width: 90vw;
+    user-select: none;
+  }
+
+  .pill {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    background: #ccc;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+
+  .pill-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 0%;
+    background: #4caf50;
+    border-radius: 50% 0 0 50%;
+    transition: width 0.3s;
+  }
+
+  .pill.filled .pill-fill {
+    width: 100%;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #a5d6a7;
+  }
+
+  @keyframes vibrate {
+    10%,30%,50%,70%,90% {
+      transform: translateX(-4px);
+    }
+    20%,40%,60%,80% {
+      transform: translateX(4px);
+    }
+  }
+
+  .pill.vibrate {
+    animation: vibrate .6s linear;
+  }
 </style>
 </head>
 <body>
-  <header>
-    <h1 id="pageTitle">Práctica</h1>
-    <button id="exitBtn">Salir</button>
-  </header>
+<header>
+  <h1 id="pageTitle">Práctica</h1>
+  <button id="exitBtn">Salir</button>
+</header>
 
-  <div class="question" id="question"></div>
-  <input id="answer" placeholder="Escribe en japonés" autocomplete="off" autofocus />
-  <div id="feedback"></div>
-  <div class="correct-circle" id="correctCircle">〇</div>
-  <div id="progressPills"></div>
-  <button id="showAnswerBtn">Ver respuesta</button>
+<div class="question" id="question"></div>
 
-  <script>
-    document.getElementById("exitBtn").addEventListener("click", () => {
-      window.location.href = "index.html";
-    });
+<input id="answer" placeholder="Escribe en japonés" autocomplete="off" autofocus />
 
-    // Focus en input al pulsar cualquier parte de la pantalla
-    const answerInput = document.getElementById("answer");
-    document.body.addEventListener("click", (e) => {
-      if (e.target !== answerInput && e.target.id !== "startWritingBtn") {
-        answerInput.focus();
-      }
-    });
-  </script>
+<div id="feedback"></div>
 
-  <script src="js/hiraganaList.js"></script>
-  <script src="js/katakanaList.js"></script>
-  <script src="js/vocabularyBasicList.js"></script>
+<div class="correct-circle" id="correctCircle">〇</div>
+
+<div id="progressPills"></div>
+
+<button id="showAnswerBtn">Ver respuesta</button>
+
+<script src="js/hiraganaList.js"></script>
+<script src="js/katakanaList.js"></script>
+<script src="js/vocabularyBasicList.js"></script>
 
 <script>
-  const params = new URLSearchParams(window.location.search);
-  const { play, exam, level: playingLevel } = Object.fromEntries(params);
+/* ---------- NAVIGATION ---------- */
+document.getElementById("exitBtn").onclick = () => location.href = "index.html";
 
-  const lists = { hiraganaList, katakanaList, vocabularyBasicList };
-  let filteredQuizList = [];
-  let section = "";
-  let subSection = "";
+const answerEl = document.getElementById("answer");
 
-  function shuffle(arr) {
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
+document.body.onclick = e => {
+  if (e.target !== answerEl) answerEl.focus();
+};
+
+/* ---------- PARAMS & LIST ---------- */
+const params = new URLSearchParams(location.search);
+
+const { play, exam, level: playingLevel } = Object.fromEntries(params);
+
+const lists = {
+  hiraganaList,
+  katakanaList,
+  vocabularyBasicList
+};
+
+let filteredQuizList = [];
+let section = "";
+let subSection = "";
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function setPageTitle(main, sub = "") {
+  document.getElementById("pageTitle").innerHTML = sub
+    ? `${main} <span class="subsection">[${sub}]</span>`
+    : main;
+}
+
+if (exam) {
+  const selections = exam.split(",");
+  const subLists = [];
+  const names = [];
+
+  selections.forEach(sel => {
+    const [listName, levelStr] = sel.split("-");
+    const current = lists[listName];
+    if (!current) return;
+    if (!section) section = current.category;
+
+    const levelData = current.levels.find(l => l.level == levelStr);
+
+    if (levelData) {
+      subLists.push(levelData.items.map(it => ({
+        ...it,
+        origin: current.category,
+        sublevel: levelData.name
+      })));
+      names.push(`${current.category}: ${levelData.name}`);
     }
-    return arr;
+  });
+
+  const maxQ = 1;
+  const total = subLists.length;
+  const base = Math.floor(maxQ / total);
+  const resto = maxQ % total;
+
+  subLists.forEach((lista, i) => {
+    filteredQuizList.push(...shuffle(lista).slice(0, base + (i < resto ? 1 : 0)));
+  });
+
+  shuffle(filteredQuizList);
+  setPageTitle("Examen", names.join(", "));
+} else if (play) {
+  const quizList = lists[play];
+  if (quizList && playingLevel) {
+    filteredQuizList = shuffle(quizList.levels[playingLevel].items);
+    section = quizList.category;
+    subSection = quizList.levels[playingLevel].name;
+    setPageTitle(section, subSection);
   }
+}
 
-  function setPageTitle(main, sub = "") {
-    const el = document.getElementById("pageTitle");
-    el.innerHTML = sub ? `${main} <span class="subsection">[${sub}]</span>` : main;
+/* ---------- QUIZ LOGIC ---------- */
+let index = 0;
+let isChecking = false;
+let checkTimeout;
+
+const questionEl = document.getElementById("question");
+const correctCircle = document.getElementById("correctCircle");
+
+const correctSound = new Audio("./sounds/small-bell-ring-01a.mp3");
+const incorrectSound = new Audio("./sounds/button-44.mp3");
+const pillSound = new Audio("./sounds/bell-ringing-05.mp3");
+
+[correctSound, incorrectSound, pillSound].forEach(a => {
+  a.preload = "auto";
+  a.load();
+});
+
+function unlockAudio() {
+  [correctSound, incorrectSound, pillSound].forEach(a => {
+    a.play().then(() => a.pause()).catch(() => {});
+  });
+  document.removeEventListener('touchstart', unlockAudio);
+  document.removeEventListener('click', unlockAudio);
+}
+
+document.addEventListener('touchstart', unlockAudio, { once: true });
+document.addEventListener('click', unlockAudio, { once: true });
+
+function showQuestion() {
+  const item = filteredQuizList[index];
+  if (!item) return;
+  questionEl.textContent = item.q;
+  answerEl.value = "";
+  const sub = document.querySelector("#pageTitle .subsection");
+  if (item.sublevel) sub.textContent = `[${item.origin}: ${item.sublevel}]`;
+}
+
+function nextQuestion() {
+  index++;
+  updatePills(index);
+
+  if (index < filteredQuizList.length) {
+    showQuestion();
+  } else {
+    questionEl.textContent = "¡Completado!";
+    answerEl.style.display = "none";
+    correctCircle.classList.add("show", "complete");
+    document.onclick = () => location.href = "index.html";
+    hideShowAnswer();
   }
+}
 
-  if (exam) {
-// --------- MODO EXAMEN ----------------------------------------
-    const selections = exam.split(",");
-    const maxPreguntas = 1;
-    const subLists = [];
-    const subSectionNames = [];
+answerEl.addEventListener("input", () => {
+  if (isChecking) return;
+  clearTimeout(checkTimeout);
+  const ans = answerEl.value.trim();
+  if (!ans) return;
 
-    selections.forEach(sel => {
-      const [listName, levelStr] = sel.split("-");
-      const currentList = lists[listName];
-      if (!currentList) return console.error("Lista inválida:", listName);
+  if (ans.normalize('NFC') === filteredQuizList[index].a.normalize('NFC')) {
+    isChecking = true;
+    showCorrect();
+    return;
+  }
+  checkTimeout = setTimeout(() => {}, 2000);
+});
 
-      if (!section) section = currentList.category;
+function showCorrect() {
+  questionEl.style.color = "green";
+  correctCircle.classList.add("show");
+  const span = document.createElement("span");
+  correctCircle.appendChild(span);
+  correctSound.currentTime = 0;
+  correctSound.play();
+  resetShowAnswer();
+  setTimeout(() => {
+    correctCircle.classList.remove("show");
+    span.remove();
+    questionEl.style.color = "";
+    nextQuestion();
+    isChecking = false;
+  }, 800);
+}
 
-      const level = parseInt(levelStr);
-      const levelData = currentList.levels.find(l => l.level === level);
-      if (levelData) {
-        subLists.push(
-          levelData.items.map(it => ({
-            ...it,
-            origin: currentList.category,
-            sublevel: levelData.name
-          }))
-        );
-        subSectionNames.push(`${currentList.category}: ${levelData.name}`);
-      }
-    });
+function showIncorrect() {
+  questionEl.style.color = "red";
+  questionEl.style.animation = "shake .3s";
+  incorrectSound.currentTime = 0;
+  incorrectSound.play();
+  navigator.vibrate?.(200);
+  setTimeout(() => {
+    questionEl.style.color = "";
+    questionEl.style.animation = "";
+  }, 400);
+}
 
-    const total = subLists.length;
-    const base = Math.floor(maxPreguntas / total);
-    const resto = maxPreguntas % total;
+showQuestion();
 
-    subLists.forEach((lista, i) => {
-      filteredQuizList.push(...shuffle(lista).slice(0, base + (i < resto ? 1 : 0)));
-    });
+/* ---------- SHOW ANSWER ---------- */
+const showAnswerBtn = document.getElementById("showAnswerBtn");
 
-    shuffle(filteredQuizList);
-    setPageTitle("Examen", subSectionNames.join(", "));
+function showAnswer() {
+  const it = filteredQuizList[index];
+  if (!it) hideShowAnswer();
+  else showAnswerBtn.textContent = it.a + (it.r ? `\n${it.r}` : "");
+}
 
-  } else if (play) {
-// --------- MODO NORMAL ----------------------------------------
-    const quizList = lists[play];
-    if (quizList && playingLevel) {
-      filteredQuizList = shuffle(quizList.levels[playingLevel].items);
-      section = quizList.category;
-      subSection = quizList.levels[playingLevel].name;
-      setPageTitle(section, subSection);
+function resetShowAnswer() {
+  showAnswerBtn.textContent = "Ver respuesta";
+}
+
+function hideShowAnswer() {
+  showAnswerBtn.style.display = "none";
+}
+
+showAnswerBtn.onclick = showAnswer;
+
+/* ---------- INPUT FOCUS ---------- */
+answerEl.addEventListener("blur", () => setTimeout(() => answerEl.focus(), 0));
+
+answerEl.focus();
+
+/* ---------- PROGRESS PILLS ---------- */
+const totalItems = filteredQuizList.length;
+const maxPills = 5;
+const blockSize = Math.ceil(totalItems / maxPills);
+const totalPills = Math.ceil(totalItems / blockSize);
+
+const progressPills = document.getElementById("progressPills");
+progressPills.innerHTML = "";
+
+for (let i = 0; i < totalPills; i++) {
+  const p = document.createElement("div");
+  p.className = "pill";
+  p.innerHTML = '<div class="pill-fill"></div>';
+  progressPills.appendChild(p);
+}
+
+function animatePill(pill) {
+  navigator.vibrate?.(300);
+  pill.classList.add("vibrate");
+  setTimeout(() => pill.classList.remove("vibrate"), 600);
+  pillSound.currentTime = 0;
+  pillSound.play();
+}
+
+function updatePills(cur) {
+  const pills = progressPills.children;
+  const pillIndex = Math.floor(cur / blockSize);
+  const progress = (cur % blockSize) / blockSize;
+
+  [...pills].forEach((p, i) => {
+    const f = p.querySelector(".pill-fill");
+    if (i < pillIndex) {
+      f.style.width = "100%";
+      p.classList.add("filled");
+    } else if (i === pillIndex) {
+      f.style.width = (progress * 100) + "%";
+      p.classList.remove("filled");
+    } else {
+      f.style.width = "0%";
+      p.classList.remove("filled");
     }
+  });
+
+  if (cur % blockSize === 0 && cur !== 0) {
+    animatePill(pills[pillIndex - 1]);
   }
+}
 </script>
-
-
-  <script src="js/quizLogic.js"></script>
 </body>
 </html>
