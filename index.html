@@ -38,7 +38,7 @@
   }
   .level-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(30%, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(24%, 1fr));
     gap: 4px;
     justify-items: center;
     align-items: center;
@@ -57,6 +57,7 @@
     color: #000;
     text-align: center;
     cursor: pointer;
+    justify-content: center;
   }
   .level-card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,.12); }
   .level-card.selected { background: #3498db; color: #fff; }
@@ -71,7 +72,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: .3s;
     font-size: 16px;
   }
   #fixedPlayButton { background: #bdc3c7; cursor: not-allowed; }
