@@ -1,6 +1,6 @@
 var vocabularyBasicList = {
-  category: "vocabulario básico",
-  saveCategory: "vocabularyBasic",
+  listName: "vocabulario básico",
+  category: "vocabulary",
   levels: [
     {
       level: 0,

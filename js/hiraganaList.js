@@ -1,6 +1,6 @@
 var hiraganaList = {
-  category: "hiragana",
-  saveCategory: "hiragana",
+  listName: "hiragana",
+  category: "write",
   levels: [
     {
       level: 0,

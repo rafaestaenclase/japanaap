@@ -1,319 +1,243 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
-  <title>Practicar Japonés</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+<title>Practicar Japonés</title>
+<style>
+  body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0 20px 120px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  #sectionsContainer {
+    width: 100%;
+    max-width: 960px;
+  }
 
-  <style>
-    body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0 20px 120px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 100%;
-      padding: 15px 0;
-      font-weight: bold;
-      font-size: 1.2rem;
-      color: #34495e;
-    }
-
-    .section {
-      width: 100%;
-      max-width: 960px;
-      margin-bottom: 20px;
-      padding: 15px;
-      border-radius: 16px;
-      background: #ecf7ff;
-    }
-
-    .section-title {
-      font-weight: bold;
-      font-size: 1.2rem;
-      margin-bottom: 10px;
-      color: #2c3e50;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .level-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(30%, 1fr));
-      gap: 4px;
-      justify-items: center;
-      align-items: center;
-    }
-
-    .level-card {
-      width: calc(100% - 30px);
-      height: 60px;
-      padding: 15px;
-      background: #fefefe;
-      border-radius: 12px;
-      display: grid;
-      place-items: center;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, .1);
-      transition: .2s;
-      font-size: 14px;
-      color: #000;
-      text-align: center;
-      cursor: pointer;
-    }
-
-    .level-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 6px 15px rgba(0, 0, 0, .12);
-    }
-
-    .level-card.selected {
-      background: #3498db;
-      color: #fff;
-    }
-
-    #fixedPlayButton,
-    #examToggleButton {
-      height: 48px;
-      width: 50%;
-      padding: 0 15px;
-      font-weight: 600;
-      border: none;
-      border-radius: 12px;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: .3s;
-      font-size: 16px;
-    }
-
-    #fixedPlayButton {
-      background: #bdc3c7;
-      cursor: not-allowed;
-    }
-
-    #fixedPlayButton.active {
-      background: #3498db;
-      cursor: pointer;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, .15);
-    }
-
-    #examToggleButton {
-      background: #2ecc71;
-      cursor: pointer;
-    }
-
-    #examToggleButton.active {
-      background: #cc2e2e;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, .15);
-    }
-
-    #completedTimes {
-      font-size: 12px;
-      color: #2c3e50;
-      font-weight: 500;
-    }
-
-    #completedTimes.instruction {
-      color: #7f8c8d;
-      font-style: italic;
-    }
-
-    #practiceContainerBack {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      height: 125px;
-      background: linear-gradient(to top, rgba(255, 255, 255, .4) 0%, rgba(255, 255, 255, 0) 50%);
-      backdrop-filter: blur(1px);
-      -webkit-backdrop-filter: blur(1px);
-      z-index: 100;
-    }
-
-    #practiceContainer {
-      position: fixed;
-      bottom: 15px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #fff;
-      padding: 10px 15px;
-      border-radius: 12px;
-      box-shadow: 0 5px 19px 1px rgba(0, 0, 0, .28);
-      display: flex;
-      gap: 10px;
-      z-index: 100;
-      min-width: 250px;
-      justify-content: space-between;
-    }
-
-    .examButton {
-      background: #ecf0f1;
-      border: none;
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background .2s;
-    }
-
-    .examButton:hover {
-      background: #d0d7de;
-    }
-
-    .level-card h3 {
-      margin: 0;
-      font-size: 14px;
-    }
-
-    .level-card p {
-      margin: 0;
-      font-size: 12px;
-      color: #7f8c8d;
-    }
-  </style>
+  .section {
+    width: calc(100% - 30px);
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 16px;
+    background: #ecf7ff;
+  }
+  .section-title {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #2c3e50;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .level-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(30%, 1fr));
+    gap: 4px;
+    justify-items: center;
+    align-items: center;
+  }
+  .level-card {
+    width: calc(100% - 30px);
+    height: 60px;
+    padding: 15px;
+    background: #fefefe;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 3px 10px rgba(0,0,0,.1);
+    transition: .2s;
+    font-size: 14px;
+    color: #000;
+    text-align: center;
+    cursor: pointer;
+  }
+  .level-card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,.12); }
+  .level-card.selected { background: #3498db; color: #fff; }
+  #fixedPlayButton, #examToggleButton {
+    height: 48px;
+    width: 50%;
+    padding: 0 15px;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .3s;
+    font-size: 16px;
+  }
+  #fixedPlayButton { background: #bdc3c7; cursor: not-allowed; }
+  #fixedPlayButton.active { background: #3498db; cursor: pointer; box-shadow: 0 3px 10px rgba(0,0,0,.15); }
+  #examToggleButton { background: #2ecc71; cursor: pointer; }
+  #examToggleButton.active { background: #cc2e2e; box-shadow: 0 3px 10px rgba(0,0,0,.15); }
+  #completedTimes { font-size: 12px; color: #2c3e50; font-weight: 500; }
+  #completedTimes.instruction { color: #7f8c8d; font-style: italic; }
+  #practiceContainerBack {
+    position: fixed; bottom: 0; width: 100%; height: 125px;
+    background: linear-gradient(to top, rgba(255,255,255,.4) 0%, rgba(255,255,255,0) 50%);
+    backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); z-index: 100;
+  }
+  #practiceContainer {
+    position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
+    background: #fff; padding: 10px 15px; border-radius: 12px;
+    box-shadow: 0 5px 19px 1px rgba(0,0,0,.28); display: flex; gap: 10px;
+    z-index: 100; min-width: 250px; justify-content: space-between;
+  }
+  .examButton {
+    background: #ecf0f1; border: none; padding: 4px 8px;
+    border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background .2s;
+  }
+  .examButton:hover { background: #d0d7de; }
+  .level-card h3 { margin:0; font-size:14px; }
+  .level-card p { margin:0; font-size:12px; color:#7f8c8d; }
+</style>
 </head>
 <body>
-  <header>Japanaap V0.1.1</header>
+<header>Japanaap V0.1.1</header>
+<div id="categoryMenu"></div>
+<div id="sectionsContainer"></div>
+<div id="practiceContainerBack"></div>
+<div id="practiceContainer">
+  <button id="examToggleButton">Examen</button>
+  <button id="fixedPlayButton">Practicar</button>
+  <span id="completedTimes"></span>
+</div>
 
-  <div class="section">
-    <div class="section-title">Hiragana</div>
-    <div id="hiragana"></div>
-  </div>
+<script src="./js/hiraganaList.js"></script>
+<script src="./js/katakanaList.js"></script>
+<script src="./js/vocabularyBasicList.js"></script>
 
-  <div class="section">
-    <div class="section-title">Katakana</div>
-    <div id="katakana"></div>
-  </div>
+<script>
+  const allList = [hiraganaList, katakanaList, vocabularyBasicList];
+  const container = document.getElementById("sectionsContainer");
+  const categoryMenu = document.getElementById("categoryMenu");
+  const fixedBtn = document.getElementById("fixedPlayButton");
+  const examBtn = document.getElementById("examToggleButton");
+  const times = document.getElementById("completedTimes");
 
-  <div class="section">
-    <div class="section-title">Vocabulario Básico</div>
-    <div id="vocabularyBasic"></div>
-  </div>
+  let selected = null, examMode = false, examSel = [];
 
-  <div id="practiceContainerBack"></div>
+  // Crear grid y secciones
+  function createGrid(listObj) {
+    const section = document.createElement("div");
+    section.id = listObj.listName;
+    section.classList.add("section", listObj.category);
 
-  <div id="practiceContainer">
-    <button id="examToggleButton">Examen</button>
-    <button id="fixedPlayButton">Practicar</button>
-    <span id="completedTimes">Completado 0 veces</span>
-  </div>
+    const title = document.createElement("div");
+    title.className = "section-title";
+    title.textContent = listObj.listName;
+    section.appendChild(title);
 
-  <script src="./js/hiraganaList.js"></script>
-  <script src="./js/katakanaList.js"></script>
-  <script src="./js/vocabularyBasicList.js"></script>
+    const grid = document.createElement("div");
+    grid.className = "level-grid";
 
-  <script>
-    const fixedBtn = document.getElementById("fixedPlayButton"),
-          examBtn = document.getElementById("examToggleButton"),
-          times = document.getElementById("completedTimes");
+    listObj.levels.forEach((lvl, i) => {
+      const levelCard = document.createElement("div");
+      levelCard.className = "level-card";
+      levelCard.dataset.listName = listObj.listName;
+      levelCard.dataset.level = lvl.level;
+      levelCard.dataset.index = i;
+      levelCard.innerHTML = `<h3>${lvl.name}</h3>`;
+      levelCard.onclick = () => handleCardClick(levelCard);
+      grid.appendChild(levelCard);
+    });
 
-    let selected = null,
-        examMode = false,
-        examSel = [];
+    section.appendChild(grid);
+    container.appendChild(section);
+  }
 
-    function createGrid(id, list) {
-      const grid = document.createElement("div");
-      grid.className = "level-grid";
-
-      list.forEach((lvl, i) => {
-        const c = document.createElement("div");
-        c.className = "level-card";
-        c.dataset.category = id;
-        c.dataset.level = lvl.level;
-        c.dataset.index = i;
-        c.innerHTML = `<h3>${lvl.name}</h3>`;
-
-        c.onclick = () => {
-          const storage = JSON.parse(localStorage.getItem("levelCompleted") || "[]"),
-                lvlData = storage.find(x => x.category == id && Number(x.levelId) == i),
-                done = lvlData ? lvlData.completedTimes || 0 : 0;
-
-          if (examMode) {
-            c.classList.toggle("selected");
-            examSel = c.classList.contains("selected")
-              ? [...examSel, c]
-              : examSel.filter(x => x !== c);
-
-            fixedBtn.classList.toggle("active", examSel.length > 0);
-            times.textContent = examSel.length
-              ? "Listo para comenzar el examen"
-              : "Selecciona los módulos a añadir al examen";
-            times.classList.add("instruction");
-          } else {
-            if (selected === c) {
-              c.classList.remove("selected");
-              selected = null;
-              fixedBtn.classList.remove("active");
-              times.textContent = "Completado 0 veces";
-              times.classList.remove("instruction");
-            } else {
-              if (selected) selected.classList.remove("selected");
-              c.classList.add("selected");
-              selected = c;
-              fixedBtn.classList.add("active");
-              times.textContent = `Completado ${done} veces`;
-              times.classList.remove("instruction");
-            }
-          }
-        };
-
-        grid.appendChild(c);
-      });
-
-      document.getElementById(id).appendChild(grid);
-    }
-
-    examBtn.onclick = () => {
-      examMode = !examMode;
-      examBtn.classList.toggle("active", examMode);
-      fixedBtn.textContent = examMode ? "Comenzar" : "Practicar";
-      examBtn.textContent = examMode ? "Cancelar" : "Examen";
-
-      if (examMode) {
-        if (selected) {
-          fixedBtn.classList.remove("active");
-          selected.classList.remove("selected");
-          selected = null;
-        }
-        times.textContent = "Selecciona los módulos a añadir al examen";
-        times.classList.add("instruction");
-      } else {
-        examSel.forEach(c => c.classList.remove("selected"));
-        examSel = [];
+  // Manejo de click en tarjetas
+  function handleCardClick(card) {
+    if (examMode) {
+      card.classList.toggle("selected");
+      examSel = card.classList.contains("selected")
+        ? [...examSel, card]
+        : examSel.filter(x => x !== card);
+      fixedBtn.classList.toggle("active", examSel.length > 0);
+      times.textContent = examSel.length
+        ? "Listo para comenzar el examen"
+        : "Selecciona los módulos a añadir al examen";
+    } else {
+      if (selected === card) {
+        card.classList.remove("selected");
+        selected = null;
         fixedBtn.classList.remove("active");
-        times.textContent = "Completado 0 veces";
-        times.classList.remove("instruction");
+      } else {
+        if (selected) selected.classList.remove("selected");
+        card.classList.add("selected");
+        selected = card;
+        fixedBtn.classList.add("active");
       }
-    };
+    }
+  }
 
-    fixedBtn.onclick = () => {
-      if (examMode && examSel.length) {
-        location.href = `practiceGround.html?exam=${examSel.map(c => `${c.dataset.category}List-${c.dataset.level}`).join(",")}`;
-      } else if (!examMode && selected) {
-        location.href = `practiceGround.html?play=${selected.dataset.category}List&level=${selected.dataset.level}`;
+  // Botón examen
+  examBtn.onclick = () => {
+    examMode = !examMode;
+    examBtn.classList.toggle("active", examMode);
+    fixedBtn.textContent = examMode ? "Comenzar" : "Practicar";
+    examBtn.textContent = examMode ? "Cancelar" : "Examen";
+
+    if (examMode) {
+      if (selected) {
+        selected.classList.remove("selected");
+        selected = null;
+        fixedBtn.classList.remove("active");
       }
-    };
+      times.textContent = "Selecciona los módulos a añadir al examen";
+    } else {
+      examSel.forEach(c => c.classList.remove("selected"));
+      examSel = [];
+      fixedBtn.classList.remove("active");
+      times.textContent = "";
+    }
+  };
 
-    ["hiragana", "katakana", "vocabularyBasic"].forEach((id, i) =>
-      createGrid(id, [hiraganaList, katakanaList, vocabularyBasicList][i].levels)
-    );
+  // Botón practicar/comenzar
+  fixedBtn.onclick = () => {
+    if (examMode && examSel.length) {
+      location.href = `practiceGround.html?exam=${examSel.map(c => `${c.dataset.listName}List-${c.dataset.level}`).join(",")}`;
+    } else if (!examMode && selected) {
+      location.href = `practiceGround.html?play=${selected.dataset.listName}List&level=${selected.dataset.level}`;
+    }
+  };
 
-    window.addEventListener("beforeunload", () =>
-      localStorage.setItem("lastScrollPosition", window.scrollY)
-    );
+  // Crear las secciones
+  allList.forEach(createGrid);
 
-    window.addEventListener("load", () =>
-      window.scrollTo(0, Number(localStorage.getItem("lastScrollPosition") || 0))
-    );
-  </script>
+// Llenar categoryMenu con botones únicos
+const uniqueCategories = [...new Set(allList.map(l => l.category))];
+uniqueCategories.forEach(cat => {
+  const btn = document.createElement("button");
+  btn.className = "examButton";
+  btn.textContent = cat;
+  btn.onclick = () => {
+    document.querySelectorAll(".section").forEach(section => {
+      if (section.classList.contains(cat)) {
+        section.style.display = "block";
+      } else {
+        section.style.display = "none";
+      }
+    });
+  };
+  categoryMenu.appendChild(btn);
+});
+
+
+  window.addEventListener("beforeunload", () =>
+    localStorage.setItem("lastScrollPosition", window.scrollY)
+  );
+  window.addEventListener("load", () =>
+    window.scrollTo(0, Number(localStorage.getItem("lastScrollPosition") || 0))
+  );
+</script>
+
 </body>
 </html>

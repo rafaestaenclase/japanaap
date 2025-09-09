@@ -262,21 +262,21 @@ if (exam) {
     const [listName, levelStr] = sel.split("-");
     const current = lists[listName];
     if (!current) return;
-    if (!section) section = current.category;
+    if (!section) section = current.listName;
 
     const levelData = current.levels.find(l => l.level == levelStr);
 
     if (levelData) {
       subLists.push(levelData.items.map(it => ({
         ...it,
-        origin: current.category,
+        origin: current.listName,
         sublevel: levelData.name
       })));
-      names.push(`${current.category}: ${levelData.name}`);
+      names.push(`${current.listName}: ${levelData.name}`);
     }
   });
 
-  const maxQ = 1;
+  const maxQ = 10;
   const total = subLists.length;
   const base = Math.floor(maxQ / total);
   const resto = maxQ % total;
@@ -291,7 +291,7 @@ if (exam) {
   const quizList = lists[play];
   if (quizList && playingLevel) {
     filteredQuizList = shuffle(quizList.levels[playingLevel].items);
-    section = quizList.category;
+    section = quizList.listName;
     subSection = quizList.levels[playingLevel].name;
     setPageTitle(section, subSection);
   }
