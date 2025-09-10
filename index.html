@@ -9,14 +9,15 @@
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    padding-top: 30vh;
+    padding-top: 25vh;
     padding-bottom: 120px;
   }
 
   #studyDiv {
     position: fixed;
-    height: 30vh;
+    height: 25vh;
     width: calc(100% - 44px);
+    overflow-y: scroll;
     background: #fefff3;
     top: 0;
     left: 0;
@@ -32,7 +33,6 @@
     width: calc(100% - 30px);
     margin-bottom: 20px;
     padding: 15px;
-    border-radius: 16px;
     background: #ecf7ff;
   }
   .section-title {
@@ -134,7 +134,8 @@
   }
 
   #webTitle {
-    height: 30vh;
+    font-size: 2vh;
+    height: 25vh;
     width: 100%;
     background: #620808;
     color: #ebebeb;
@@ -143,6 +144,7 @@
     justify-content: center;
     writing-mode: vertical-rl; /* texto vertical */
     text-orientation: upright; /* cada carácter en pie */
+    font-weight: bold;
   }
 
   .categoryButton {
@@ -170,7 +172,7 @@
 </head>
 <body>
   <div id="verticalBar">
-    <div id="webTitle">JAPANAPP</div>
+    <div id="webTitle">ジャパンアップ</div>
     <div id="categoryMenu"></div>
     <button id="examToggleButton">EXAMEN</button>
   </div>
@@ -243,17 +245,6 @@
 
       fixedBtn.classList.toggle("active", examSel.length > 0);
       practiceContainer.style.display = examSel.length > 0 ? "flex" : "none";
-
-      // Mostrar información del último seleccionado en studyDiv
-      if (examSel.length) {
-        const lastCard = examSel[examSel.length - 1];
-        const list = allList.find(l => l.listName === lastCard.dataset.listName);
-        const level = list.levels[lastCard.dataset.index];
-        //renderStudyDiv(level);
-      } else {
-        studyDiv.innerHTML = "";
-      }
-
     } else {
       if (selected === card) {
         card.classList.remove("selected");
@@ -318,7 +309,7 @@
     examBtn.classList.toggle("active", examMode);
     fixedBtn.textContent = examMode ? "Comenzar" : "Practicar";
     examBtn.textContent = examMode ? "CANCELAR" : "EXAMEN";
-
+    studyDiv.innerHTML = examMode ? '<h3 style="padding-left: 10px;" >SELECCIONA LOS MÓDULOS A AÑADIR AL EXAMEN.</h3>' : "";
     if (examMode) {
       if (selected) {
         selected.classList.remove("selected");
@@ -365,7 +356,7 @@ uniqueCategories.forEach(cat => {
     document.querySelectorAll(".section").forEach(section => {
       const sectionSelected = document.querySelector(`.section.${cat}`);
       if (sectionSelected) {
-        const y = sectionSelected.getBoundingClientRect().top + window.scrollY - (0.30 * window.innerHeight);
+        const y = sectionSelected.getBoundingClientRect().top + window.scrollY - (0.25 * window.innerHeight);
         window.scrollTo({ top: y, behavior: "smooth" });
       }
     });
@@ -381,9 +372,32 @@ uniqueCategories.forEach(cat => {
     window.scrollTo(0, Number(localStorage.getItem("lastScrollPosition") || 0))
   );
 
+  function showGanbatte() {
+    const studyDiv = document.getElementById("studyDiv");
+    if (studyDiv.innerHTML.trim() === "") {
+      studyDiv.innerHTML = "<h1 style='font-weight:bold;padding-left:10px;margin-bottom:0px'>がんばって</h1><h3 style='font-weight:bold;padding-left:10px;margin-top:0px'>Ánimo</h3>";
+    }
+  }
 
-window.addEventListener("scroll", () => {
-  //PONGA COMO SELECCIONADA LA CATEGORIA EN LA QUE ESTÁ
+  // Al arrancar
+  showGanbatte();
+
+  // 2. Observador para detectar cambios posteriores
+const observer = new MutationObserver(() => {
+  showGanbatte();
+});
+
+observer.observe(studyDiv, {
+  childList: true,
+  subtree: true
+});
+
+document.addEventListener("click", function enableFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  }
+  // Quitamos el listener para que solo se active una vez
+  document.removeEventListener("click", enableFullscreen);
 });
 
 
