@@ -249,7 +249,7 @@
         const lastCard = examSel[examSel.length - 1];
         const list = allList.find(l => l.listName === lastCard.dataset.listName);
         const level = list.levels[lastCard.dataset.index];
-        renderStudyDiv(level);
+        //renderStudyDiv(level);
       } else {
         studyDiv.innerHTML = "";
       }
@@ -313,6 +313,7 @@
 
   // Botón examen
   examBtn.onclick = () => {
+    studyDiv.innerHTML = "";
     examMode = !examMode;
     examBtn.classList.toggle("active", examMode);
     fixedBtn.textContent = examMode ? "Comenzar" : "Practicar";

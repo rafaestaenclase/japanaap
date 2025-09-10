@@ -306,16 +306,15 @@ const questionEl = document.getElementById("question");
 const correctCircle = document.getElementById("correctCircle");
 
 const correctSound = new Audio("./sounds/small-bell-ring-01a.mp3");
-const incorrectSound = new Audio("./sounds/button-44.mp3");
 const pillSound = new Audio("./sounds/bell-ringing-05.mp3");
 
-[correctSound, incorrectSound, pillSound].forEach(a => {
+[correctSound, pillSound].forEach(a => {
   a.preload = "auto";
   a.load();
 });
 
 function unlockAudio() {
-  [correctSound, incorrectSound, pillSound].forEach(a => {
+  [correctSound, pillSound].forEach(a => {
     a.play().then(() => a.pause()).catch(() => {});
   });
   document.removeEventListener('touchstart', unlockAudio);
@@ -378,18 +377,6 @@ function showCorrect() {
     nextQuestion();
     isChecking = false;
   }, 800);
-}
-
-function showIncorrect() {
-  questionEl.style.color = "red";
-  questionEl.style.animation = "shake .3s";
-  incorrectSound.currentTime = 0;
-  incorrectSound.play();
-  navigator.vibrate?.(200);
-  setTimeout(() => {
-    questionEl.style.color = "";
-    questionEl.style.animation = "";
-  }, 400);
 }
 
 showQuestion();
