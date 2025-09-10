@@ -1,6 +1,6 @@
-var katakanaList = {
-  listName: "katakana",
-  category: "write",
+var pruebaList0 = {
+  listName: "prueba0",
+  category: "prueba0",
   levels: [
     {
       level: 0,

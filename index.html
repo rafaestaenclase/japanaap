@@ -9,14 +9,12 @@
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
+    padding-top: 40vh;
     padding-bottom: 120px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
   }
 
   #sectionsContainer {
-    width: 100%;
+    width: calc(100% - 44px);
     max-width: 960px;
   }
 
@@ -86,7 +84,7 @@
     backdrop-filter: blur(1px); -webkit-backdrop-filter: blur(1px); z-index: 100;
   }
   #practiceContainer {
-    position: fixed; bottom: 60px; left: 50%; transform: translateX(-50%);
+    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
     background: #fff; padding: 10px 15px; border-radius: 12px;
     box-shadow: 0 5px 19px 1px rgba(0,0,0,.28); display: flex; gap: 10px;
     z-index: 100; min-width: 250px; justify-content: space-between;
@@ -98,12 +96,45 @@
   .examButton:hover { background: #d0d7de; }
 
   #categoryMenu {
-    position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
-    background: #fff; padding: 10px 15px; border-radius: 12px;
-    box-shadow: 0 5px 19px 1px rgba(0,0,0,.28); display: flex; gap: 10px;
-    z-index: 101; min-width: 250px; justify-content: space-between;
+      position: fixed;
+      height: 60vh;
+      width: 44px;
+      top: 40vh;
+      right: 0;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 5px 19px 1px rgba(0, 0, 0, .28);
+      display: flex;
+      gap: 10px;
+      z-index: 101;
+      justify-content: center;
+      flex-wrap: wrap;
   }
 
+  .categoryButton {
+    height: 48px;
+    width: 50%;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    border: none;
+    background: none;
+    text-decoration: underline;
+    font-weight: bold;
+  }
+
+  #scrollDot {
+    position: absolute;
+    right: 4px;
+    top: 0;
+    width: 12px;
+    height: 12px;
+    background: #3498db;
+    border-radius: 50%;
+    transition: top 0.1s linear;
+  }
 
   .level-card h3 { margin:0; font-size:14px; }
   .level-card p { margin:0; font-size:12px; color:#7f8c8d; }
@@ -123,9 +154,11 @@
 <script src="./js/hiraganaList.js"></script>
 <script src="./js/katakanaList.js"></script>
 <script src="./js/vocabularyBasicList.js"></script>
+<script src="./js/pruebaList0.js"></script>
+<script src="./js/pruebaList1.js"></script>
 
 <script>
-  const allList = [hiraganaList, katakanaList, vocabularyBasicList];
+  const allList = [hiraganaList, katakanaList, vocabularyBasicList,pruebaList0, pruebaList1];
   const container = document.getElementById("sectionsContainer");
   const categoryMenu = document.getElementById("categoryMenu");
   const fixedBtn = document.getElementById("fixedPlayButton");
@@ -226,15 +259,23 @@
 const uniqueCategories = [...new Set(allList.map(l => l.category))];
 uniqueCategories.forEach(cat => {
   const btn = document.createElement("button");
+  switch (cat) {
+    case "write":
+      btn.textContent = "W";
+      break;
+    case "vocabulary":
+      btn.textContent = "V";
+      break;
+    default:
+      btn.textContent = "?"; // opcional, por si no coincide nada
+      break;
+  }
+  btn.id = cat;
   btn.className = "categoryButton";
-  btn.textContent = cat;
   btn.onclick = () => {
     document.querySelectorAll(".section").forEach(section => {
-      if (section.classList.contains(cat)) {
-        section.style.display = "block";
-      } else {
-        section.style.display = "none";
-      }
+      const sectionSelected = document.querySelector(`.section.${cat}`);
+      if (section) sectionSelected.scrollIntoView({ behavior: "smooth" });
     });
   };
   categoryMenu.appendChild(btn);
@@ -247,6 +288,45 @@ uniqueCategories.forEach(cat => {
   window.addEventListener("load", () =>
     window.scrollTo(0, Number(localStorage.getItem("lastScrollPosition") || 0))
   );
+
+const scrollDot = document.createElement("div");
+scrollDot.id = "scrollDot";
+categoryMenu.appendChild(scrollDot);
+
+window.addEventListener("scroll", () => {
+  const sections = document.querySelectorAll(".section");
+
+  let currentCat = null;
+  let minDist = Infinity;
+
+  // Detectar la sección más cercana al centro del viewport
+  sections.forEach(section => {
+    const rect = section.getBoundingClientRect();
+    const dist = Math.abs(rect.top + rect.height / 2 - window.innerHeight / 2);
+    if (dist < minDist) {
+      minDist = dist;
+      currentCat = section.classList[1];
+    }
+  });
+
+  if (currentCat) {
+    const btns = [...categoryMenu.querySelectorAll(".categoryButton")];
+    const targetBtn = btns.find(b =>
+      (currentCat === b.id)
+    );
+
+    if (targetBtn) {
+      const btnRect = targetBtn.getBoundingClientRect();
+      const menuRect = categoryMenu.getBoundingClientRect();
+
+      // mover el dot al centro del botón dentro del menú
+      scrollDot.style.top =
+        (btnRect.top + btnRect.height / 2 - menuRect.top - scrollDot.offsetHeight / 2) + "px";
+    }
+  }
+});
+
+
 </script>
 
 </body>
