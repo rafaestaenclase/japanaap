@@ -63,21 +63,21 @@
   }
   .level-card {
     width: calc(100% - 30px);
-      height: 60px;
-      padding: 15px;
-      background: #fefefe;
-      display: grid;
-      place-items: center;
-      box-shadow: 0px 2px 0px 0px #2c3e50;
-      transition: .2s;
-      font-size: 14px;
-      color: #000;
-      text-align: center;
-      cursor: pointer;
-      justify-content: center;
+    height: 60px;
+    padding: 15px;
+    background: #fefefe;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 3px 10px rgb(196 192 180 / 52%);
+    transition: .2s;
+    font-size: 14px;
+    color: #000;
+    text-align: center;
+    cursor: pointer;
+    justify-content: center;
   }
-  .level-card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,.12); }
-  .level-card.selected { background: #2c3e50; color: #fff; }
+  
+  .level-card.selected { background: #3498db; color: #fff; transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,.12);}
   #fixedPlayButton {
     height: 48px;
     padding: 0 15px;
@@ -91,7 +91,7 @@
     font-size: 16px;
   }
   #fixedPlayButton { background: #bdc3c7; cursor: not-allowed; }
-  #fixedPlayButton.active { background: #2c3e50; cursor: pointer; box-shadow: 0 3px 10px rgba(0,0,0,.15); }
+  #fixedPlayButton.active { background: #3498db; cursor: pointer; box-shadow: 0 3px 10px rgba(0,0,0,.15); }
 
   #examToggleButton { 
     width: 100%;
