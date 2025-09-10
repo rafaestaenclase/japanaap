@@ -22,12 +22,16 @@
     position: fixed;
     height: 25vh;
     width: calc(100% - 44px);
-    overflow-y: scroll;
     background: #fefff3;
     top: 0;
     left: 0;
     z-index: 100;
+    overflow: scroll;
   }
+
+   #studyDiv * {
+    font-size: 40px;
+   }
 
   #sectionsContainer {
     width: calc(100% - 44px);
@@ -76,7 +80,7 @@
     cursor: pointer;
     justify-content: center;
   }
-  
+
   .level-card.selected { background: #3498db; color: #fff; transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,.12);}
   #fixedPlayButton {
     height: 48px;
@@ -281,7 +285,26 @@
     }
   }
 
-  // Función para renderizar el contenido del nivel en studyDiv
+  function fitTextInStudyDiv() {
+    const studyDiv = document.getElementById("studyDiv");
+    if (!studyDiv) return;
+
+    const children = Array.from(studyDiv.children);
+
+    children.forEach(child => {
+      let fontSize = parseInt(window.getComputedStyle(child).fontSize);
+      // Reducir fuente hasta que el contenido quepa dentro de studyDiv
+
+      while (child.scrollHeight > (studyDiv.clientHeight - 60) && fontSize > 8) {
+        fontSize -= 1;
+        child.style.fontSize = fontSize + "px";
+        child.querySelectorAll("*").forEach(el => el.style.fontSize = fontSize + "px");
+      }
+    });
+  }
+
+
+  // Aplicar al renderizar contenido
   function renderStudyDiv(level) {
     const studyDiv = document.getElementById("studyDiv");
     studyDiv.innerHTML = ""; // limpiar contenido previo
@@ -296,6 +319,7 @@
     studyDiv.appendChild(title);
 
     const list = document.createElement("div");
+    list.id = "studyList";
     list.style.display = "flex";
     list.style.flexWrap = "wrap";
 
@@ -303,20 +327,18 @@
       const card = document.createElement("div");
       card.style.padding = "8px 12px";
       card.style.fontSize = "15px";
-
       card.style.display = "flex";
       card.style.flexDirection = "column";
       card.style.alignItems = "center";
-
 
       card.innerHTML = `<span>${item.q}</span><span style="font-weight: bold;">${item.a}</span>`;
       list.appendChild(card);
     });
 
     studyDiv.appendChild(list);
+
+    fitTextInStudyDiv(); // ajustar tamaño de fuente
   }
-
-
 
   // Botón examen
   examBtn.onclick = () => {
