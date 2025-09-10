@@ -16,8 +16,6 @@
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    padding-top: 25vh;
-    padding-bottom: 120px;
   }
 
   #studyDiv {
@@ -34,13 +32,18 @@
   #sectionsContainer {
     width: calc(100% - 44px);
     max-width: 960px;
+    height: calc(75vh - 120px);
+    margin-top: 25vh;
+    overflow: scroll;
+    padding-bottom: 120px;
+    background: #2c3e50;
   }
 
   .section {
     width: calc(100% - 30px);
     margin-bottom: 20px;
     padding: 15px;
-    background: #ecf7ff;
+    background: white;
   }
   .section-title {
     font-weight: bold;
@@ -54,28 +57,27 @@
   .level-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(32%, 1fr));
-    gap: 4px;
+    gap: 3px;
     justify-items: center;
     align-items: center;
   }
   .level-card {
     width: calc(100% - 30px);
-    height: 60px;
-    padding: 15px;
-    background: #fefefe;
-    border-radius: 12px;
-    display: grid;
-    place-items: center;
-    box-shadow: 0 3px 10px rgba(0,0,0,.1);
-    transition: .2s;
-    font-size: 14px;
-    color: #000;
-    text-align: center;
-    cursor: pointer;
-    justify-content: center;
+      height: 60px;
+      padding: 15px;
+      background: #fefefe;
+      display: grid;
+      place-items: center;
+      box-shadow: 0px 2px 0px 0px #2c3e50;
+      transition: .2s;
+      font-size: 14px;
+      color: #000;
+      text-align: center;
+      cursor: pointer;
+      justify-content: center;
   }
   .level-card:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,.12); }
-  .level-card.selected { background: #3498db; color: #fff; }
+  .level-card.selected { background: #2c3e50; color: #fff; }
   #fixedPlayButton {
     height: 48px;
     padding: 0 15px;
@@ -89,14 +91,15 @@
     font-size: 16px;
   }
   #fixedPlayButton { background: #bdc3c7; cursor: not-allowed; }
-  #fixedPlayButton.active { background: #3498db; cursor: pointer; box-shadow: 0 3px 10px rgba(0,0,0,.15); }
+  #fixedPlayButton.active { background: #2c3e50; cursor: pointer; box-shadow: 0 3px 10px rgba(0,0,0,.15); }
 
   #examToggleButton { 
     width: 100%;
     max-height: 25vh;
     font-weight: 600;
     border: none;
-    background: white;
+    color: white;
+    background: #086242;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -104,8 +107,6 @@
     writing-mode: vertical-rl;
     text-orientation: upright;
     padding: 15px 0px;
-    border-top: 3px solid #2ecc71;
-    border-bottom: 3px solid #2ecc71;
   }
 
   #examToggleButton.active { border: 3px solid #cc2e2e; box-shadow: 0 3px 10px rgba(0,0,0,.15); }
@@ -129,7 +130,7 @@
     width: 44px;
     top: 0;
     right: 0;
-    background: #fff;
+    background: #fefff3;
     border-radius: 12px;
     box-shadow: 0 5px 19px 1px rgba(0, 0, 0, .28);
     display: flex;
@@ -162,15 +163,20 @@
     justify-content: center;
     font-size: 16px;
     border: none;
-    background: none;
+    background: #17171712;
     border: solid 1px gray;
     border-radius: 69px;
     margin-top: 5px;
-  }
+    margin-bottom: 5px;
+    text-shadow:
+      -4px -4px 8px white,
+       4px -4px 8px white,
+      -4px  4px 8px white,
+       4px  4px 8px white;
 
   #categoryMenu {
     display: flex;
-    height: 40vh;
+    max-height: 40vh;
     align-content: flex-start;
     flex-wrap: wrap;
     justify-content: center;
@@ -363,24 +369,23 @@ uniqueCategories.forEach(cat => {
   btn.id = cat;
   btn.className = "categoryButton";
   btn.onclick = () => {
-    document.querySelectorAll(".section").forEach(section => {
-      const sectionSelected = document.querySelector(`.section.${cat}`);
-      if (sectionSelected) {
-        const y = sectionSelected.getBoundingClientRect().top + window.scrollY - (0.25 * window.innerHeight);
-        window.scrollTo({ top: y, behavior: "smooth" });
-      }
-    });
+    const sectionSelected = container.querySelector(`.section.${cat}`);
+    if (!sectionSelected) return;
+    const offset = window.innerHeight * 0.25;
+    const y = Math.max(0, sectionSelected.offsetTop - offset);
+    container.scrollTo({ top: y, behavior: 'smooth' });
   };
   categoryMenu.appendChild(btn);
 });
 
 
   window.addEventListener("beforeunload", () =>
-    localStorage.setItem("lastScrollPosition", window.scrollY)
+    localStorage.setItem("lastScrollPosition", container.scrollTop)
   );
   window.addEventListener("load", () =>
-    window.scrollTo(0, Number(localStorage.getItem("lastScrollPosition") || 0))
+    container.scrollTo(0, Number(localStorage.getItem("lastScrollPosition") || 0))
   );
+
 
   function showGanbatte() {
     const studyDiv = document.getElementById("studyDiv");
