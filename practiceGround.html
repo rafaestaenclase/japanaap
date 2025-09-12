@@ -348,13 +348,25 @@ function nextQuestion() {
   }
 }
 
+function normalizeAnswer(str) {
+  return str
+    .normalize('NFC') // normaliza acentos y formas Unicode
+    .replace(/ー/g, "一")   // trata guion largo como kanji uno
+    .replace(/一/g, "ー")   // y viceversa (ambos válidos)
+    .replace(/ぺッ/g, "ペッ") // casos específicos
+    .replace(/ペッ/g, "ぺッ")
+    .replace(/へ/g, "ヘ")
+    .replace(/ヘ/g, "へ")
+    .trim();
+}
+
 answerEl.addEventListener("input", () => {
   if (isChecking) return;
   clearTimeout(checkTimeout);
   const ans = answerEl.value.trim();
   if (!ans) return;
 
-  if (ans.normalize('NFC') === filteredQuizList[index].a.normalize('NFC')) {
+  if (normalizeAnswer(ans) === normalizeAnswer(filteredQuizList[index].a)) {
     isChecking = true;
     showCorrect();
     return;
