@@ -6,6 +6,10 @@
 <title>Practicar Japonés</title>
 <style>
 
+  .full-height {
+  height: calc(var(--vh, 1vh) * 100);
+}
+
   * {
   outline: none;          /* Quita el borde de foco azul */
   user-select: none;      /* Opcional: evita selección de texto al hacer click */
@@ -452,6 +456,15 @@ document.querySelectorAll(".level-card").forEach(card => {
   const observer = new MutationObserver(() => fitTextInCard(card));
   observer.observe(card, { childList: true, subtree: true });
 });
+
+
+//Solucion a la barra de busqueda
+function setFullHeight() {
+  document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+}
+window.addEventListener('resize', setFullHeight);
+setFullHeight();
+
 
 
 </script>
