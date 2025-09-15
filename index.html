@@ -31,10 +31,15 @@
     left: 0;
     z-index: 100;
     overflow: scroll;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
   }
 
    #studyDiv * {
-    font-size: 40px;
+    font-size: 20px;
    }
 
   #sectionsContainer {
@@ -44,12 +49,11 @@
     margin-top: 25vh;
     overflow: scroll;
     padding-bottom: 120px;
-    background: #2c3e50;
   }
 
   .section {
     width: calc(100% - 30px);
-    margin-bottom: 20px;
+    margin-bottom: 2px;
     padding: 15px;
     background: white;
   }
@@ -83,6 +87,7 @@
     text-align: center;
     cursor: pointer;
     justify-content: center;
+    justify-items: center;
   }
 
   .level-card.selected { background: #3498db; color: #fff; transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,.12);}
@@ -208,14 +213,16 @@
   <button id="fixedPlayButton">Practicar</button>
 </div>
 
+<!--Añadir lista-->
 <script src="./js/hiraganaList.js"></script>
 <script src="./js/katakanaList.js"></script>
 <script src="./js/vocabularyBasicList.js"></script>
-<script src="./js/pruebaList0.js"></script>
+<script src="./js/particleList.js"></script>
 <script src="./js/pruebaList1.js"></script>
 
 <script>
-  const allList = [hiraganaList, katakanaList, vocabularyBasicList,pruebaList0, pruebaList1];
+  //Añadir lista
+  const allList = [hiraganaList, katakanaList, vocabularyBasicList, particleList, pruebaList1];
   const container = document.getElementById("sectionsContainer");
   const categoryMenu = document.getElementById("categoryMenu");
   const fixedBtn = document.getElementById("fixedPlayButton");
@@ -224,8 +231,8 @@
 
   let selected = null, examMode = false, examSel = [];
 
-  // Crear grid y secciones
-  function createGrid(listObj) {
+  // Crear grid para un nivel
+  function createGrid(listObj, parent) {
     const section = document.createElement("div");
     section.id = listObj.listName;
     section.classList.add("section", listObj.category);
@@ -250,9 +257,39 @@
     });
 
     section.appendChild(grid);
-    container.appendChild(section);
+    parent.appendChild(section);
   }
 
+  // Crear las categorías dinámicamente
+  const categories = [...new Set(allList.map(l => l.category))];
+  categories.forEach(cat => {
+    const categoryDiv = document.createElement("div");
+    categoryDiv.className = "category-block";
+    categoryDiv.dataset.category = cat;
+
+    // Título de categoría con emoji
+    const h2 = document.createElement("h2");
+    h2.style.padding = "5px";
+    h2.style.background = "#ecf0f1";
+    h2.style.margin = "0 0 10px 0";
+    h2.style.color = "#2c3e50";
+    h2.textContent =
+      cat === "write" ? "✍️ Escritura" :
+      cat === "vocabulary" ? "📖 Vocabulario" :
+      cat === "grammar" ? "🧩 Gramática" :
+      cat; // fallback
+
+    categoryDiv.appendChild(h2);
+
+    // Añadir todas las secciones de esta categoría
+    allList.filter(l => l.category === cat).forEach(listObj => {
+      createGrid(listObj, categoryDiv);
+    });
+
+    container.appendChild(categoryDiv);
+  });
+
+  // Resto de tu código (NO TOCADO) ↓↓↓
   // Manejo de click en tarjetas
   function handleCardClick(card) {
     const practiceContainer = document.getElementById("practiceContainer");
@@ -374,9 +411,6 @@
     }
   };
 
-  // Crear las secciones
-  allList.forEach(createGrid);
-
 // Llenar categoryMenu con botones únicos
 const uniqueCategories = [...new Set(allList.map(l => l.category))];
 uniqueCategories.forEach(cat => {
@@ -388,6 +422,9 @@ uniqueCategories.forEach(cat => {
     case "vocabulary":
       btn.textContent = "📖";
       break;
+    case "grammar":
+      btn.textContent = "🧩";
+      break;
     default:
       btn.textContent = "?"; // opcional, por si no coincide nada
       break;
@@ -397,7 +434,7 @@ uniqueCategories.forEach(cat => {
   btn.onclick = () => {
     const sectionSelected = container.querySelector(`.section.${cat}`);
     if (!sectionSelected) return;
-    const offset = window.innerHeight * 0.25;
+    const offset = window.innerHeight * 0.25 + 52;
     const y = Math.max(0, sectionSelected.offsetTop - offset);
     container.scrollTo({ top: y, behavior: 'smooth' });
   };
