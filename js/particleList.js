@@ -6,9 +6,9 @@ var particleList = {
       level: 0,
       name: "Básicas",
       items: [
-        { q: "Partícula de tema (se pronuncia 'wa')", a: "は" },
-        { q: "Partícula de sujeto", a: "が" },
-        { q: "Partícula de objeto directo (se pronuncia 'o')", a: "を" }
+        { q: "Tema (se pronuncia 'wa')", a: "は" },
+        { q: "Sujeto", a: "が" },
+        { q: "Objeto directo (se pronuncia 'o')", a: "を" }
       ]
     },
     {
@@ -51,23 +51,27 @@ var particleList = {
       level: 5,
       name: "Ejemplos básicos",
       items: [
-        { q: "わたし ___ がくせいです。 (tema de la oración)", a: "は" },
-        { q: "にほん ___ いきます。 (dirección, destino)", a: "へ" },
-        { q: "パン ___ たべます。 (objeto directo)", a: "を" },
-        { q: "ほん ___ つくえのうえにあります。 (ubicación)", a: "は" },
-        { q: "バス ___ がっこうへいきます。 (medio de transporte)", a: "で" },
-        { q: "トムさん ___ マリアさんはともだちです。 (enumeración)", a: "と" }
+          { q: "みず ___ のみます。 (Beber agua - objeto directo)", a: "を" },
+          { q: "にほん ___ いきます。 (Ir a Japón - dirección / lugar de destino)", a: "へ" },
+          { q: "バス ___ がっこうへいきます。 (Ir en bus - lugar de acción / medio)", a: "で" },
+          { q: "これはわたし ___ ほんです。 (Este es mi libro - posesión / atributo)", a: "の" },
+          { q: "ともだち ___ えいがをみます。 (Ver una peli con un amigo - enumeración / con)", a: "と" },
+          { q: "ろくじ ___ おきます。 (Me levanto a las 6 - momento en el tiempo)", a: "に" },
+          { q: "パン ___ たべます。 (Comer pan - objeto directo)", a: "を" },
+          { q: "こうえん ___ いきます。 (Ir al parque - dirección / lugar de destino)", a: "へ" },
+          { q: "いえ ___ べんきょうします。 (Estudiar en casa - lugar de acción / medio)", a: "で" },
+          { q: "ともだち ___ てがみをかきます。 (Escribir una carta con un amigo - enumeración / con)", a: "と" }
       ]
     },
     {
       level: 6,
       name: "Ejemplos intermedios",
       items: [
-        { q: "これはわたし ___ ほんです。 (posesión)", a: "の" },
-        { q: "ろくじ ___ おきます。 (momento en el tiempo)", a: "に" },
-        { q: "とうきょう ___ きょうとまでいきます。 (desde-hasta)", a: "から" },
-        { q: "にほんごがすこし ___ わかります。 (énfasis afirmativo)", a: "は" },
-        { q: "ビール ___ のみません。 (tampoco)", a: "も" }
+        { q: "これはわたし ___ ほんです。 (Este es mi libro - posesión)", a: "の" },
+        { q: "ろくじ ___ おきます。 (Me levanto a las 6 - momento en el tiempo)", a: "に" },
+        { q: "とうきょう ___ きょうとまでいきます。 (Voy desde Tokio hasta Kioto)", a: "から" },
+        { q: "にほんごがすこし ___ わかります。 (Entiendo un poco de japonés - énfasis afirmativo)", a: "は" },
+        { q: "ビール ___ のみません。 (Tampoco bebo cerveza)", a: "も" }
       ]
     }
   ]
