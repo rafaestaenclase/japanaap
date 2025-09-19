@@ -20,8 +20,8 @@
 
   #studyDiv {
     position: fixed;
-    height: 25vh;
-    width: calc(100% - 44px);
+    height: calc(25vh - 16px);
+    width: calc(100% - 65px);
     background: #fefff3;
     top: 0;
     left: 0;
@@ -29,9 +29,10 @@
     overflow: scroll;
     display: flex;
     flex-direction: column;
-    flex-wrap: nowrap;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+    flex-wrap: nowrap;
+    padding: 10px;
   }
 
    #studyDiv * {
@@ -86,21 +87,19 @@
     justify-items: center;
   }
 
-  .level-card.selected { background: #3498db; color: #fff; transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,.12);}
+  .level-card.selected { background: #0a0862; color: #fff; transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,.12);}
   #fixedPlayButton {
     height: 48px;
     padding: 0 15px;
     font-weight: 600;
     border: none;
-    border-radius: 12px;
-    color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 16px;
+    background: none;
+    color: white;
   }
-  #fixedPlayButton { background: #bdc3c7; cursor: not-allowed; }
-  #fixedPlayButton.active { background: #3498db; cursor: pointer; box-shadow: 0 3px 10px rgba(0,0,0,.15); }
 
   #examToggleButton { 
     width: 100%;
@@ -124,7 +123,7 @@
   #completedTimes.instruction { color: #7f8c8d; font-style: italic; }
   #practiceContainer {
     position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-    background: #fff; padding: 10px 15px; border-radius: 12px;
+    background: #0a0862; padding: 10px 15px;
     box-shadow: 0 5px 19px 1px rgba(0,0,0,.28); display: flex; gap: 10px;
     z-index: 100; justify-content: space-between; display: none; justify-content: center;
   }
@@ -152,7 +151,7 @@
 
   #webTitle {
     font-size: 2vh;
-    height: 25vh;
+    height: calc(25vh + 3px);
     width: 100%;
     background: #620808;
     color: #ebebeb;
@@ -344,11 +343,12 @@
 
     children.forEach(child => {
       let fontSize = parseInt(window.getComputedStyle(child).fontSize);
-      // Reducir fuente hasta que el contenido quepa dentro de studyDiv
 
-      while (child.scrollHeight > (studyDiv.clientHeight - 60) && fontSize > 8) {
+      // Reducir fuente hasta que el contenido quepa en ancho
+      while (child.scrollWidth > studyDiv.clientWidth && fontSize > 8) {
         fontSize -= 1;
         child.style.fontSize = fontSize + "px";
+        // Si tiene elementos internos también ajustarlos
         child.querySelectorAll("*").forEach(el => el.style.fontSize = fontSize + "px");
       }
     });
@@ -363,35 +363,59 @@
     const title = document.createElement("p");
     title.textContent = level.name;
     title.style.paddingLeft = "10px";
-    title.style.marginBottom = "0px";
+    title.style.marginBottom = "10px";
     title.style.fontWeight = "bold";
     title.style.color = "#2c3e50";
     title.style.fontSize = "1.2rem";
     studyDiv.appendChild(title);
 
-    const list = document.createElement("div");
-    list.id = "studyList";
-    list.style.display = "flex";
-    list.style.flexWrap = "wrap";
+    // Crear tabla
+    const table = document.createElement("table");
+    table.style.borderCollapse = "collapse";
+    table.style.width = "100%";
 
-    level.items.forEach(item => {
-      const card = document.createElement("div");
-      card.style.padding = "8px 12px";
-      card.style.fontSize = "15px";
-      card.style.display = "flex";
-      card.style.flexDirection = "row";
-      card.style.alignItems = "left";
-      card.style.gap = "10px";
-      card.style.border = "1px solid";
-
-      card.innerHTML = `<span>${item.q}</span><span style="font-weight: bold;">${item.a}</span>`;
-      list.appendChild(card);
+    // Cabecera
+    const thead = document.createElement("thead");
+    const headerRow = document.createElement("tr");
+    ["Español", "Japonés"].forEach(text => {
+      const th = document.createElement("th");
+      th.textContent = text;
+      th.style.border = "1px solid #ccc";
+      th.style.padding = "8px";
+      th.style.textAlign = "left";
+      th.style.background = "#f0f0f0";
+      headerRow.appendChild(th);
     });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
 
-    studyDiv.appendChild(list);
+    // Cuerpo
+    const tbody = document.createElement("tbody");
+    level.items.forEach(item => {
+      const tr = document.createElement("tr");
+
+      const td1 = document.createElement("td");
+      td1.textContent = item.q;
+      td1.style.border = "1px solid #ccc";
+      td1.style.padding = "8px";
+
+      const td2 = document.createElement("td");
+      td2.textContent = item.a;
+      td2.style.border = "1px solid #ccc";
+      td2.style.padding = "8px";
+      td2.style.fontWeight = "bold";
+
+      tr.appendChild(td1);
+      tr.appendChild(td2);
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+
+    studyDiv.appendChild(table);
 
     fitTextInStudyDiv(); // ajustar tamaño de fuente
   }
+
 
   // Botón examen
   examBtn.onclick = () => {
