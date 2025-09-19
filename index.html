@@ -20,7 +20,7 @@
 
   #studyDiv {
     position: fixed;
-    height: calc(25vh - 16px);
+    height: calc(25vh - 21px);
     width: calc(100% - 65px);
     background: #fefff3;
     top: 0;
@@ -158,7 +158,7 @@
 
   #webTitle {
     font-size: 2vh;
-    height: calc(25vh + 3px);
+    height: 25vh;
     width: 100%;
     background: #620808;
     color: #ebebeb;
@@ -552,10 +552,6 @@ document.querySelectorAll(".level-card").forEach(card => {
 });
 
 
-document.querySelectorAll("button").forEach(btn => {
-  btn.addEventListener("touchstart", e => e.preventDefault()); // opcional
-  btn.addEventListener("mousedown", e => e.preventDefault());
-});
 
 document.querySelectorAll("button").forEach(btn => {
   btn.setAttribute("tabindex", "-1"); // no pueden recibir focus
