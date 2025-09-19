@@ -553,8 +553,13 @@ document.querySelectorAll(".level-card").forEach(card => {
 
 
 
-document.querySelectorAll("button").forEach(btn => {
-  btn.setAttribute("tabindex", "-1"); // no pueden recibir focus
+// Evitar que el teclado aparezca en los campos de entrada
+document.addEventListener('focusin', (event) => {
+    // Si el elemento que recibe el foco es un campo de entrada (input, textarea, etc.)
+    // le quitamos el foco inmediatamente.
+    if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+        event.target.blur();
+    }
 });
 
 
