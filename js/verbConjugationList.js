@@ -1,43 +1,28 @@
 var verbConjugationList = {
-  listName: "Conjugaciones de Verbos Básicas",
+  listName: "verbConjugation",
   category: "grammar",
   levels: [{
     level: 0,
     name: "Nivel 1: Verbos Ichidan (Grupo 2)",
     items: [{
-        q: "たべる (taberu) → presente formal",
+        q: "たべる (taberu) → forma presente formal",
         a: "たべます",
         r: "tabemasu"
       },
       {
-        q: "たべる (taberu) → negativo formal",
+        q: "たべる (taberu) → forma negativa formal",
         a: "たべません",
         r: "tabemasen"
       },
       {
-        q: "たべる (taberu) → pasado formal",
+        q: "たべる (taberu) → forma pasada formal",
         a: "たべました",
         r: "tabemashita"
       },
       {
-        q: "たべる (taberu) → pasado negativo formal",
+        q: "たべる (taberu) → forma pasada negativa formal",
         a: "たべませんでした",
         r: "tabemasendeshita"
-      },
-      {
-        q: "たべる (taberu) → negativo informal",
-        a: "たべない",
-        r: "tabenai"
-      },
-      {
-        q: "たべる (taberu) → pasado informal",
-        a: "たべた",
-        r: "tabeta"
-      },
-      {
-        q: "たべる (taberu) → pasado negativo informal",
-        a: "たべなかった",
-        r: "tabenakatta"
       },
       {
         q: "たべる (taberu) → forma -te",
@@ -45,98 +30,83 @@ var verbConjugationList = {
         r: "tabete"
       },
       {
-        q: "たべる (taberu) → volitivo",
-        a: "たべよう",
-        r: "tabeyou"
-      },
-      {
-        q: "たべる (taberu) → potencial",
-        a: "たべられる",
-        r: "taberareru"
-      },
-      {
-        q: "たべる (taberu) → condicional (-tara)",
-        a: "たべたら",
-        r: "tabetara"
-      },
-      {
-        q: "たべる (taberu) → imperativo",
-        a: "たべろ",
-        r: "tabero"
-      },
-      {
-        q: "たべる (taberu) → deseo",
-        a: "たべたい",
-        r: "tabetai"
-      },
-      {
-        q: "たべる (taberu) → deseo negativo",
-        a: "たべたくない",
-        r: "tabetakunai"
-      },
-      {
-        q: "たべる (taberu) → progresivo",
-        a: "たべている",
-        r: "tabeteiru"
-      },
-      {
-        q: "たべる (taberu) → cortesía/pedido",
+        q: "たべる (taberu) → forma de cortesía/pedido",
         a: "たべてください",
         r: "tabete kudasai"
       },
       {
-        q: "みる (miru) → pasado informal",
-        a: "みた",
-        r: "mita"
+        q: "たべる (taberu) → forma presente informal",
+        a: "たべる",
+        r: "taberu"
       },
       {
-        q: "みる (miru) → imperativo",
-        a: "みろ",
-        r: "miro"
+        q: "たべる (taberu) → forma negativa informal",
+        a: "たべない",
+        r: "tabenai"
       },
       {
-        q: "おきる (okiru) → forma -te",
-        a: "おきて",
-        r: "okite"
+        q: "たべる (taberu) → forma pasada informal",
+        a: "たべた",
+        r: "tabeta"
+      },
+      {
+        q: "たべる (taberu) → forma pasada negativa informal",
+        a: "たべなかった",
+        r: "tabenakatta"
+      },
+      {
+        q: "たべる (taberu) → forma volitiva",
+        a: "たべよう",
+        r: "tabeyou"
+      },
+      {
+        q: "たべる (taberu) → forma potencial",
+        a: "たべられる",
+        r: "taberareru"
+      },
+      {
+        q: "たべる (taberu) → forma condicional",
+        a: "たべたら",
+        r: "tabetara"
+      },
+      {
+        q: "たべる (taberu) → forma imperativa",
+        a: "たべろ",
+        r: "tabero"
+      },
+      {
+        q: "たべる (taberu) → forma de deseo",
+        a: "たべたい",
+        r: "tabetai"
+      },
+      {
+        q: "みる (miru) → forma -te",
+        a: "みて",
+        r: "mite"
+      },
+      {
+        q: "おきる (okiru) → forma potencial",
+        a: "おきられる",
+        r: "okirareru"
       },
     ]
   }, {
     level: 1,
     name: "Nivel 2: Verbos Godan (Grupo 1)",
     items: [{
-        q: "かく (kaku) → presente formal",
+        q: "かく (kaku) → forma presente formal",
         a: "かきます",
         r: "kakimasu"
       },
       {
-        q: "かく (kaku) → negativo formal",
-        a: "かきません",
-        r: "kakimasen"
-      },
-      {
-        q: "かく (kaku) → pasado formal",
-        a: "かきました",
-        r: "kakimashita"
-      },
-      {
-        q: "かく (kaku) → pasado negativo formal",
-        a: "かきませんでした",
-        r: "kakimasendeshita"
-      },
-      {
-        q: "かく (kaku) → negativo informal",
+        q: "かく (kaku) → forma negativa informal",
         a: "かかない",
         r: "kakanai"
       },
       {
-        q: "かく (kaku) → pasado informal",
+        q: "かく (kaku) → forma pasada informal",
         a: "かいた",
         r: "kaita"
-      },
-      {
-        q: "かく (kaku) → pasado negativo informal",
-        a: "かかなかった",
-        r: "kakanakatta"
       },
       {
         q: "かく (kaku) → forma -te",
@@ -144,128 +114,73 @@ var verbConjugationList = {
         r: "kaite"
       },
       {
-        q: "かく (kaku) → volitivo",
-        a: "かこう",
-        r: "kakou"
+        q: "はなす (hanasu) → forma pasada informal",
+        a: "はなした",
+        r: "hanashita"
       },
       {
-        q: "かく (kaku) → potencial",
-        a: "かける",
-        r: "kakeru"
+        q: "よむ (yomu) → forma volitiva",
+        a: "よもう",
+        r: "yomou"
       },
       {
-        q: "かく (kaku) → condicional (-tara)",
-        a: "かいたら",
-        r: "kaitara"
+        q: "のむ (nomu) → forma potencial",
+        a: "のめる",
+        r: "nomeru"
       },
       {
-        q: "かく (kaku) → imperativo",
-        a: "かけ",
-        r: "kake"
+        q: "あるく (aruku) → forma condicional",
+        a: "あるいたら",
+        r: "aruitara"
       },
       {
-        q: "かく (kaku) → deseo",
-        a: "かきたい",
-        r: "kakitai"
+        q: "かう (kau) → forma -te",
+        a: "かって",
+        r: "katte"
       },
       {
-        q: "かく (kaku) → deseo negativo",
-        a: "かきたくない",
-        r: "kakitakunai"
+        q: "まつ (matsu) → forma de deseo",
+        a: "まちたい",
+        r: "machitai"
       },
       {
-        q: "かく (kaku) → progresivo",
-        a: "かいている",
-        r: "kaiteiru"
+        q: "しぬ (shinu) → forma volitiva",
+        a: "しんよう",
+        r: "shinou"
       },
       {
-        q: "かく (kaku) → cortesía/pedido",
-        a: "かいてください",
-        r: "kaite kudasai"
-      },
-      {
-        q: "はなす (hanasu) → forma -te",
-        a: "はなして",
-        r: "hanashite"
-      },
-      {
-        q: "よむ (yomu) → pasado informal",
-        a: "よんだ",
-        r: "yonda"
-      },
-      {
-        q: "しぬ (shinu) → forma -te",
-        a: "しんで",
-        r: "shinde"
-      },
-      {
-        q: "とぶ (tobu) → pasado informal",
+        q: "とぶ (tobu) → forma pasada informal",
         a: "とんだ",
         r: "tonda"
       },
       {
-        q: "まもる (mamoru) → imperativo",
-        a: "まもれ",
-        r: "mamore"
-      },
-      {
-        q: "かう (kau) → pasado informal",
-        a: "かった",
-        r: "katta"
-      },
-      {
-        q: "まつ (matsu) → pasado informal",
-        a: "まった",
-        r: "matta"
-      },
-      {
-        q: "あるく (aruku) → potencial",
-        a: "あるける",
-        r: "arukeru"
+        q: "きく (kiku) → forma imperativa",
+        a: "きけ",
+        r: "kike"
       },
     ]
   }, {
     level: 2,
     name: "Nivel 3: Verbos Irregulares",
     items: [{
-        q: "する (suru) → presente formal",
+        q: "する (suru) → forma presente formal",
         a: "します",
         r: "shimasu"
       },
       {
-        q: "する (suru) → pasado informal",
+        q: "する (suru) → forma pasada informal",
         a: "した",
         r: "shita"
       },
       {
-        q: "する (suru) → forma -te",
-        a: "して",
-        r: "shite"
-      },
-      {
-        q: "する (suru) → volitivo",
-        a: "しよう",
-        r: "shiyou"
-      },
-      {
-        q: "する (suru) → potencial",
+        q: "する (suru) → forma potencial",
         a: "できる",
         r: "dekiru"
       },
       {
-        q: "する (suru) → imperativo",
-        a: "しろ",
-        r: "shiro"
-      },
-      {
-        q: "くる (kuru) → presente formal",
-        a: "きます",
-        r: "kimasu"
-      },
-      {
-        q: "くる (kuru) → pasado informal",
-        a: "きた",
-        r: "kita"
+        q: "くる (kuru) → forma negativa informal",
+        a: "こない",
+        r: "konai"
       },
       {
         q: "くる (kuru) → forma -te",
@@ -273,19 +188,9 @@ var verbConjugationList = {
         r: "kite"
       },
       {
-        q: "くる (kuru) → volitivo",
+        q: "くる (kuru) → forma volitiva",
         a: "こよう",
         r: "koyou"
-      },
-      {
-        q: "くる (kuru) → potencial",
-        a: "こられる",
-        r: "korareru"
-      },
-      {
-        q: "くる (kuru) → imperativo",
-        a: "こい",
-        r: "koi"
       },
     ]
   }]
