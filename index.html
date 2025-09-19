@@ -87,6 +87,13 @@
     justify-items: center;
   }
 
+  button {
+    touch-action: manipulation;  /* mejora el touch en móviles */
+    -webkit-user-select: none;   /* evitar selección en iOS */
+    user-select: none;
+    outline: none;
+  }
+
   .level-card.selected { background: #0a0862; color: #fff; transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,.12);}
   #fixedPlayButton {
     height: 48px;
@@ -542,6 +549,16 @@ document.querySelectorAll(".level-card").forEach(card => {
   // Opcional: si el texto cambia dinámicamente
   const observer = new MutationObserver(() => fitTextInCard(card));
   observer.observe(card, { childList: true, subtree: true });
+});
+
+
+document.querySelectorAll("button").forEach(btn => {
+  btn.addEventListener("touchstart", e => e.preventDefault()); // opcional
+  btn.addEventListener("mousedown", e => e.preventDefault());
+});
+
+document.querySelectorAll("button").forEach(btn => {
+  btn.setAttribute("tabindex", "-1"); // no pueden recibir focus
 });
 
 
