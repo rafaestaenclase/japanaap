@@ -477,7 +477,7 @@ uniqueCategories.forEach(cat => {
   btn.onclick = () => {
     const sectionSelected = container.querySelector(`.section.${cat}`);
     if (!sectionSelected) return;
-    const offset = window.innerHeight * 0.25 + 52;
+    const offset = window.innerHeight * 0.25 + 70;
     const y = Math.max(0, sectionSelected.offsetTop - offset);
     container.scrollTo({ top: y, behavior: 'smooth' });
   };
