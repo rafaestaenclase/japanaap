@@ -3,7 +3,7 @@ var verbConjugationList = {
     category: "grammar",
     levels: [{
         level: 0,
-        name: "Nivel 1: Verbos Ichidan (Grupo 2)",
+        name: "Verbos Ichidan (Grupo 2)",
         items: [{
             q: "たべる (taberu) → comer (presente)",
             a: "たべます",
@@ -51,7 +51,7 @@ var verbConjugationList = {
         }, ],
     }, {
         level: 1,
-        name: "Nivel 2: Verbos Godan (Grupo 1)",
+        name: "Verbos Godan (Grupo 1)",
         items: [{
             q: "かく (kaku) → escribir (presente)",
             a: "かきます",
@@ -107,7 +107,7 @@ var verbConjugationList = {
         }, ],
     }, {
         level: 2,
-        name: "Nivel 3: Verbos Irregulares",
+        name: "Verbos Irregulares",
         items: [{
             q: "する (suru) → hacer (presente)",
             a: "します",

@@ -284,11 +284,14 @@ main {
 
 <div class="correct-circle" id="correctCircle">〇</div>
 
+
+<!--Añadir lista-->
 <script src="js/hiraganaList.js"></script>
 <script src="js/katakanaList.js"></script>
 <script src="js/vocabularyBasicList.js"></script>
 <script src="./js/particleList.js"></script>
 <script src="./js/verbConjugationList.js"></script>
+<script src="./js/demonstrativesList.js"></script>
 
 <script>
 /* ---------- SCRIPT JS ---------- */
@@ -304,10 +307,6 @@ document.getElementById("exitBtn").onclick = () => location.href = "index.html";
 
 const answerEl = document.getElementById("answer");
 
-document.body.onclick = e => {
-    if (e.target !== answerEl) answerEl.focus();
-};
-
 /* ---------- PARAMS & LIST ---------- */
 const params = new URLSearchParams(location.search);
 
@@ -319,7 +318,8 @@ const lists = {
     katakanaList,
     vocabularyBasicList,
     particleList,
-    verbConjugationList
+    verbConjugationList,
+    demonstrativesList
 };
 
 let filteredQuizList = [];
