@@ -499,10 +499,6 @@ function hideShowAnswer() {
 
 showAnswerBtn.onclick = showAnswer;
 
-/* ---------- INPUT FOCUS ---------- */
-answerEl.addEventListener("blur", () => setTimeout(() => answerEl.focus(), 0));
-
-answerEl.focus();
 
 /* ---------- PROGRESS PILLS ---------- */
 const totalItems = filteredQuizList.length;
