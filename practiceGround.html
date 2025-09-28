@@ -308,6 +308,11 @@ document.getElementById("exitBtn").onclick = () => location.href = "index.html";
 
 const answerEl = document.getElementById("answer");
 
+document.body.onclick = e => {
+    if (e.target !== answerEl) answerEl.focus();
+};
+
+
 /* ---------- PARAMS & LIST ---------- */
 const params = new URLSearchParams(location.search);
 
