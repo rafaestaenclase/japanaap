@@ -451,8 +451,22 @@ function normalizeAnswer(str) {
         .replace(/ペッ/g, "ぺッ")
         .replace(/へ/g, "ヘ")
         .replace(/ヘ/g, "へ")
+        .replace(/\s+/g, "") // <-- eliminar TODOS los espacios
         .trim();
 }
+
+function checkAnswer(userInput, item) {
+    const normalizedInput = normalizeAnswer(userInput);
+
+    // item.a puede ser un array con varias alternativas
+    const answers = Array.isArray(item.a) ? item.a : [item.a];
+
+    // También incluir posibles alternativos con alt: true
+    if (item.alt) answers.push(item.alt);
+
+    return answers.some(ans => normalizedInput === normalizeAnswer(ans));
+}
+
 
 answerEl.addEventListener("input", () => {
     if (isChecking) return;
@@ -460,11 +474,14 @@ answerEl.addEventListener("input", () => {
     const ans = answerEl.value.trim();
     if (!ans) return;
 
-    if (normalizeAnswer(ans) === normalizeAnswer(filteredQuizList[index].a)) {
+    const currentItem = filteredQuizList[index];
+
+    if (checkAnswer(ans, currentItem)) {
         isChecking = true;
         showCorrect();
         return;
     }
+
     checkTimeout = setTimeout(() => {}, 2000);
 });
 
