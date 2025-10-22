@@ -1,5 +1,5 @@
 var verbConjugationList = {
-    listName: "verbConjugation",
+    listName: "verbConjugationList",
     category: "grammar",
     levels: [{
         level: 0,

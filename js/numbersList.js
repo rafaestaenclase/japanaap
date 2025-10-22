@@ -1,5 +1,5 @@
 var numbersList = {
-  listName: "numbers",
+  listName: "numbersList",
   category: "write",
   levels: [
     {

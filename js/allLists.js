@@ -18,13 +18,3 @@ const scriptDir = (() => {
 scriptFiles.forEach(file => {
   document.write(`<script src="${scriptDir + file}"></script>`);
 });
-
-
-// 👇 Esta parte se ejecuta después de document.write,
-// así que las listas ya están cargadas cuando llegue aquí
-window.ALL_LISTS = scriptFiles.map(f => {
-
-  const varName = f.replace(".js", "");
-
-  return window[varName] || null;
-});

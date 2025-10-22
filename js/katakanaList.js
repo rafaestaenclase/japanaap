@@ -1,5 +1,5 @@
 var katakanaList = {
-  listName: "katakana",
+  listName: "katakanaList",
   category: "write",
   levels: [
     { level: 0, name: "Vocales", items: [

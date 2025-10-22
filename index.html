@@ -243,7 +243,13 @@ button {
 
 
   // Mejorar la obtención de referencias y usar destructuring para mayor legibilidad
-  const ALL_LISTS = [hiraganaList, katakanaList, vocabularyBasicList, particleList, verbConjugationList, demonstrativesList, numbersList];
+  //que añada las listas a all_lists
+  const ALL_LISTS = [];
+  for (const prop in window) {
+      if (prop.endsWith("List") && window[prop] !== null && window[prop] !== undefined) {
+          ALL_LISTS.push(window[prop]);
+      }
+  }
   const $ = (s) => document.getElementById(s);
   const container = $("sectionsContainer");
   const categoryMenu = $("categoryMenu");
@@ -550,10 +556,10 @@ button {
     // Botón practicar/comenzar
     fixedBtn.onclick = () => {
       if (examMode && examSel.length) {
-        const examParams = examSel.map(c => `${c.dataset.listName}List-${c.dataset.level}`).join(",");
+        const examParams = examSel.map(c => `${c.dataset.listName}-${c.dataset.level}`).join(",");
         location.href = `practiceGround.html?exam=${examParams}`;
       } else if (!examMode && selected) {
-        const listName = selected.dataset.listName + "List";
+        const listName = selected.dataset.listName;
         const level = selected.dataset.level;
         location.href = `practiceGround.html?play=${listName}&level=${level}`;
       }

@@ -286,13 +286,7 @@ main {
 
 
 <!--Añadir lista-->
-<script src="js/hiraganaList.js"></script>
-<script src="js/katakanaList.js"></script>
-<script src="js/vocabularyBasicList.js"></script>
-<script src="./js/particleList.js"></script>
-<script src="./js/verbConjugationList.js"></script>
-<script src="./js/demonstrativesList.js"></script>
-<script src="./js/numbersList.js"></script>
+<script src="js/allLists.js"></script>
 
 <script>
 /* ---------- SCRIPT JS ---------- */
@@ -318,16 +312,14 @@ const params = new URLSearchParams(location.search);
 
 const { play, exam, level: playingLevel } = Object.fromEntries(params);
 
+
 //AÑADIR LISTA
-const lists = {
-    hiraganaList,
-    katakanaList,
-    vocabularyBasicList,
-    particleList,
-    verbConjugationList,
-    demonstrativesList,
-    numbersList
-};
+  const ALL_LISTS = [];
+  for (const prop in window) {
+      if (prop.endsWith("List") && window[prop] !== null && window[prop] !== undefined) {
+          ALL_LISTS.push(window[prop]);
+      }
+  }
 
 let filteredQuizList = [];
 let section = "";
@@ -354,7 +346,8 @@ if (exam) {
 
     selections.forEach(sel => {
         const [listName, levelStr] = sel.split("-");
-        const current = lists[listName];
+        const current = ALL_LISTS.find(l => l.listName === listName);
+
         if (!current) return;
         if (!section) section = current.listName;
 
@@ -382,7 +375,8 @@ if (exam) {
     shuffle(filteredQuizList);
     setPageTitle("Examen", names.join(", "));
 } else if (play) {
-    const quizList = lists[play];
+    const quizList = ALL_LISTS.find(l => l.listName === play);
+    console.log(quizList);
     if (quizList && playingLevel) {
         filteredQuizList = shuffle(quizList.levels[playingLevel].items);
         section = quizList.listName;
