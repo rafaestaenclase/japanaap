@@ -5,213 +5,222 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
 <title>Practicar Japonés</title>
 <style>
+/* 1. Reset & Accesibilidad */
+* {
+  outline: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+button {
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  outline: none;
+  border: none; /* Consolidado */
+  cursor: pointer;
+  transition: .2s; /* Para los botones hover/click */
+}
+/* 2. Diseño de Layout Principal */
+#studyDiv {
+  position: fixed;
+  height: calc(25vh - 21px);
+  width: calc(100% - 65px);
+  background: #fefff3;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 10px;
+}
+#studyDiv * { font-size: 20px; }
+#sectionsContainer {
+  width: calc(100% - 44px);
+  max-width: 960px;
+  height: calc(75vh - 120px);
+  margin-top: 25vh;
+  overflow: scroll;
+  padding-bottom: 120px;
+}
+#verticalBar {
+  position: fixed;
+  height: 100vh;
+  width: 44px;
+  top: 0;
+  right: 0;
+  background: #fefff3;
+  border-radius: 12px;
+  box-shadow: 0 5px 19px 1px rgba(0, 0, 0, .28);
+  display: flex;
+  z-index: 101;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+#webTitle {
+  font-size: 2vh;
+  height: 25vh;
+  width: 100%;
+  background: #620808;
+  color: #ebebeb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  font-weight: bold;
+}
+#categoryMenu {
+  display: flex;
+  max-height: 40vh;
+  align-content: flex-start;
+  flex-wrap: wrap;
+  justify-content: center;
+}
 
-  * {
-  outline: none;          /* Quita el borde de foco azul */
-  user-select: none;      /* Opcional: evita selección de texto al hacer click */
-  -webkit-tap-highlight-color: transparent; /* Quita el highlight en móviles */
-  }
+/* 3. Estilos de Secciones y Tarjetas */
+.section {
+  width: calc(100% - 30px);
+  margin-bottom: 2px;
+  padding: 15px;
+  background: white;
+}
+.section-title {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  color: #2c3e50;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.level-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(32%, 1fr));
+  gap: 3px;
+  justify-items: center;
+  align-items: center;
+}
+.level-card {
+  width: calc(100% - 30px);
+  height: 60px;
+  padding: 15px;
+  background: #fefefe;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 3px 10px rgb(196 192 180 / 52%);
+  font-size: 14px;
+  color: #000;
+  text-align: center;
+  cursor: pointer;
+  justify-content: center;
+  justify-items: center;
+}
+.level-card.selected {
+  background: #0a0862;
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0,0,0,.12);
+}
+.level-card h3 { margin:0; font-size:14px; } /* Ajuste de fuente en JS */
+.level-card p { margin:0; font-size:12px; color:#7f8c8d; }
 
-  body {
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
-  }
+/* 4. Botones Flotantes y de Menú */
+#practiceContainer {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0a0862;
+  padding: 10px 15px;
+  box-shadow: 0 5px 19px 1px rgba(0,0,0,.28);
+  display: none; /* Escondido por defecto */
+  gap: 10px;
+  z-index: 100;
+  justify-content: center;
+}
+#fixedPlayButton {
+  height: 48px;
+  padding: 0 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  background: none;
+  color: white;
+}
+#examToggleButton {
+  width: 100%;
+  max-height: 25vh;
+  font-weight: 600;
+  color: white;
+  background: #086242;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  padding: 15px 0;
+  margin-top: 5px;
+}
+#examToggleButton.active {
+  border: 3px solid #cc2e2e;
+  box-shadow: 0 3px 10px rgba(0,0,0,.15);
+}
+.categoryButton, #fullscreenToggle {
+  height: 40px;
+  width: 40px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  margin-top: 5px;
+  background: none; /* Base para botones de barra vertical */
+}
+.categoryButton {
+  background: #17171712;
+  border: solid 1px gray;
+  border-radius: 69px;
+  text-shadow:
+    -4px -4px 8px white, 4px -4px 8px white,
+    -4px  4px 8px white, 4px  4px 8px white;
+}
 
-  #studyDiv {
-    position: fixed;
-    height: calc(25vh - 21px);
-    width: calc(100% - 65px);
-    background: #fefff3;
-    top: 0;
-    left: 0;
-    z-index: 100;
-    overflow: scroll;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    flex-wrap: nowrap;
-    padding: 10px;
-  }
+/* 5. Estilos de Tabla */
+.study-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.study-table th {
+  background: #f0f0f0;
+}
+.study-table th, .study-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+.study-table td:last-child {
+  font-weight: bold;
+}
+/* Estilos de título de categoría */
+.category-block h2 {
+  padding: 5px;
+  background: #ecf0f1;
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+}
 
-   #studyDiv * {
-    font-size: 20px;
-   }
-
-  #sectionsContainer {
-    width: calc(100% - 44px);
-    max-width: 960px;
-    height: calc(75vh - 120px);
-    margin-top: 25vh;
-    overflow: scroll;
-    padding-bottom: 120px;
-  }
-
-  .section {
-    width: calc(100% - 30px);
-    margin-bottom: 2px;
-    padding: 15px;
-    background: white;
-  }
-  .section-title {
-    font-weight: bold;
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    color: #2c3e50;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .level-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(32%, 1fr));
-    gap: 3px;
-    justify-items: center;
-    align-items: center;
-  }
-  .level-card {
-    width: calc(100% - 30px);
-    height: 60px;
-    padding: 15px;
-    background: #fefefe;
-    display: grid;
-    place-items: center;
-    box-shadow: 0 3px 10px rgb(196 192 180 / 52%);
-    transition: .2s;
-    font-size: 14px;
-    color: #000;
-    text-align: center;
-    cursor: pointer;
-    justify-content: center;
-    justify-items: center;
-  }
-
-  button {
-    touch-action: manipulation;  /* mejora el touch en móviles */
-    -webkit-user-select: none;   /* evitar selección en iOS */
-    user-select: none;
-    outline: none;
-  }
-
-  .level-card.selected { background: #0a0862; color: #fff; transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,.12);}
-  #fixedPlayButton {
-    height: 48px;
-    padding: 0 15px;
-    font-weight: 600;
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    background: none;
-    color: white;
-  }
-
-  #examToggleButton { 
-    width: 100%;
-    max-height: 25vh;
-    font-weight: 600;
-    border: none;
-    color: white;
-    background: #086242;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    writing-mode: vertical-rl;
-    text-orientation: upright;
-    padding: 15px 0px;
-    margin-top: 5px;
-  }
-
-  #examToggleButton.active { border: 3px solid #cc2e2e; box-shadow: 0 3px 10px rgba(0,0,0,.15); }
-  #completedTimes { font-size: 12px; color: #2c3e50; font-weight: 500; }
-  #completedTimes.instruction { color: #7f8c8d; font-style: italic; }
-  #practiceContainer {
-    position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-    background: #0a0862; padding: 10px 15px;
-    box-shadow: 0 5px 19px 1px rgba(0,0,0,.28); display: flex; gap: 10px;
-    z-index: 100; justify-content: space-between; display: none; justify-content: center;
-  }
-  .examButton {
-    background: #ecf0f1; border: none; padding: 4px 8px;
-    border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: background .2s;
-  }
-  .examButton:hover { background: #d0d7de; }
-
-  #verticalBar {
-    position: fixed;
-    height: 100vh;
-    width: 44px;
-    top: 0;
-    right: 0;
-    background: #fefff3;
-    border-radius: 12px;
-    box-shadow: 0 5px 19px 1px rgba(0, 0, 0, .28);
-    display: flex;
-    z-index: 101;
-    justify-content: center;
-    flex-wrap: wrap;
-    align-content: flex-start;
-  }
-
-  #webTitle {
-    font-size: 2vh;
-    height: 25vh;
-    width: 100%;
-    background: #620808;
-    color: #ebebeb;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    writing-mode: vertical-rl; /* texto vertical */
-    text-orientation: upright; /* cada carácter en pie */
-    font-weight: bold;
-  }
-
-  .categoryButton {
-    height: 40px;
-    width: 40px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    border: none;
-    background: #17171712;
-    border: solid 1px gray;
-    border-radius: 69px;
-    margin-top: 5px;
-    text-shadow:
-      -4px -4px 8px white,
-       4px -4px 8px white,
-      -4px  4px 8px white,
-       4px  4px 8px white;
-  }
-
-  #fullscreenToggle {
-    height: 40px;
-    width: 40px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    border: none;
-    margin-top: 5px;
-  }
-
-  #categoryMenu {
-    display: flex;
-    max-height: 40vh;
-    align-content: flex-start;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .level-card h3 { margin:0; font-size:14px; }
-  .level-card p { margin:0; font-size:12px; color:#7f8c8d; }
+/* Clases no utilizadas en CSS, eliminadas: .examButton, #completedTimes, .instruction */
 </style>
 </head>
 <body>
@@ -228,32 +237,35 @@
 <div id="practiceContainer">
   <button id="fixedPlayButton">Practicar</button>
 </div>
-
-<!--Añadir lista-->
-<script src="./js/hiraganaList.js"></script>
-<script src="./js/katakanaList.js"></script>
-<script src="./js/vocabularyBasicList.js"></script>
-<script src="./js/particleList.js"></script>
-<script src="./js/verbConjugationList.js"></script>
-<script src="./js/demonstrativesList.js"></script>
-<script src="./js/numbersList.js"></script>
-
+<script src="./js/allLists.js"></script>
 <script>
-  //Añadir lista
-  const allList = [hiraganaList, katakanaList, vocabularyBasicList, particleList, verbConjugationList, demonstrativesList, numbersList];
-  const container = document.getElementById("sectionsContainer");
-  const categoryMenu = document.getElementById("categoryMenu");
-  const fixedBtn = document.getElementById("fixedPlayButton");
-  const examBtn = document.getElementById("examToggleButton");
-  const times = document.getElementById("completedTimes");
 
-  let selected = null, examMode = false, examSel = [];
 
-  // Crear grid para un nivel
+
+  // Mejorar la obtención de referencias y usar destructuring para mayor legibilidad
+  const ALL_LISTS = [hiraganaList, katakanaList, vocabularyBasicList, particleList, verbConjugationList, demonstrativesList, numbersList];
+  const $ = (s) => document.getElementById(s);
+  const container = $("sectionsContainer");
+  const categoryMenu = $("categoryMenu");
+  const fixedBtn = $("fixedPlayButton");
+  const examBtn = $("examToggleButton");
+  const studyDiv = $("studyDiv");
+  const practiceContainer = $("practiceContainer");
+  const fullscreenBtn = $("fullscreenToggle");
+
+  let selected = null;
+  let examMode = false;
+  let examSel = [];
+
+  /**
+   * Crea el bloque de sección y sus tarjetas de nivel (grid).
+   * @param {object} listObj - Objeto de lista de datos (ej. hiraganaList).
+   * @param {HTMLElement} parent - El contenedor donde se añadirá.
+   */
   function createGrid(listObj, parent) {
     const section = document.createElement("div");
     section.id = listObj.listName;
-    section.classList.add("section", listObj.category);
+    section.className = `section ${listObj.category}`;
 
     const title = document.createElement("div");
     title.className = "section-title";
@@ -272,147 +284,203 @@
       levelCard.innerHTML = `<h3>${lvl.name}</h3>`;
       levelCard.onclick = () => handleCardClick(levelCard);
       grid.appendChild(levelCard);
+
+      // Ajustar texto inmediatamente después de la creación
+      fitTextInCard(levelCard);
     });
 
     section.appendChild(grid);
     parent.appendChild(section);
   }
 
-  // Crear las categorías dinámicamente
-  const categories = [...new Set(allList.map(l => l.category))];
-  categories.forEach(cat => {
-    const categoryDiv = document.createElement("div");
-    categoryDiv.className = "category-block";
-    categoryDiv.dataset.category = cat;
+  /**
+   * Genera los bloques de categorías y los menús de filtro.
+   */
+  function initCategoriesAndSections() {
+    const categories = [...new Set(ALL_LISTS.map(l => l.category))];
 
-    // Título de categoría con emoji
-    const h2 = document.createElement("h2");
-    h2.style.padding = "5px";
-    h2.style.background = "#ecf0f1";
-    h2.style.margin = "0 0 10px 0";
-    h2.style.color = "#2c3e50";
-    h2.textContent =
-      cat === "write" ? "✍️ Escritura" :
-      cat === "vocabulary" ? "📖 Vocabulario" :
-      cat === "grammar" ? "🧩 Gramática" :
-      cat; // fallback
+    categories.forEach(cat => {
+      // 1. Crear Bloque de Contenido (category-block)
+      const categoryDiv = document.createElement("div");
+      categoryDiv.className = "category-block";
+      categoryDiv.style.display = "none"; // Ocultar por defecto para el filtro inicial
+      categoryDiv.dataset.category = cat;
 
-    categoryDiv.appendChild(h2);
+      const h2 = document.createElement("h2");
+      h2.textContent =
+        cat === "write" ? "✍️ Escritura" :
+        cat === "vocabulary" ? "📖 Vocabulario" :
+        cat === "grammar" ? "🧩 Gramática" :
+        cat;
+      categoryDiv.appendChild(h2);
 
-    // Añadir todas las secciones de esta categoría
-    allList.filter(l => l.category === cat).forEach(listObj => {
-      createGrid(listObj, categoryDiv);
+      ALL_LISTS.filter(l => l.category === cat).forEach(listObj => {
+        createGrid(listObj, categoryDiv);
+      });
+
+      container.appendChild(categoryDiv);
+
+      // 2. Crear Botón de Menú (categoryButton)
+      const btn = document.createElement("button");
+      btn.textContent =
+        cat === "write" ? "✏️" :
+        cat === "vocabulary" ? "📖" :
+        cat === "grammar" ? "🧩" :
+        "?";
+      btn.id = cat;
+      btn.className = "categoryButton";
+
+      btn.onclick = () => filterSections(cat, btn);
+      categoryMenu.appendChild(btn);
     });
 
-    container.appendChild(categoryDiv);
-  });
+    // Mostrar todas las secciones al inicio (ya que se ocultan por defecto)
+    container.querySelectorAll(".category-block").forEach(b => b.style.display = "block");
+  }
 
-  // Resto de tu código (NO TOCADO) ↓↓↓
-  // Manejo de click en tarjetas
-  function handleCardClick(card) {
-    const practiceContainer = document.getElementById("practiceContainer");
-    const studyDiv = document.getElementById("studyDiv");
+  /**
+   * Filtra las secciones visibles al hacer clic en un botón de categoría.
+   * @param {string} cat - La categoría a filtrar.
+   * @param {HTMLElement} clickedBtn - El botón pulsado.
+   */
+  function filterSections(cat, clickedBtn) {
+    const allBlocks = container.querySelectorAll(".category-block");
+    const currentBlock = container.querySelector(`.category-block[data-category="${cat}"]`);
+    const allBtns = document.querySelectorAll(".categoryButton");
 
-    let currentList = allList.find(l => l.listName === card.dataset.listName);
-    let currentLevel = currentList.levels[card.dataset.index];
+    // Determinar si YA es el único visible
+    const isAlreadyActive = currentBlock.style.display !== "none" &&
+      [...allBlocks].every(b => b === currentBlock || b.style.display === "none");
 
-    if (examMode) {
-      card.classList.toggle("selected");
-      examSel = card.classList.contains("selected")
-        ? [...examSel, card]
-        : examSel.filter(x => x !== card);
-
-      fixedBtn.classList.toggle("active", examSel.length > 0);
-      practiceContainer.style.display = examSel.length > 0 ? "flex" : "none";
+    if (isAlreadyActive) {
+      // Mostrar todos los bloques
+      allBlocks.forEach(b => b.style.display = "block");
+      // Desactivar todos los botones
+      allBtns.forEach(b => {
+        b.style.background = "#17171712";
+        b.style.color = "black";
+      });
     } else {
-      if (selected === card) {
-        card.classList.remove("selected");
-        selected = null;
-        fixedBtn.classList.remove("active");
-        studyDiv.innerHTML = "";
-      } else {
-        if (selected) selected.classList.remove("selected");
-        card.classList.add("selected");
-        selected = card;
-        fixedBtn.classList.add("active");
-
-        // Mostrar información en studyDiv
-        renderStudyDiv(currentLevel);
-      }
-
-      practiceContainer.style.display = selected ? "flex" : "none";
+      // Ocultar todos excepto el actual
+      allBlocks.forEach(b => {
+        b.style.display = (b === currentBlock) ? "block" : "none";
+      });
+      // Marcar botón activo
+      allBtns.forEach(b => {
+        const isActive = (b === clickedBtn);
+        b.style.background = isActive ? "#0a0862" : "#17171712";
+        b.style.color = isActive ? "white" : "black";
+      });
     }
   }
 
-  function fitTextInStudyDiv() {
-    const studyDiv = document.getElementById("studyDiv");
-    if (!studyDiv) return;
-
-    const children = Array.from(studyDiv.children);
-
-    children.forEach(child => {
-      let fontSize = parseInt(window.getComputedStyle(child).fontSize);
-
-      // Reducir fuente hasta que el contenido quepa en ancho
-      while (child.scrollWidth > studyDiv.clientWidth && fontSize > 8) {
-        fontSize -= 1;
-        child.style.fontSize = fontSize + "px";
-        // Si tiene elementos internos también ajustarlos
-        child.querySelectorAll("*").forEach(el => el.style.fontSize = fontSize + "px");
+  /**
+   * Maneja el clic en una tarjeta de nivel.
+   * @param {HTMLElement} card - La tarjeta de nivel (level-card) que se ha pulsado.
+   */
+  function handleCardClick(card) {
+    if (examMode) {
+      // Modo Examen: Selección múltiple
+      card.classList.toggle("selected");
+      if (card.classList.contains("selected")) {
+        examSel.push(card);
+      } else {
+        examSel = examSel.filter(x => x !== card);
       }
-    });
+      practiceContainer.style.display = examSel.length > 0 ? "flex" : "none";
+
+    } else {
+      // Modo Práctica: Selección simple
+      const isDeselecting = selected === card;
+
+      if (selected) selected.classList.remove("selected");
+
+      if (isDeselecting) {
+        selected = null;
+        studyDiv.innerHTML = "";
+      } else {
+        card.classList.add("selected");
+        selected = card;
+
+        // Mostrar información
+        const listName = card.dataset.listName;
+        const levelIndex = parseInt(card.dataset.index);
+        const currentList = ALL_LISTS.find(l => l.listName === listName);
+        const currentLevel = currentList.levels[levelIndex];
+        renderStudyDiv(currentLevel);
+      }
+      practiceContainer.style.display = selected ? "flex" : "none";
+    }
+    // Asegurarse de que el botón de práctica/examen tiene el estado correcto
+    fixedBtn.classList.toggle("active", examMode ? examSel.length > 0 : !!selected);
   }
 
+  /**
+   * Ajusta el tamaño de fuente de los elementos en studyDiv si desbordan.
+   */
+  function fitTextInStudyDiv() {
+    // Usamos el contenedor principal para la lógica de ajuste
+    const maxHeight = studyDiv.clientHeight;
+    const maxWidth = studyDiv.clientWidth;
 
-  // Aplicar al renderizar contenido
+    // Solo ajustamos la tabla si existe para evitar conflictos con el 'Ganbatte'
+    const table = studyDiv.querySelector('.study-table');
+    if (!table) return;
+
+    let tableFontSize = 20; // Valor inicial del CSS
+    const children = Array.from(table.querySelectorAll('th, td'));
+
+    // Ajustar fuente reduciendo para que no desborde el ancho de la tabla
+    while (table.scrollWidth > maxWidth && tableFontSize > 8) {
+      tableFontSize -= 1;
+      children.forEach(el => el.style.fontSize = tableFontSize + "px");
+    }
+    // Una vez ajustado el ancho, asegurar que la tabla no rompa el layout vertical
+    // Aunque el CSS maneja overflow:scroll, un ajuste vertical estricto es más complejo
+    // y la limitación por ancho es la prioridad para tablas.
+  }
+
+  /**
+   * Dibuja la tabla de contenidos en studyDiv para el nivel seleccionado.
+   * @param {object} level - El objeto de nivel con `name` y `items`.
+   */
   function renderStudyDiv(level) {
-    const studyDiv = document.getElementById("studyDiv");
-    studyDiv.innerHTML = ""; // limpiar contenido previo
+    studyDiv.innerHTML = "";
 
     const title = document.createElement("p");
     title.textContent = level.name;
-    title.style.paddingLeft = "10px";
-    title.style.marginBottom = "10px";
-    title.style.fontWeight = "bold";
-    title.style.color = "#2c3e50";
-    title.style.fontSize = "1.2rem";
+    Object.assign(title.style, {
+      paddingLeft: "10px",
+      marginBottom: "10px",
+      fontWeight: "bold",
+      color: "#2c3e50",
+      fontSize: "1.2rem"
+    });
     studyDiv.appendChild(title);
 
-    // Crear tabla
+    // Crear tabla y aplicar clase CSS
     const table = document.createElement("table");
-    table.style.borderCollapse = "collapse";
-    table.style.width = "100%";
+    table.className = "study-table";
 
-    // Cabecera
+    // Cabecera (thead)
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
     ["Español", "Japonés"].forEach(text => {
       const th = document.createElement("th");
       th.textContent = text;
-      th.style.border = "1px solid #ccc";
-      th.style.padding = "8px";
-      th.style.textAlign = "left";
-      th.style.background = "#f0f0f0";
       headerRow.appendChild(th);
     });
     thead.appendChild(headerRow);
     table.appendChild(thead);
 
-    // Cuerpo
+    // Cuerpo (tbody)
     const tbody = document.createElement("tbody");
     level.items.forEach(item => {
       const tr = document.createElement("tr");
-
       const td1 = document.createElement("td");
       td1.textContent = item.q;
-      td1.style.border = "1px solid #ccc";
-      td1.style.padding = "8px";
-
       const td2 = document.createElement("td");
       td2.textContent = item.a;
-      td2.style.border = "1px solid #ccc";
-      td2.style.padding = "8px";
-      td2.style.fontWeight = "bold";
 
       tr.appendChild(td1);
       tr.appendChild(td2);
@@ -422,149 +490,113 @@
 
     studyDiv.appendChild(table);
 
-    fitTextInStudyDiv(); // ajustar tamaño de fuente
+    fitTextInStudyDiv();
   }
 
-
-  // Botón examen
-  examBtn.onclick = () => {
-    studyDiv.innerHTML = "";
-    examMode = !examMode;
-    examBtn.classList.toggle("active", examMode);
-    fixedBtn.textContent = examMode ? "Comenzar" : "Practicar";
-    examBtn.textContent = examMode ? "CANCELAR" : "EXAMEN";
-    studyDiv.innerHTML = examMode ? '<h3 style="padding-left: 10px;" >SELECCIONA LOS MÓDULOS A AÑADIR AL EXAMEN.</h3>' : "";
-    if (examMode) {
-      if (selected) {
-        selected.classList.remove("selected");
-        selected = null;
-        fixedBtn.classList.remove("active");
-      }
-    } else {
-      examSel.forEach(c => c.classList.remove("selected"));
-      examSel = [];
-      fixedBtn.classList.remove("active");
-    }
-  };
-
-  // Botón practicar/comenzar
-  fixedBtn.onclick = () => {
-    if (examMode && examSel.length) {
-      location.href = `practiceGround.html?exam=${examSel.map(c => `${c.dataset.listName}List-${c.dataset.level}`).join(",")}`;
-    } else if (!examMode && selected) {
-      location.href = `practiceGround.html?play=${selected.dataset.listName}List&level=${selected.dataset.level}`;
-    }
-  };
-
-// Llenar categoryMenu con botones únicos
-const uniqueCategories = [...new Set(allList.map(l => l.category))];
-uniqueCategories.forEach(cat => {
-  const btn = document.createElement("button");
-  switch (cat) {
-    case "write":
-      btn.textContent = "✏️";
-      break;
-    case "vocabulary":
-      btn.textContent = "📖";
-      break;
-    case "grammar":
-      btn.textContent = "🧩";
-      break;
-    default:
-      btn.textContent = "?"; // opcional, por si no coincide nada
-      break;
-  }
-  btn.id = cat;
-  btn.className = "categoryButton";
-  btn.onclick = () => {
-    const sectionSelected = container.querySelector(`.section.${cat}`);
-    if (!sectionSelected) return;
-    const offset = window.innerHeight * 0.25 + 70;
-    const y = Math.max(0, sectionSelected.offsetTop - offset);
-    container.scrollTo({ top: y, behavior: 'smooth' });
-  };
-  categoryMenu.appendChild(btn);
-});
-
-
-  // Botón de pantalla completa
-  const fullscreenBtn = document.getElementById("fullscreenToggle");
-
-  fullscreenBtn.onclick = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(err => {
-        alert(`Error al intentar entrar en pantalla completa: ${err.message}`);
-      });
-    } else {
-      document.exitFullscreen();
-    }
-  };
-
-
-  window.addEventListener("beforeunload", () =>
-    localStorage.setItem("lastScrollPosition", container.scrollTop)
-  );
-  window.addEventListener("load", () =>
-    container.scrollTo(0, Number(localStorage.getItem("lastScrollPosition") || 0))
-  );
-
-
+  /**
+   * Muestra el mensaje de ánimo por defecto en studyDiv.
+   */
   function showGanbatte() {
-    const studyDiv = document.getElementById("studyDiv");
     if (studyDiv.innerHTML.trim() === "") {
       studyDiv.innerHTML = "<h1 style='font-weight:bold;padding-left:10px;margin-bottom:0px'>がんばって</h1><h3 style='font-weight:bold;padding-left:10px;margin-top:0px'>Ánimo</h3>";
     }
   }
 
-  // Al arrancar
-  showGanbatte();
+  /**
+   * Ajusta el tamaño de fuente de un h3 dentro de un level-card para que quepa.
+   * @param {HTMLElement} card - La tarjeta de nivel.
+   */
+  function fitTextInCard(card) {
+    const h3 = card.querySelector("h3");
+    if (!h3) return;
 
-    // 2. Observador para detectar cambios posteriores
-  const observer = new MutationObserver(() => {
-    showGanbatte();
-  });
-
-  observer.observe(studyDiv, {
-    childList: true,
-    subtree: true
-  });
-
-
-
-function fitTextInCard(card) {
-  const h3 = card.querySelector("h3");
-  if (!h3) return;
-
-  let fontSize = 14; // tamaño inicial en px
-  h3.style.fontSize = fontSize + "px";
-
-  // Reducir tamaño hasta que quepa
-  while (h3.scrollWidth > card.clientWidth - 15 && fontSize > 8) {
-    fontSize -= 1;
+    let fontSize = 14; // tamaño inicial en px (del CSS)
     h3.style.fontSize = fontSize + "px";
-  }
-}
 
-// Aplicarlo a todos los level-card
-document.querySelectorAll(".level-card").forEach(card => {
-  fitTextInCard(card);
-  // Opcional: si el texto cambia dinámicamente
-  const observer = new MutationObserver(() => fitTextInCard(card));
-  observer.observe(card, { childList: true, subtree: true });
-});
-
-
-
-// Evitar que el teclado aparezca en los campos de entrada
-document.addEventListener('focusin', (event) => {
-    // Si el elemento que recibe el foco es un campo de entrada (input, textarea, etc.)
-    // le quitamos el foco inmediatamente.
-    if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
-        event.target.blur();
+    // Reducir tamaño hasta que quepa (usamos clientWidth y scrollWidth para detectar desborde)
+    while (h3.scrollWidth > card.clientWidth - 15 && fontSize > 8) {
+      fontSize -= 1;
+      h3.style.fontSize = fontSize + "px";
     }
-});
+  }
 
+  /**
+   * Event listeners y configuración inicial.
+   */
+  function setupListeners() {
+    // Botón examen
+    examBtn.onclick = () => {
+      studyDiv.innerHTML = "";
+      examMode = !examMode;
+      examBtn.classList.toggle("active", examMode);
+      fixedBtn.textContent = examMode ? "Comenzar" : "Practicar";
+      examBtn.textContent = examMode ? "CANCELAR" : "EXAMEN";
 
+      if (examMode) {
+        studyDiv.innerHTML = '<h3 style="padding-left: 10px;">SELECCIONA LOS MÓDULOS A AÑADIR AL EXAMEN.</h3>';
+        if (selected) {
+          selected.classList.remove("selected");
+          selected = null;
+        }
+      } else {
+        examSel.forEach(c => c.classList.remove("selected"));
+        examSel = [];
+        showGanbatte();
+      }
+      practiceContainer.style.display = (examMode && examSel.length > 0) || (!examMode && selected) ? "flex" : "none";
+      fixedBtn.classList.toggle("active", examMode ? examSel.length > 0 : !!selected);
+    };
+
+    // Botón practicar/comenzar
+    fixedBtn.onclick = () => {
+      if (examMode && examSel.length) {
+        const examParams = examSel.map(c => `${c.dataset.listName}List-${c.dataset.level}`).join(",");
+        location.href = `practiceGround.html?exam=${examParams}`;
+      } else if (!examMode && selected) {
+        const listName = selected.dataset.listName + "List";
+        const level = selected.dataset.level;
+        location.href = `practiceGround.html?play=${listName}&level=${level}`;
+      }
+    };
+
+    // Botón de pantalla completa
+    fullscreenBtn.onclick = () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.error(`Error al intentar entrar en pantalla completa: ${err.message}`);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    };
+
+    // Manejo de scroll y almacenamiento local
+    window.addEventListener("beforeunload", () =>
+      localStorage.setItem("lastScrollPosition", container.scrollTop)
+    );
+    window.addEventListener("load", () =>
+      container.scrollTo(0, Number(localStorage.getItem("lastScrollPosition") || 0))
+    );
+
+    // Evitar que el teclado aparezca en los campos de entrada
+    document.addEventListener('focusin', (event) => {
+      if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+        event.target.blur();
+      }
+    });
+
+    // Observador para re-mostrar Ganbatte si studyDiv se vacía
+    const observer = new MutationObserver(() => {
+      // Usar setTimeout para asegurar que se ejecuta DESPUÉS de cualquier otra manipulación del DOM
+      setTimeout(showGanbatte, 0);
+    });
+    observer.observe(studyDiv, { childList: true, subtree: true, characterData: true });
+  }
+
+  // Inicialización
+  initCategoriesAndSections();
+  setupListeners();
+  showGanbatte();
 </script>
 
 </body>
