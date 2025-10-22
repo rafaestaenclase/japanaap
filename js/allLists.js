@@ -7,7 +7,7 @@ const scriptFiles = [
   "particleList.js",
   "verbConjugationList.js",
   "demonstrativesList.js",
-  "numbersList.js"
+  "countingAndTimeList.js"
 ];
 
 const scriptDir = (() => {

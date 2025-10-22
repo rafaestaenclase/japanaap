@@ -1,4 +1,5 @@
 var katakanaList = {
+    name: "Katakana",
   listName: "katakanaList",
   category: "write",
   levels: [

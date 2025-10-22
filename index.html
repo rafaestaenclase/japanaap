@@ -275,7 +275,7 @@ button {
 
     const title = document.createElement("div");
     title.className = "section-title";
-    title.textContent = listObj.listName;
+    title.textContent = listObj.name;
     section.appendChild(title);
 
     const grid = document.createElement("div");
@@ -441,9 +441,6 @@ button {
       tableFontSize -= 1;
       children.forEach(el => el.style.fontSize = tableFontSize + "px");
     }
-    // Una vez ajustado el ancho, asegurar que la tabla no rompa el layout vertical
-    // Aunque el CSS maneja overflow:scroll, un ajuste vertical estricto es más complejo
-    // y la limitación por ancho es la prioridad para tablas.
   }
 
   /**
@@ -520,7 +517,7 @@ button {
     h3.style.fontSize = fontSize + "px";
 
     // Reducir tamaño hasta que quepa (usamos clientWidth y scrollWidth para detectar desborde)
-    while (h3.scrollWidth > card.clientWidth - 15 && fontSize > 8) {
+    while (h3.scrollWidth > card.clientWidth && fontSize > 10) {
       fontSize -= 1;
       h3.style.fontSize = fontSize + "px";
     }

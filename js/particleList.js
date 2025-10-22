@@ -1,4 +1,5 @@
 var particleList = {
+  name: "Particulas",
   listName: "particleList",
   category: "grammar",
   levels: [

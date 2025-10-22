@@ -1,4 +1,5 @@
 var demonstrativesList = {
+    name: "Demostrativos",
     listName: "demonstrativesList",
     category: "grammar",
     levels: [

@@ -1,5 +1,5 @@
 var hiraganaList = {
-  name: "hiragana",
+  name: "Hiragana",
   listName: "hiraganaList",
   category: "write",
   levels: [
