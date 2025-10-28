@@ -28,8 +28,8 @@ button {
 /* 2. Diseño de Layout Principal */
 #studyDiv {
   position: fixed;
-  height: calc(25vh - 21px);
-  width: calc(100% - 65px);
+  height: calc(25vh - 10px);
+  width: calc(100% - 55px);
   background: #fefff3;
   top: 0;
   left: 0;
@@ -39,7 +39,7 @@ button {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  padding: 10px;
+  padding: 5px;
 }
 #studyDiv * { font-size: 20px; }
 #sectionsContainer {
@@ -88,9 +88,9 @@ button {
 
 /* 3. Estilos de Secciones y Tarjetas */
 .section {
-  width: calc(100% - 30px);
+  width: calc(100% - 10px);
   margin-bottom: 2px;
-  padding: 15px;
+  padding: 5px;
   background: white;
 }
 .section-title {
@@ -111,8 +111,8 @@ button {
 }
 .level-card {
   width: calc(100% - 30px);
-  height: 60px;
-  padding: 15px;
+  height: 40px;
+  padding: 10px 15px;
   background: #fefefe;
   display: grid;
   place-items: center;
@@ -213,11 +213,16 @@ button {
   font-weight: bold;
 }
 /* Estilos de título de categoría */
+/* Encabezados de categoría fijos dentro del contenedor */
 .category-block h2 {
-  padding: 5px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
   background: #ecf0f1;
-  margin: 0 0 10px 0;
+  margin: 0;
+  padding: 8px 2px;
   color: #2c3e50;
+  font-weight: bold;
 }
 
 /* Clases no utilizadas en CSS, eliminadas: .examButton, #completedTimes, .instruction */
@@ -276,10 +281,18 @@ button {
     const title = document.createElement("div");
     title.className = "section-title";
     title.textContent = listObj.name;
-    section.appendChild(title);
 
+    // Añadimos un icono indicador ▼ o ▲
+    const arrow = document.createElement("span");
+    arrow.textContent = "▼";
+    arrow.style.marginLeft = "8px";
+    arrow.style.fontSize = "0.9em";
+    title.appendChild(arrow);
+
+    // Contenedor del grid que se ocultará o mostrará
     const grid = document.createElement("div");
     grid.className = "level-grid";
+    grid.style.display = "none"; // inicialmente oculto
 
     listObj.levels.forEach((lvl, i) => {
       const levelCard = document.createElement("div");
@@ -290,11 +303,17 @@ button {
       levelCard.innerHTML = `<h3>${lvl.name}</h3>`;
       levelCard.onclick = () => handleCardClick(levelCard);
       grid.appendChild(levelCard);
-
-      // Ajustar texto inmediatamente después de la creación
       fitTextInCard(levelCard);
     });
 
+    // Al hacer clic en el título, alternar visibilidad del grid
+    title.onclick = () => {
+      const isVisible = grid.style.display === "grid";
+      grid.style.display = isVisible ? "none" : "grid";
+      arrow.textContent = isVisible ? "▼" : "▲";
+    };
+
+    section.appendChild(title);
     section.appendChild(grid);
     parent.appendChild(section);
   }
@@ -349,36 +368,36 @@ button {
    * @param {string} cat - La categoría a filtrar.
    * @param {HTMLElement} clickedBtn - El botón pulsado.
    */
-  function filterSections(cat, clickedBtn) {
-    const allBlocks = container.querySelectorAll(".category-block");
-    const currentBlock = container.querySelector(`.category-block[data-category="${cat}"]`);
-    const allBtns = document.querySelectorAll(".categoryButton");
+    function filterSections(cat, clickedBtn) {
+      // Deseleccionar card activa si existe
+      if (selected) {
+        selected.classList.remove("selected");
+        selected = null;
+        practiceContainer.style.display = "none";
+      }
 
-    // Determinar si YA es el único visible
-    const isAlreadyActive = currentBlock.style.display !== "none" &&
-      [...allBlocks].every(b => b === currentBlock || b.style.display === "none");
+      currentCategory = cat; // Guardar categoría activa
+      const allBlocks = container.querySelectorAll(".category-block");
+      const currentBlock = container.querySelector(`.category-block[data-category="${cat}"]`);
+      const allBtns = document.querySelectorAll(".categoryButton");
 
-    if (isAlreadyActive) {
-      // Mostrar todos los bloques
-      allBlocks.forEach(b => b.style.display = "block");
-      // Desactivar todos los botones
-      allBtns.forEach(b => {
-        b.style.background = "#17171712";
-        b.style.color = "black";
-      });
-    } else {
-      // Ocultar todos excepto el actual
+      // Ocultar todos los bloques excepto el actual
       allBlocks.forEach(b => {
         b.style.display = (b === currentBlock) ? "block" : "none";
       });
-      // Marcar botón activo
+
+      // Marcar solo el botón activo
       allBtns.forEach(b => {
         const isActive = (b === clickedBtn);
-        b.style.background = isActive ? "#0a0862" : "#17171712";
-        b.style.color = isActive ? "white" : "black";
+        b.style.border = isActive ? "4px solid #620808" : "1px solid gray";
+        b.style.background = "none";
+        b.style.color = "black";
       });
+
+      saveState(); // Guardar estado
     }
-  }
+
+
 
   /**
    * Maneja el clic en una tarjeta de nivel.
@@ -449,7 +468,6 @@ button {
    */
   function renderStudyDiv(level) {
     studyDiv.innerHTML = "";
-
     const title = document.createElement("p");
     title.textContent = level.name;
     Object.assign(title.style, {
@@ -523,6 +541,24 @@ button {
     }
   }
 
+  function saveState() {
+    const openSections = [...document.querySelectorAll(".level-grid")]
+      .filter(g => g.style.display === "grid")
+      .map(g => g.parentElement.id);
+
+    const state = {
+      category: currentCategory,
+      scroll: container.scrollTop,
+      openSections,
+      selectedCard: selected ? {
+        listName: selected.dataset.listName,
+        level: selected.dataset.level
+      } : null
+    };
+
+    localStorage.setItem("jpState", JSON.stringify(state));
+  }
+
   /**
    * Event listeners y configuración inicial.
    */
@@ -577,9 +613,54 @@ button {
     window.addEventListener("beforeunload", () =>
       localStorage.setItem("lastScrollPosition", container.scrollTop)
     );
-    window.addEventListener("load", () =>
-      container.scrollTo(0, Number(localStorage.getItem("lastScrollPosition") || 0))
-    );
+    window.addEventListener("load", () => {
+      const saved = JSON.parse(localStorage.getItem("jpState") || "{}");
+      const isEmpty = Object.keys(saved).length === 0;
+      if (isEmpty) {
+        // Activar la primera categoría por defecto
+        const firstCategoryBtn = categoryMenu.querySelector(".categoryButton");
+        if (firstCategoryBtn) {
+          const firstCat = firstCategoryBtn.id;
+          filterSections(firstCat, firstCategoryBtn);
+        }
+      }
+
+      if (isEmpty) return;
+
+      // Restaurar categoría
+      if (saved.category) {
+        const btn = document.getElementById(saved.category);
+        if (btn) filterSections(saved.category, btn);
+      }
+
+      // Restaurar secciones abiertas
+      if (Array.isArray(saved.openSections)) {
+        saved.openSections.forEach(id => {
+          const section = document.getElementById(id);
+          const grid = section?.querySelector(".level-grid");
+          const arrow = section?.querySelector(".section-title span");
+          if (grid && arrow) {
+            grid.style.display = "grid";
+            arrow.textContent = "▲";
+          }
+        });
+      }
+
+      // Restaurar scroll
+      if (typeof saved.scroll === "number") {
+        setTimeout(() => container.scrollTo(0, saved.scroll), 100);
+      }
+
+      // Restaurar selección previa
+      if (saved.selectedCard) {
+        const { listName, level } = saved.selectedCard;
+        const card = container.querySelector(`.level-card[data-list-name="${listName}"][data-level="${level}"]`);
+        if (card) {
+          card.click();
+        }
+      }
+    });
+
 
     // Evitar que el teclado aparezca en los campos de entrada
     document.addEventListener('focusin', (event) => {
@@ -594,6 +675,16 @@ button {
       setTimeout(showGanbatte, 0);
     });
     observer.observe(studyDiv, { childList: true, subtree: true, characterData: true });
+
+    container.addEventListener("scroll", () => {
+      saveState();
+    });
+
+    document.addEventListener("click", (e) => {
+      if (e.target.closest(".section-title") || e.target.closest(".categoryButton") || e.target.closest(".level-card")) {
+        setTimeout(saveState, 200);
+      }
+    });
   }
 
   // Inicialización
