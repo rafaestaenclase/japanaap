@@ -40,7 +40,7 @@ var vocabularyBasicList = {
       level: 3,
       name: "Ropa",
       items: [
-        { q: "camisa", a: ["シャツ"], r: "shatsu" },
+        { q: "camisa", a: ["Ｔシャツ", "ティーシャツ"], r: "tīshatsu" },
         { q: "pantalón", a: ["ズボン"], r: "zubon" },
         { q: "zapatos", a: ["くつ", "靴"], r: "kutsu" },
         { q: "sombrero", a: ["ぼうし", "帽子"], r: "boushi" },
