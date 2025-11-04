@@ -1,13 +1,13 @@
 // allLists.js
 
 const scriptFiles = [
-  "hiraganaList.js",
-  "katakanaList.js",
-  "vocabularyBasicList.js",
-  "particleList.js",
-  "verbConjugationList.js",
-  "demonstrativesList.js",
-  "countingAndTimeList.js"
+  "write/hiraganaList.js",
+  "write/katakanaList.js",
+  "vocabulary/vocabularyBasicList.js",
+  "vocabulary/countingAndTimeList.js",
+  "grammar/particleList.js",
+  "grammar/verbConjugationList.js",
+  "grammar/demonstrativesList.js"
 ];
 
 const scriptDir = (() => {
