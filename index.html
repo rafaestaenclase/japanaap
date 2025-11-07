@@ -27,9 +27,13 @@ button {
 }
 /* 2. Diseño de Layout Principal */
 #studyDiv {
+  position: fixed;
   height: calc(25vh - 10px);
-  width: calc(100% - 10px);
+  width: calc(100% - 55px);
   background: #fefff3;
+  top: 0;
+  left: 0;
+  z-index: 100;
   overflow: scroll;
   display: flex;
   flex-direction: column;
@@ -39,21 +43,27 @@ button {
 }
 #studyDiv * { font-size: 20px; }
 #sectionsContainer {
-  display: flex;
-  float: left;
-  width: 100%;
-  height: calc(75vh - 51px); 
+  width: calc(100% - 44px);
+  max-width: 960px;
+  height: calc(75vh - 120px);
+  margin-top: 25vh;
   overflow: scroll;
+  padding-bottom: 120px;
 }
-#bar {
-  height: 48px;
-  width: 100%;
+#verticalBar {
+  position: fixed;
+  height: 100vh;
+  width: 44px;
+  top: 0;
+  right: 0;
   background: #fefff3;
+  border-radius: 12px;
+  box-shadow: 0 5px 19px 1px rgba(0, 0, 0, .28);
   display: flex;
+  z-index: 101;
   justify-content: center;
   flex-wrap: wrap;
   align-content: flex-start;
-  float: left;
 }
 #webTitle {
   font-size: 2vh;
@@ -120,7 +130,7 @@ button {
   transform: translateY(-3px);
   box-shadow: 0 6px 15px rgba(0,0,0,.12);
 }
-.level-card h3 { margin:0; font-size:14px;font-weight: 500 !important;} /* Ajuste de fuente en JS */
+.level-card h3 { margin:0; font-size:14px;} /* Ajuste de fuente en JS */
 .level-card p { margin:0; font-size:12px; color:#7f8c8d; }
 
 /* 4. Botones Flotantes y de Menú */
@@ -149,12 +159,15 @@ button {
   color: white;
 }
 #examToggleButton {
+  width: 100%;
+  max-height: 25vh;
   font-weight: 600;
   color: white;
   background: #086242;
   display: flex;
   align-items: center;
   justify-content: center;
+  writing-mode: vertical-rl;
   text-orientation: upright;
   padding: 15px 0;
   margin-top: 5px;
@@ -163,18 +176,7 @@ button {
   border: 3px solid #cc2e2e;
   box-shadow: 0 3px 10px rgba(0,0,0,.15);
 }
-
-.categoryButton {
-  background: #17171712;
-  border: solid 1px gray;
-  border-radius: 69px;
-  text-shadow:
-    -4px -4px 8px white, 4px -4px 8px white,
-    -4px  4px 8px white, 4px  4px 8px white;
-}
-
-
-.categoryButton {
+.categoryButton, #fullscreenToggle {
   height: 40px;
   width: 40px;
   font-weight: 600;
@@ -184,6 +186,14 @@ button {
   font-size: 16px;
   margin-top: 5px;
   background: none; /* Base para botones de barra vertical */
+}
+.categoryButton {
+  background: #17171712;
+  border: solid 1px gray;
+  border-radius: 69px;
+  text-shadow:
+    -4px -4px 8px white, 4px -4px 8px white,
+    -4px  4px 8px white, 4px  4px 8px white;
 }
 
 /* 5. Estilos de Tabla */
@@ -204,11 +214,6 @@ button {
 }
 /* Estilos de título de categoría */
 /* Encabezados de categoría fijos dentro del contenedor */
-
-.category-block {
-  width: 100%;
-}
-
 .category-block h2 {
   position: sticky;
   top: 0;
@@ -224,23 +229,19 @@ button {
 </style>
 </head>
 <body>
-
-  <div id="studyDiv"></div>
-
-  <div id="sectionsContainer"></div>
-
-  <div id="bar">
+  <div id="verticalBar">
+    <div id="webTitle">ジャパンアップ</div>
     <div id="categoryMenu"></div>
     <button id="examToggleButton">EXAMEN</button>
+    <button id="fullscreenToggle">⛶</button>
   </div>
 
+<div id="studyDiv"></div>
 
-
-  <div id="practiceContainer">
-    <button id="fixedPlayButton">Practicar</button>
-  </div>
-
-
+<div id="sectionsContainer"></div>
+<div id="practiceContainer">
+  <button id="fixedPlayButton">Practicar</button>
+</div>
 <script src="./js/allLists.js"></script>
 <script>
 
@@ -261,6 +262,7 @@ button {
   const examBtn = $("examToggleButton");
   const studyDiv = $("studyDiv");
   const practiceContainer = $("practiceContainer");
+  const fullscreenBtn = $("fullscreenToggle");
 
   let selected = null;
   let examMode = false;
@@ -592,6 +594,18 @@ button {
       } else if (!examMode && selected) {
         const listName = selected.dataset.listName;
         const level = selected.dataset.level;
+        location.href = `practiceGround.html?play=${listName}&level=${level}`;
+      }
+    };
+
+    // Botón de pantalla completa
+    fullscreenBtn.onclick = () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.error(`Error al intentar entrar en pantalla completa: ${err.message}`);
+        });
+      } else {
+        document.exitFullscreen();
       }
     };
 
