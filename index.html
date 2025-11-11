@@ -176,7 +176,7 @@ button {
   border: 3px solid #cc2e2e;
   box-shadow: 0 3px 10px rgba(0,0,0,.15);
 }
-.categoryButton, #fullscreenToggle {
+.categoryButton {
   height: 40px;
   width: 40px;
   font-weight: 600;
@@ -233,7 +233,6 @@ button {
     <div id="webTitle">ジャパンアップ</div>
     <div id="categoryMenu"></div>
     <button id="examToggleButton">EXAMEN</button>
-    <button id="fullscreenToggle">⛶</button>
   </div>
 
 <div id="studyDiv"></div>
@@ -262,7 +261,6 @@ button {
   const examBtn = $("examToggleButton");
   const studyDiv = $("studyDiv");
   const practiceContainer = $("practiceContainer");
-  const fullscreenBtn = $("fullscreenToggle");
 
   let selected = null;
   let examMode = false;
@@ -595,17 +593,6 @@ button {
         const listName = selected.dataset.listName;
         const level = selected.dataset.level;
         location.href = `practiceGround.html?play=${listName}&level=${level}`;
-      }
-    };
-
-    // Botón de pantalla completa
-    fullscreenBtn.onclick = () => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => {
-          console.error(`Error al intentar entrar en pantalla completa: ${err.message}`);
-        });
-      } else {
-        document.exitFullscreen();
       }
     };
 
