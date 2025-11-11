@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+<title>Practicar Japonés</title>
+<style>
+/* 1. Reset & accesibilidad (no eliminar outlines globales) */
+* {
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
+}
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #fff;
+}
+button {
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  border: none;
+  cursor: pointer;
+  transition: .2s;
+  background: none;
+}
+
+/* Layout principal */
+#studyDiv {
+  position: fixed;
+  height: 100vh;
+  width: 50%;
+  background: #fefff3;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: 8px;
+}
+#studyDiv .title {
+  font-size: 1.2rem;
+  margin: 0 0 8px 10px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+/* Contenedor principal de secciones */
+#sectionsContainer {
+  width: calc(62% - 44px);
+  max-width: 960px;
+  height: 100vh;
+  margin-left: 50%;
+  overflow: auto;
+}
+
+/* Barra vertical derecha */
+#verticalBar {
+  position: fixed;
+  height: 100vh;
+  width: 44px;
+  top: 0;
+  right: 0;
+  background: #fefff3;
+  border-radius: 12px;
+  box-shadow: 0 5px 19px 1px rgba(0, 0, 0, .28);
+  display: none;
+  z-index: 101;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+#webTitle {
+  font-size: 2vh;
+  height: 25vh;
+  width: 100%;
+  background: #620808;
+  color: #ebebeb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  font-weight: bold;
+}
+#categoryMenu {
+  display: flex;
+  max-height: 40vh;
+  align-content: flex-start;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Secciones y títulos simplificados */
+.section {
+  width: 100%;
+  background: #f9f9f9;
+  border-radius: 6px;
+  padding: 4px 8px;
+}
+
+.section-title {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #222;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.section-title span {
+  transition: transform 0.2s ease;
+}
+
+/* Grid de niveles más compacto */
+.level-grid {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.level-card {
+  background: #fff;
+  padding: 10px 8px;
+  border-radius: 6px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  box-shadow: none;
+}
+
+.level-card:hover {
+  background: #620808;
+  color: #fff;
+}
+
+.level-card.selected {
+  background: #620808;
+  color: #fff;
+}
+
+.level-card h3 {
+  margin: 0px;
+  font-size: 14px;
+}
+
+/* Flecha más simple */
+.section-title span {
+  display: inline-block;
+  transform: rotate(0deg);
+}
+
+.section-title.expanded span {
+  transform: rotate(62deg);
+}
+/* Botón vertical (AÑADIR) */
+#addToggleButton {
+  width: 100%;
+  max-height: 25vh;
+  font-weight: 600;
+  color: white;
+  background: #086242;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  padding: 12px 0;
+  margin-top: 8px;
+  border-radius: 8px;
+}
+.categoryButton {
+  height: 40px;
+  width: 40px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  margin-top: 5px;
+  background: #17171712;
+  border: solid 1px gray;
+  border-radius: 69px;
+  text-shadow:
+    -4px -4px 8px white, 4px -4px 8px white,
+    -4px  4px 8px white, 4px  4px 8px white;
+}
+
+/* Tabla de estudio */
+.study-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+.study-table th {
+  background: #f0f0f0;
+}
+.study-table th, .study-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+.study-table td:last-child {
+  font-weight: bold;
+}
+
+/* Encabezados de categoría pegajosos */
+.category-block h2 {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: #ecf0f1;
+  margin: 0;
+  padding: 8px 2px;
+  color: #2c3e50;
+  font-weight: bold;
+  font-size: 20px;
+}
+</style>
+</head>
+<body>
+  <div id="verticalBar">
+    <div id="webTitle">ジャパンアップ</div>
+    <div id="categoryMenu"></div>
+    <button id="addToggleButton">+</button>
+  </div>
+
+  <div id="studyDiv"></div>
+  <div id="sectionsContainer"></div>
+
+  <script src="./js/allLists.js"></script>
+  <script>
+  // helper corto
+  const $ = id => document.getElementById(id);
+
+  // Recopilar listas: filtrado seguro (toma propiedades que tengan .levels[] y name)
+  const ALL_LISTS = [];
+  for (const prop in window) {
+    if (!Object.prototype.hasOwnProperty.call(window, prop)) continue;
+    if (!prop.endsWith("List")) continue;
+    const v = window[prop];
+    if (v && typeof v === "object" && Array.isArray(v.levels) && v.name) {
+      ALL_LISTS.push(v);
+    }
+  }
+
+  const container = $("sectionsContainer");
+  const categoryMenu = $("categoryMenu");
+  const studyDiv = $("studyDiv");
+  let selected = null;
+  let currentCategory = null;
+
+  function createGrid(listObj, parent) {
+    const section = document.createElement("div");
+    section.id = listObj.listName || (listObj.name.replace(/\s+/g,'_'));
+    section.className = `section ${listObj.category || ''}`;
+
+    const title = document.createElement("div");
+    title.className = "section-title";
+    title.textContent = listObj.name || "Sin nombre";
+
+    const arrow = document.createElement("span");
+    arrow.textContent = "▼";
+    arrow.style.marginLeft = "8px";
+    arrow.style.fontSize = "0.9em";
+    title.appendChild(arrow);
+
+    const grid = document.createElement("div");
+    grid.className = "level-grid";
+    grid.style.display = "none";
+
+    (listObj.levels || []).forEach((lvl, i) => {
+      const levelCard = document.createElement("div");
+      levelCard.className = "level-card";
+      levelCard.dataset.listName = listObj.listName || listObj.name;
+      levelCard.dataset.level = lvl.level ?? i;
+      levelCard.dataset.index = i;
+      const h = document.createElement('h3');
+      h.textContent = lvl.name || `Nivel ${i+1}`;
+      levelCard.appendChild(h);
+      levelCard.onclick = () => handleCardClick(levelCard);
+      grid.appendChild(levelCard);
+    });
+
+    title.onclick = () => {
+      const isVisible = grid.style.display === "flex";
+      grid.style.display = isVisible ? "none" : "flex";
+      title.classList.toggle("expanded", !isVisible);
+    };
+
+
+    section.appendChild(title);
+    section.appendChild(grid);
+    parent.appendChild(section);
+  }
+
+  function initCategoriesAndSections() {
+    const categories = [...new Set(ALL_LISTS.map(l => l.category || 'default'))];
+
+    categories.forEach(cat => {
+      const categoryDiv = document.createElement("div");
+      categoryDiv.className = "category-block";
+      categoryDiv.dataset.category = cat;
+
+      const h2 = document.createElement("h2");
+      h2.textContent =
+        cat === "write" ? "✍️ Escritura" :
+        cat === "vocabulary" ? "📖 Vocabulario" :
+        cat === "grammar" ? "🧩 Gramática" :
+        cat;
+      categoryDiv.appendChild(h2);
+
+      ALL_LISTS.filter(l => (l.category || 'default') === cat).forEach(listObj => {
+        createGrid(listObj, categoryDiv);
+      });
+
+      container.appendChild(categoryDiv);
+
+      const btn = document.createElement("button");
+      btn.textContent =
+        cat === "write" ? "✏️" :
+        cat === "vocabulary" ? "📖" :
+        cat === "grammar" ? "🧩" :
+        "?";
+      btn.id = `btn_${cat}`;
+      btn.className = "categoryButton";
+      btn.onclick = () => filterSections(cat, btn);
+      categoryMenu.appendChild(btn);
+    });
+
+    // Mostrar todas al inicio
+    container.querySelectorAll(".category-block").forEach(b => b.style.display = "block");
+  }
+
+  function filterSections(cat, clickedBtn) {
+    if (selected) {
+      selected.classList.remove("selected");
+      selected = null;
+      studyDiv.innerHTML = "";
+    }
+
+    currentCategory = cat;
+    const allBlocks = container.querySelectorAll(".category-block");
+    const currentBlock = container.querySelector(`.category-block[data-category="${cat}"]`);
+    const allBtns = document.querySelectorAll(".categoryButton");
+
+    allBlocks.forEach(b => {
+      b.style.display = (b === currentBlock) ? "block" : "none";
+    });
+
+    allBtns.forEach(b => {
+      const isActive = (b === clickedBtn);
+      b.style.border = isActive ? "4px solid #620808" : "1px solid gray";
+      b.style.background = "none";
+      b.style.color = "black";
+      b.style.borderRadius = isActive ? "8px" : "69px";
+      b.style.outline = isActive ? "3px solid rgba(98,8,8,0.25)" : "none";
+    });
+  }
+
+  function handleCardClick(card) {
+    const isDeselecting = selected === card;
+    if (selected) selected.classList.remove("selected");
+
+    if (isDeselecting) {
+      selected = null;
+      studyDiv.innerHTML = "";
+    } else {
+      card.classList.add("selected");
+      selected = card;
+
+      const listName = card.dataset.listName;
+      const levelIndex = parseInt(card.dataset.index);
+      const currentList = ALL_LISTS.find(l => (l.listName === listName) || (l.name === listName));
+      const currentLevel = currentList && currentList.levels[levelIndex];
+      if (currentLevel) renderStudyDiv(currentLevel);
+      else studyDiv.innerHTML = "<p class='title'>Nivel no encontrado</p>";
+    }
+  }
+
+  function renderStudyDiv(level) {
+    studyDiv.innerHTML = "";
+    const title = document.createElement("p");
+    title.className = "title";
+    title.textContent = level.name || "Nivel";
+    studyDiv.appendChild(title);
+
+    const table = document.createElement("table");
+    table.className = "study-table";
+
+    const thead = document.createElement("thead");
+    const headerRow = document.createElement("tr");
+    ["Español","Japonés"].forEach(text => {
+      const th = document.createElement("th");
+      th.textContent = text;
+      headerRow.appendChild(th);
+    });
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+    (level.items || []).forEach(item => {
+      const tr = document.createElement("tr");
+      const td1 = document.createElement("td");
+      td1.textContent = item.q ?? "";
+      const td2 = document.createElement("td");
+      td2.textContent = Array.isArray(item.a) ? item.a.join(", ") : (item.a ?? "");
+      tr.appendChild(td1);
+      tr.appendChild(td2);
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    studyDiv.appendChild(table);
+  }
+
+  function showGanbatte() {
+    if (studyDiv.innerHTML.trim() === "") {
+      studyDiv.innerHTML = "<h1 class='title'>がんばって</h1><h3 style='font-weight:bold;padding-left:10px;margin-top:0px'>Ánimo</h3>";
+    }
+  }
+
+  function setupListeners() {
+    document.addEventListener('focusin', (event) => {
+      if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+        event.target.blur();
+      }
+    });
+
+    const observer = new MutationObserver(() => {
+      setTimeout(showGanbatte, 0);
+    });
+    observer.observe(studyDiv, { childList: true, subtree: true, characterData: true });
+
+    // addToggleButton: no había comportamiento asignado, lo dejamos preparado
+    const addBtn = $("addToggleButton");
+    if (addBtn) {
+      addBtn.addEventListener('click', () => {
+        console.warn("addToggleButton pulsado — añade aquí la lógica para AÑADIR elemento o elimina el botón si no lo usas.");
+      });
+    }
+  }
+
+  // Inicialización
+  initCategoriesAndSections();
+  setupListeners();
+  showGanbatte();
+  </script>
+</body>
+</html>
