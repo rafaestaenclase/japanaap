@@ -15,6 +15,19 @@
   user-select: none;
 }
 
+/* Ocultar scrollbar de todos los elementos scrollables */
+#studyDiv::-webkit-scrollbar,
+#sectionsContainer::-webkit-scrollbar {
+  display: none; /* Chrome, Edge, Safari */
+}
+
+#studyDiv,
+#sectionsContainer {
+  -ms-overflow-style: none;  /* IE y Edge */
+  scrollbar-width: none;     /* Firefox */
+  overflow: auto; /* mantener scroll funcional */
+}
+
 body {
   font-family: "Noto Sans JP", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   font-optical-sizing: auto;
@@ -38,7 +51,7 @@ button {
   position: fixed;
   top: 0;
   left: 0;
-  height: 100vh;
+  height: 75vh;
   width: 50%;
   z-index: 100;
   overflow: auto;
@@ -46,8 +59,6 @@ button {
   flex-direction: column;
   align-items: flex-start;
   padding: 8px;
-  border-right: 3px solid #620808;
-  background: #0B0B0E;
 }
 
 #studyDiv .title {
@@ -64,37 +75,6 @@ button {
   margin-left: 50%;
   overflow: auto;
   padding-top: 30vh;
-}
-
-/* Barra vertical derecha */
-#verticalBar {
-  position: fixed;
-  top: 0;
-  right: 0;
-  height: 100vh;
-  width: 44px;
-  background: #fefff3;
-  border-radius: 12px;
-  box-shadow: 0 5px 19px 1px rgba(0, 0, 0, .28);
-  display: none;
-  z-index: 101;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-content: flex-start;
-}
-
-#webTitle {
-  height: 25vh;
-  width: 100%;
-  background: #620808;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  writing-mode: vertical-rl;
-  text-orientation: upright;
-  font-size: 2vh;
-  font-weight: bold;
-  letter-spacing: 2px;
 }
 
 /* Secciones */
@@ -205,40 +185,6 @@ button {
   transform: rotate(180deg);
 }
 
-/* Botón vertical */
-#addToggleButton {
-  width: 100%;
-  max-height: 25vh;
-  padding: 12px 0;
-  margin-top: 8px;
-  font-weight: 600;
-  background: #086242;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  writing-mode: vertical-rl;
-  text-orientation: upright;
-  border-radius: 8px;
-}
-
-/* Botones de categoría */
-.categoryButton {
-  height: 40px;
-  width: 40px;
-  margin-top: 5px;
-  font-size: 16px;
-  font-weight: 600;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #17171712;
-  border: 1px solid gray;
-  border-radius: 69px;
-  text-shadow:
-    -4px -4px 8px white, 4px -4px 8px white,
-    -4px  4px 8px white, 4px  4px 8px white;
-}
-
 /* Tabla */
 .study-table {
   width: 100%;
@@ -264,30 +210,42 @@ button {
   font-weight: 500;
 }
 
-/* Encabezados de categoría pegajosos */
-.category-block h2 {
-  position: sticky;
-  top: -30vh;
-  z-index: 5;
+#actionDiv {
+  position: fixed;
+  padding-top: 8px;
+  bottom: 0;
+  left: 0;
+  width: 50%;
+  height: calc(25vh - 8px);
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-content: center;
+  flex-direction: column;
+}
+
+#actionDiv > * {
   margin: 0;
-  padding: 8px 2px;
-  font-weight: bold;
-  font-size: 20px;
-  background: #0B0B0E;
-  border-bottom: 1px solid #620808;
+  width: 90%;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  background: rgba(255, 255, 255, 0.10);
+  border-radius: 6px;
+  padding: 5px;
+  text-align: center;
 }
 
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div id="verticalBar">
-    <div id="webTitle">ジャパンアップ</div>
-    <div id="categoryMenu"></div>
-    <button id="addToggleButton">+</button>
-  </div>
-
   <div id="studyDiv"></div>
+  <div id="actionDiv">
+    <div>Practicar</div>
+    <div>Añadir a favoritos</div>
+    <div>Ver solo favoritos</div>
+  </div>
   <div id="sectionsContainer"></div>
 <script src="./js/allLists.js"></script>
 <script>
@@ -295,7 +253,6 @@ const $ = id => document.getElementById(id);
 const ALL_LISTS = Object.values(window).filter(l => l?.levels && l.name);
 
 const container = $("sectionsContainer");
-const categoryMenu = $("categoryMenu");
 const studyDiv = $("studyDiv");
 let selected = null;
 let currentCategory = null;
@@ -332,7 +289,7 @@ function createGrid(listObj, parent) {
   parent.appendChild(section);
 }
 
-function initCategoriesAndSections() {
+function initSectionsOnly() {
   const categories = [...new Set(ALL_LISTS.map(l => l.category||'default'))];
   categories.forEach(cat => {
     const catDiv = document.createElement("div");
@@ -347,14 +304,6 @@ function initCategoriesAndSections() {
 
     ALL_LISTS.filter(l => (l.category||'default')===cat).forEach(l => createGrid(l, catDiv));
     container.appendChild(catDiv);
-
-    const btn = document.createElement("button");
-    btn.textContent = cat === "write" ? "✏️" :
-                      cat === "vocabulary" ? "📖" :
-                      cat === "grammar" ? "🧩" : "?";
-    btn.className = "categoryButton";
-    btn.onclick = () => filterSections(cat, btn);
-    categoryMenu.appendChild(btn);
   });
 }
 
@@ -408,9 +357,7 @@ function renderStudyDiv(level){
 
 function showGanbatte(){ if(!studyDiv.innerHTML.trim()) studyDiv.innerHTML="<h1 class='title'>がんばって</h1><h3 style='font-weight:bold;padding-left:10px;margin-top:0px'>Ánimo</h3>"; }
 
-document.getElementById("addToggleButton")?.addEventListener('click',()=>console.warn("addToggleButton pulsado"));
-
-initCategoriesAndSections();
+initSectionsOnly();
 showGanbatte();
 </script>
 </body>
