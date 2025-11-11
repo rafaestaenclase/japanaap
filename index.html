@@ -5,51 +5,60 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
 <title>Practicar Japonés</title>
 <style>
-/* 1. Reset & Accesibilidad */
+/* 1. Reset & accesibilidad (no eliminar outlines globales) */
 * {
-  outline: none;
-  user-select: none;
   -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
 }
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
+  background: #fff;
 }
 button {
   touch-action: manipulation;
   -webkit-user-select: none;
   user-select: none;
-  outline: none;
-  border: none; /* Consolidado */
+  border: none;
   cursor: pointer;
-  transition: .2s; /* Para los botones hover/click */
+  transition: .2s;
+  background: none;
 }
-/* 2. Diseño de Layout Principal */
+
+/* Layout principal */
 #studyDiv {
   position: fixed;
-  height: calc(25vh - 10px);
-  width: calc(100% - 55px);
+  height: 25vh;
+  width: 100%;
   background: #fefff3;
   top: 0;
   left: 0;
   z-index: 100;
-  overflow: scroll;
+  overflow: auto;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: center;
-  padding: 5px;
+  align-items: flex-start;
+  padding: 8px;
 }
-#studyDiv * { font-size: 20px; }
+#studyDiv .title {
+  font-size: 1.2rem;
+  margin: 0 0 8px 10px;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+/* Contenedor principal de secciones */
 #sectionsContainer {
   width: calc(100% - 44px);
   max-width: 960px;
-  height: calc(75vh - 120px);
+  height: 75vh;
   margin-top: 25vh;
-  overflow: scroll;
-  padding-bottom: 120px;
+  overflow: auto;
 }
+
+/* Barra vertical derecha */
 #verticalBar {
   position: fixed;
   height: 100vh;
@@ -86,79 +95,73 @@ button {
   justify-content: center;
 }
 
-/* 3. Estilos de Secciones y Tarjetas */
+/* Secciones y títulos simplificados */
 .section {
-  width: calc(100% - 10px);
-  margin-bottom: 2px;
-  padding: 5px;
-  background: white;
+  width: 100%;
+  background: #f9f9f9;
+  border-radius: 6px;
+  padding: 4px 8px;
 }
+
 .section-title {
-  font-weight: bold;
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-  color: #2c3e50;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #222;
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-.level-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(32%, 1fr));
-  gap: 3px;
-  justify-items: center;
-  align-items: center;
-}
-.level-card {
-  width: calc(100% - 30px);
-  height: 40px;
-  padding: 10px 15px;
-  background: #fefefe;
-  display: grid;
-  place-items: center;
-  box-shadow: 0 3px 10px rgb(196 192 180 / 52%);
-  font-size: 14px;
-  color: #000;
-  text-align: center;
   cursor: pointer;
-  justify-content: center;
-  justify-items: center;
+  padding: 4px 0;
 }
-.level-card.selected {
-  background: #0a0862;
-  color: #fff;
-  transform: translateY(-3px);
-  box-shadow: 0 6px 15px rgba(0,0,0,.12);
-}
-.level-card h3 { margin:0; font-size:14px;} /* Ajuste de fuente en JS */
-.level-card p { margin:0; font-size:12px; color:#7f8c8d; }
 
-/* 4. Botones Flotantes y de Menú */
-#practiceContainer {
-  position: fixed;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #0a0862;
-  padding: 10px 15px;
-  box-shadow: 0 5px 19px 1px rgba(0,0,0,.28);
-  display: none; /* Escondido por defecto */
-  gap: 10px;
-  z-index: 100;
-  justify-content: center;
+.section-title span {
+  transition: transform 0.2s ease;
 }
-#fixedPlayButton {
-  height: 48px;
-  padding: 0 15px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  background: none;
-  color: white;
+
+/* Grid de niveles más compacto */
+.level-grid {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
 }
-#examToggleButton {
+
+.level-card {
+  background: #fff;
+  padding: 10px 8px;
+  border-radius: 6px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  box-shadow: none;
+}
+
+.level-card:hover {
+  background: #620808;
+  color: #fff;
+}
+
+.level-card.selected {
+  background: #620808;
+  color: #fff;
+}
+
+.level-card h3 {
+  margin: 0px;
+}
+
+/* Flecha más simple */
+.section-title span {
+  display: inline-block;
+  transform: rotate(0deg);
+}
+
+.section-title.expanded span {
+  transform: rotate(62deg);
+}
+/* Botón vertical (AÑADIR) */
+#addToggleButton {
   width: 100%;
   max-height: 25vh;
   font-weight: 600;
@@ -169,12 +172,9 @@ button {
   justify-content: center;
   writing-mode: vertical-rl;
   text-orientation: upright;
-  padding: 15px 0;
-  margin-top: 5px;
-}
-#examToggleButton.active {
-  border: 3px solid #cc2e2e;
-  box-shadow: 0 3px 10px rgba(0,0,0,.15);
+  padding: 12px 0;
+  margin-top: 8px;
+  border-radius: 8px;
 }
 .categoryButton {
   height: 40px;
@@ -185,9 +185,6 @@ button {
   justify-content: center;
   font-size: 16px;
   margin-top: 5px;
-  background: none; /* Base para botones de barra vertical */
-}
-.categoryButton {
   background: #17171712;
   border: solid 1px gray;
   border-radius: 69px;
@@ -196,7 +193,7 @@ button {
     -4px  4px 8px white, 4px  4px 8px white;
 }
 
-/* 5. Estilos de Tabla */
+/* Tabla de estudio */
 .study-table {
   border-collapse: collapse;
   width: 100%;
@@ -212,8 +209,8 @@ button {
 .study-table td:last-child {
   font-weight: bold;
 }
-/* Estilos de título de categoría */
-/* Encabezados de categoría fijos dentro del contenedor */
+
+/* Encabezados de categoría pegajosos */
 .category-block h2 {
   position: sticky;
   top: 0;
@@ -224,109 +221,90 @@ button {
   color: #2c3e50;
   font-weight: bold;
 }
-
-/* Clases no utilizadas en CSS, eliminadas: .examButton, #completedTimes, .instruction */
 </style>
 </head>
 <body>
   <div id="verticalBar">
     <div id="webTitle">ジャパンアップ</div>
     <div id="categoryMenu"></div>
-    <button id="examToggleButton">EXAMEN</button>
+    <button id="addToggleButton">+</button>
   </div>
 
-<div id="studyDiv"></div>
+  <div id="studyDiv"></div>
+  <div id="sectionsContainer"></div>
 
-<div id="sectionsContainer"></div>
-<div id="practiceContainer">
-  <button id="fixedPlayButton">Practicar</button>
-</div>
-<script src="./js/allLists.js"></script>
-<script>
+  <script src="./js/allLists.js"></script>
+  <script>
+  // helper corto
+  const $ = id => document.getElementById(id);
 
-
-
-  // Mejorar la obtención de referencias y usar destructuring para mayor legibilidad
-  //que añada las listas a all_lists
+  // Recopilar listas: filtrado seguro (toma propiedades que tengan .levels[] y name)
   const ALL_LISTS = [];
   for (const prop in window) {
-      if (prop.endsWith("List") && window[prop] !== null && window[prop] !== undefined) {
-          ALL_LISTS.push(window[prop]);
-      }
+    if (!Object.prototype.hasOwnProperty.call(window, prop)) continue;
+    if (!prop.endsWith("List")) continue;
+    const v = window[prop];
+    if (v && typeof v === "object" && Array.isArray(v.levels) && v.name) {
+      ALL_LISTS.push(v);
+    }
   }
-  const $ = (s) => document.getElementById(s);
+
   const container = $("sectionsContainer");
   const categoryMenu = $("categoryMenu");
-  const fixedBtn = $("fixedPlayButton");
-  const examBtn = $("examToggleButton");
   const studyDiv = $("studyDiv");
-  const practiceContainer = $("practiceContainer");
-
   let selected = null;
-  let examMode = false;
-  let examSel = [];
+  let currentCategory = null;
 
-  /**
-   * Crea el bloque de sección y sus tarjetas de nivel (grid).
-   * @param {object} listObj - Objeto de lista de datos (ej. hiraganaList).
-   * @param {HTMLElement} parent - El contenedor donde se añadirá.
-   */
   function createGrid(listObj, parent) {
     const section = document.createElement("div");
-    section.id = listObj.listName;
-    section.className = `section ${listObj.category}`;
+    section.id = listObj.listName || (listObj.name.replace(/\s+/g,'_'));
+    section.className = `section ${listObj.category || ''}`;
 
     const title = document.createElement("div");
     title.className = "section-title";
-    title.textContent = listObj.name;
+    title.textContent = listObj.name || "Sin nombre";
 
-    // Añadimos un icono indicador ▼ o ▲
     const arrow = document.createElement("span");
     arrow.textContent = "▼";
     arrow.style.marginLeft = "8px";
     arrow.style.fontSize = "0.9em";
     title.appendChild(arrow);
 
-    // Contenedor del grid que se ocultará o mostrará
     const grid = document.createElement("div");
     grid.className = "level-grid";
-    grid.style.display = "none"; // inicialmente oculto
+    grid.style.display = "none";
 
-    listObj.levels.forEach((lvl, i) => {
+    (listObj.levels || []).forEach((lvl, i) => {
       const levelCard = document.createElement("div");
       levelCard.className = "level-card";
-      levelCard.dataset.listName = listObj.listName;
-      levelCard.dataset.level = lvl.level;
+      levelCard.dataset.listName = listObj.listName || listObj.name;
+      levelCard.dataset.level = lvl.level ?? i;
       levelCard.dataset.index = i;
-      levelCard.innerHTML = `<h3>${lvl.name}</h3>`;
+      const h = document.createElement('h3');
+      h.textContent = lvl.name || `Nivel ${i+1}`;
+      levelCard.appendChild(h);
       levelCard.onclick = () => handleCardClick(levelCard);
       grid.appendChild(levelCard);
-      fitTextInCard(levelCard);
     });
 
-    // Al hacer clic en el título, alternar visibilidad del grid
     title.onclick = () => {
-      const isVisible = grid.style.display === "grid";
-      grid.style.display = isVisible ? "none" : "grid";
-      arrow.textContent = isVisible ? "▼" : "▲";
+      const isVisible = grid.style.display === "flex";
+      grid.style.display = isVisible ? "none" : "flex";
+      title.classList.toggle("expanded", !isVisible);
     };
+
 
     section.appendChild(title);
     section.appendChild(grid);
     parent.appendChild(section);
   }
 
-  /**
-   * Genera los bloques de categorías y los menús de filtro.
-   */
   function initCategoriesAndSections() {
-    const categories = [...new Set(ALL_LISTS.map(l => l.category))];
+    const categories = [...new Set(ALL_LISTS.map(l => l.category || 'default'))];
 
     categories.forEach(cat => {
-      // 1. Crear Bloque de Contenido (category-block)
       const categoryDiv = document.createElement("div");
       categoryDiv.className = "category-block";
-      categoryDiv.style.display = "none"; // Ocultar por defecto para el filtro inicial
       categoryDiv.dataset.category = cat;
 
       const h2 = document.createElement("h2");
@@ -337,154 +315,87 @@ button {
         cat;
       categoryDiv.appendChild(h2);
 
-      ALL_LISTS.filter(l => l.category === cat).forEach(listObj => {
+      ALL_LISTS.filter(l => (l.category || 'default') === cat).forEach(listObj => {
         createGrid(listObj, categoryDiv);
       });
 
       container.appendChild(categoryDiv);
 
-      // 2. Crear Botón de Menú (categoryButton)
       const btn = document.createElement("button");
       btn.textContent =
         cat === "write" ? "✏️" :
         cat === "vocabulary" ? "📖" :
         cat === "grammar" ? "🧩" :
         "?";
-      btn.id = cat;
+      btn.id = `btn_${cat}`;
       btn.className = "categoryButton";
-
       btn.onclick = () => filterSections(cat, btn);
       categoryMenu.appendChild(btn);
     });
 
-    // Mostrar todas las secciones al inicio (ya que se ocultan por defecto)
+    // Mostrar todas al inicio
     container.querySelectorAll(".category-block").forEach(b => b.style.display = "block");
   }
 
-  /**
-   * Filtra las secciones visibles al hacer clic en un botón de categoría.
-   * @param {string} cat - La categoría a filtrar.
-   * @param {HTMLElement} clickedBtn - El botón pulsado.
-   */
-    function filterSections(cat, clickedBtn) {
-      // Deseleccionar card activa si existe
-      if (selected) {
-        selected.classList.remove("selected");
-        selected = null;
-        practiceContainer.style.display = "none";
-      }
-
-      currentCategory = cat; // Guardar categoría activa
-      const allBlocks = container.querySelectorAll(".category-block");
-      const currentBlock = container.querySelector(`.category-block[data-category="${cat}"]`);
-      const allBtns = document.querySelectorAll(".categoryButton");
-
-      // Ocultar todos los bloques excepto el actual
-      allBlocks.forEach(b => {
-        b.style.display = (b === currentBlock) ? "block" : "none";
-      });
-
-      // Marcar solo el botón activo
-      allBtns.forEach(b => {
-        const isActive = (b === clickedBtn);
-        b.style.border = isActive ? "4px solid #620808" : "1px solid gray";
-        b.style.background = "none";
-        b.style.color = "black";
-      });
-
-      saveState(); // Guardar estado
+  function filterSections(cat, clickedBtn) {
+    if (selected) {
+      selected.classList.remove("selected");
+      selected = null;
+      studyDiv.innerHTML = "";
     }
 
+    currentCategory = cat;
+    const allBlocks = container.querySelectorAll(".category-block");
+    const currentBlock = container.querySelector(`.category-block[data-category="${cat}"]`);
+    const allBtns = document.querySelectorAll(".categoryButton");
 
+    allBlocks.forEach(b => {
+      b.style.display = (b === currentBlock) ? "block" : "none";
+    });
 
-  /**
-   * Maneja el clic en una tarjeta de nivel.
-   * @param {HTMLElement} card - La tarjeta de nivel (level-card) que se ha pulsado.
-   */
+    allBtns.forEach(b => {
+      const isActive = (b === clickedBtn);
+      b.style.border = isActive ? "4px solid #620808" : "1px solid gray";
+      b.style.background = "none";
+      b.style.color = "black";
+      b.style.borderRadius = isActive ? "8px" : "69px";
+      b.style.outline = isActive ? "3px solid rgba(98,8,8,0.25)" : "none";
+    });
+  }
+
   function handleCardClick(card) {
-    if (examMode) {
-      // Modo Examen: Selección múltiple
-      card.classList.toggle("selected");
-      if (card.classList.contains("selected")) {
-        examSel.push(card);
-      } else {
-        examSel = examSel.filter(x => x !== card);
-      }
-      practiceContainer.style.display = examSel.length > 0 ? "flex" : "none";
+    const isDeselecting = selected === card;
+    if (selected) selected.classList.remove("selected");
 
+    if (isDeselecting) {
+      selected = null;
+      studyDiv.innerHTML = "";
     } else {
-      // Modo Práctica: Selección simple
-      const isDeselecting = selected === card;
+      card.classList.add("selected");
+      selected = card;
 
-      if (selected) selected.classList.remove("selected");
-
-      if (isDeselecting) {
-        selected = null;
-        studyDiv.innerHTML = "";
-      } else {
-        card.classList.add("selected");
-        selected = card;
-
-        // Mostrar información
-        const listName = card.dataset.listName;
-        const levelIndex = parseInt(card.dataset.index);
-        const currentList = ALL_LISTS.find(l => l.listName === listName);
-        const currentLevel = currentList.levels[levelIndex];
-        renderStudyDiv(currentLevel);
-      }
-      practiceContainer.style.display = selected ? "flex" : "none";
-    }
-    // Asegurarse de que el botón de práctica/examen tiene el estado correcto
-    fixedBtn.classList.toggle("active", examMode ? examSel.length > 0 : !!selected);
-  }
-
-  /**
-   * Ajusta el tamaño de fuente de los elementos en studyDiv si desbordan.
-   */
-  function fitTextInStudyDiv() {
-    // Usamos el contenedor principal para la lógica de ajuste
-    const maxHeight = studyDiv.clientHeight;
-    const maxWidth = studyDiv.clientWidth;
-
-    // Solo ajustamos la tabla si existe para evitar conflictos con el 'Ganbatte'
-    const table = studyDiv.querySelector('.study-table');
-    if (!table) return;
-
-    let tableFontSize = 20; // Valor inicial del CSS
-    const children = Array.from(table.querySelectorAll('th, td'));
-
-    // Ajustar fuente reduciendo para que no desborde el ancho de la tabla
-    while (table.scrollWidth > maxWidth && tableFontSize > 8) {
-      tableFontSize -= 1;
-      children.forEach(el => el.style.fontSize = tableFontSize + "px");
+      const listName = card.dataset.listName;
+      const levelIndex = parseInt(card.dataset.index);
+      const currentList = ALL_LISTS.find(l => (l.listName === listName) || (l.name === listName));
+      const currentLevel = currentList && currentList.levels[levelIndex];
+      if (currentLevel) renderStudyDiv(currentLevel);
+      else studyDiv.innerHTML = "<p class='title'>Nivel no encontrado</p>";
     }
   }
 
-  /**
-   * Dibuja la tabla de contenidos en studyDiv para el nivel seleccionado.
-   * @param {object} level - El objeto de nivel con `name` y `items`.
-   */
   function renderStudyDiv(level) {
     studyDiv.innerHTML = "";
     const title = document.createElement("p");
-    title.textContent = level.name;
-    Object.assign(title.style, {
-      paddingLeft: "10px",
-      marginBottom: "10px",
-      fontWeight: "bold",
-      color: "#2c3e50",
-      fontSize: "1.2rem"
-    });
+    title.className = "title";
+    title.textContent = level.name || "Nivel";
     studyDiv.appendChild(title);
 
-    // Crear tabla y aplicar clase CSS
     const table = document.createElement("table");
     table.className = "study-table";
 
-    // Cabecera (thead)
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
-    ["Español", "Japonés"].forEach(text => {
+    ["Español","Japonés"].forEach(text => {
       const th = document.createElement("th");
       th.textContent = text;
       headerRow.appendChild(th);
@@ -492,193 +403,52 @@ button {
     thead.appendChild(headerRow);
     table.appendChild(thead);
 
-    // Cuerpo (tbody)
     const tbody = document.createElement("tbody");
-    level.items.forEach(item => {
+    (level.items || []).forEach(item => {
       const tr = document.createElement("tr");
       const td1 = document.createElement("td");
-      td1.textContent = item.q;
+      td1.textContent = item.q ?? "";
       const td2 = document.createElement("td");
-      td2.textContent = item.a;
-
+      td2.textContent = Array.isArray(item.a) ? item.a.join(", ") : (item.a ?? "");
       tr.appendChild(td1);
       tr.appendChild(td2);
       tbody.appendChild(tr);
     });
     table.appendChild(tbody);
-
     studyDiv.appendChild(table);
-
-    fitTextInStudyDiv();
   }
 
-  /**
-   * Muestra el mensaje de ánimo por defecto en studyDiv.
-   */
   function showGanbatte() {
     if (studyDiv.innerHTML.trim() === "") {
-      studyDiv.innerHTML = "<h1 style='font-weight:bold;padding-left:10px;margin-bottom:0px'>がんばって</h1><h3 style='font-weight:bold;padding-left:10px;margin-top:0px'>Ánimo</h3>";
+      studyDiv.innerHTML = "<h1 class='title'>がんばって</h1><h3 style='font-weight:bold;padding-left:10px;margin-top:0px'>Ánimo</h3>";
     }
   }
 
-  /**
-   * Ajusta el tamaño de fuente de un h3 dentro de un level-card para que quepa.
-   * @param {HTMLElement} card - La tarjeta de nivel.
-   */
-  function fitTextInCard(card) {
-    const h3 = card.querySelector("h3");
-    if (!h3) return;
-
-    let fontSize = 14; // tamaño inicial en px (del CSS)
-    h3.style.fontSize = fontSize + "px";
-
-    // Reducir tamaño hasta que quepa (usamos clientWidth y scrollWidth para detectar desborde)
-    while (h3.scrollWidth > card.clientWidth && fontSize > 10) {
-      fontSize -= 1;
-      h3.style.fontSize = fontSize + "px";
-    }
-  }
-
-  function saveState() {
-    const openSections = [...document.querySelectorAll(".level-grid")]
-      .filter(g => g.style.display === "grid")
-      .map(g => g.parentElement.id);
-
-    const state = {
-      category: currentCategory,
-      scroll: container.scrollTop,
-      openSections,
-      selectedCard: selected ? {
-        listName: selected.dataset.listName,
-        level: selected.dataset.level
-      } : null
-    };
-
-    localStorage.setItem("jpState", JSON.stringify(state));
-  }
-
-  /**
-   * Event listeners y configuración inicial.
-   */
   function setupListeners() {
-    // Botón examen
-    examBtn.onclick = () => {
-      studyDiv.innerHTML = "";
-      examMode = !examMode;
-      examBtn.classList.toggle("active", examMode);
-      fixedBtn.textContent = examMode ? "Comenzar" : "Practicar";
-      examBtn.textContent = examMode ? "CANCELAR" : "EXAMEN";
-
-      if (examMode) {
-        studyDiv.innerHTML = '<h3 style="padding-left: 10px;">SELECCIONA LOS MÓDULOS A AÑADIR AL EXAMEN.</h3>';
-        if (selected) {
-          selected.classList.remove("selected");
-          selected = null;
-        }
-      } else {
-        examSel.forEach(c => c.classList.remove("selected"));
-        examSel = [];
-        showGanbatte();
-      }
-      practiceContainer.style.display = (examMode && examSel.length > 0) || (!examMode && selected) ? "flex" : "none";
-      fixedBtn.classList.toggle("active", examMode ? examSel.length > 0 : !!selected);
-    };
-
-    // Botón practicar/comenzar
-    fixedBtn.onclick = () => {
-      if (examMode && examSel.length) {
-        const examParams = examSel.map(c => `${c.dataset.listName}-${c.dataset.level}`).join(",");
-        location.href = `practiceGround.html?exam=${examParams}`;
-      } else if (!examMode && selected) {
-        const listName = selected.dataset.listName;
-        const level = selected.dataset.level;
-        location.href = `practiceGround.html?play=${listName}&level=${level}`;
-      }
-    };
-
-    // Manejo de scroll y almacenamiento local
-    window.addEventListener("beforeunload", () =>
-      localStorage.setItem("lastScrollPosition", container.scrollTop)
-    );
-    window.addEventListener("load", () => {
-      const saved = JSON.parse(localStorage.getItem("jpState") || "{}");
-      const isEmpty = Object.keys(saved).length === 0;
-      if (isEmpty) {
-        // Activar la primera categoría por defecto
-        const firstCategoryBtn = categoryMenu.querySelector(".categoryButton");
-        if (firstCategoryBtn) {
-          const firstCat = firstCategoryBtn.id;
-          filterSections(firstCat, firstCategoryBtn);
-        }
-      }
-
-      if (isEmpty) return;
-
-      // Restaurar categoría
-      if (saved.category) {
-        const btn = document.getElementById(saved.category);
-        if (btn) filterSections(saved.category, btn);
-      }
-
-      // Restaurar secciones abiertas
-      if (Array.isArray(saved.openSections)) {
-        saved.openSections.forEach(id => {
-          const section = document.getElementById(id);
-          const grid = section?.querySelector(".level-grid");
-          const arrow = section?.querySelector(".section-title span");
-          if (grid && arrow) {
-            grid.style.display = "grid";
-            arrow.textContent = "▲";
-          }
-        });
-      }
-
-      // Restaurar scroll
-      if (typeof saved.scroll === "number") {
-        setTimeout(() => container.scrollTo(0, saved.scroll), 100);
-      }
-
-      // Restaurar selección previa
-      if (saved.selectedCard) {
-        const { listName, level } = saved.selectedCard;
-        const card = container.querySelector(`.level-card[data-list-name="${listName}"][data-level="${level}"]`);
-        if (card) {
-          card.click();
-        }
-      }
-    });
-
-
-    // Evitar que el teclado aparezca en los campos de entrada
     document.addEventListener('focusin', (event) => {
       if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
         event.target.blur();
       }
     });
 
-    // Observador para re-mostrar Ganbatte si studyDiv se vacía
     const observer = new MutationObserver(() => {
-      // Usar setTimeout para asegurar que se ejecuta DESPUÉS de cualquier otra manipulación del DOM
       setTimeout(showGanbatte, 0);
     });
     observer.observe(studyDiv, { childList: true, subtree: true, characterData: true });
 
-    container.addEventListener("scroll", () => {
-      saveState();
-    });
-
-    document.addEventListener("click", (e) => {
-      if (e.target.closest(".section-title") || e.target.closest(".categoryButton") || e.target.closest(".level-card")) {
-        setTimeout(saveState, 200);
-      }
-    });
+    // addToggleButton: no había comportamiento asignado, lo dejamos preparado
+    const addBtn = $("addToggleButton");
+    if (addBtn) {
+      addBtn.addEventListener('click', () => {
+        console.warn("addToggleButton pulsado — añade aquí la lógica para AÑADIR elemento o elimina el botón si no lo usas.");
+      });
+    }
   }
 
   // Inicialización
   initCategoriesAndSections();
   setupListeners();
   showGanbatte();
-</script>
-
+  </script>
 </body>
 </html>
