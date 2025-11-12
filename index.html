@@ -38,7 +38,7 @@ button, [role="button"]{ touch-action: manipulation; cursor: pointer; border: no
 /* Layout principal */
 #studyDiv {
   position: fixed; top:0; left:0; height:75vh; width:50%; z-index:1;
-  display:flex; flex-direction:column; align-items:flex-start;
+  display:flex; flex-direction:column; align-items:flex-start; padding:8px;
 }
 #studyDiv .title{ font-size:1.2rem; margin:0 0 8px 10px; font-weight:600 }
 
@@ -83,7 +83,7 @@ button, [role="button"]{ touch-action: manipulation; cursor: pointer; border: no
 .level-card h3{ margin:0; font-size:15px; font-weight:500; letter-spacing:.3px }
 
 /* Lista de estudio (nuevo formato sin tabla) */
-.study-list{ display:flex; flex-direction:column; gap:10px; width:100% }
+.study-list{ display:flex; flex-direction:column; width:100% }
 .study-item{ background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:6px; line-height:1.4 }
 .study-q{ font-weight:400; color:var(--fg); margin-bottom:4px; font-size:13px; background:rgba(255,255,255,0.10); padding:8px }
 .study-a{ color:var(--muted); font-size:.95rem; margin-left:12px; padding:2px 0 4px 0 }
