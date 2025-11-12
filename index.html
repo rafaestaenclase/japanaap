@@ -69,7 +69,7 @@ button {
 
 #sectionsContainer {
   position: relative;
-  width: calc(62% - 44px);
+  width: calc(62% - 50px);
   max-width: 960px;
   height: 100vh;
   margin-left: 50%;
@@ -344,10 +344,16 @@ function renderStudyDiv(level){
 }
 
 //CREAR URL DE PRACTICA
-document.querySelector("#actionDiv > :first-child").onclick = () => {
-  if (!selected) return;
+const practiceBtn = document.querySelector("#actionDiv > :first-child");
+
+practiceBtn.addEventListener("click", go);
+practiceBtn.addEventListener("touchstart", go);
+
+function go(e){
+  e.preventDefault();
+  if(!selected) return;
   location.href = `practiceGround.html?play=${encodeURIComponent(selected.dataset.listName)}&level=${encodeURIComponent(selected.dataset.index)}`;
-};
+}
 
 function showGanbatte(){ if(!studyDiv.innerHTML.trim()) studyDiv.innerHTML="<h1 class='title'>がんばって</h1><h3 style='font-weight:bold;padding-left:10px;margin-top:0px'>Ánimo</h3>"; }
 
