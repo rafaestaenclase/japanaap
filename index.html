@@ -54,7 +54,6 @@ button {
   height: 75vh;
   width: 50%;
   z-index: 1;
-  overflow: auto;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -75,6 +74,7 @@ button {
   right: 0;
   overflow: auto;
   padding-top: 30vh;
+  padding-bottom: 40px;
 }
 
 /* Secciones */
@@ -190,15 +190,19 @@ button {
   width: 100%;
   margin-top: 4px;
   border-collapse: collapse;
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 8px;
   overflow: hidden;
+  display: block;
+}
+
+.study-table > * {
+  max-width: 100%;
 }
 
 .study-table th, .study-table td {
   border: 1px solid #3a3a3a;
   padding: 8px;
   text-align: left;
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .study-table th {
@@ -236,6 +240,50 @@ button {
   padding: 5px;
   text-align: center;
 }
+
+/* Nuevo formato sin tabla */
+.study-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.study-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid #3a3a3a;
+  border-radius: 6px;
+  line-height: 1.4;
+}
+
+.study-q {
+  font-weight: 400;
+  color: #E8E8E8;
+  margin-bottom: 4px;
+  font-size: 13px;
+  background: rgba(255, 255, 255, 0.10);
+  padding: 8px;
+}
+
+.study-a {
+  color: #bdbdbd;
+  font-size: 0.95rem;
+  margin-left: 12px;
+  padding: 2px;
+  padding-bottom: 4px;
+}
+
+.study-a > div {
+  margin: 2px 0;
+  font-size: 16px;
+}
+
+.romaji {
+  font-style: italic;
+  opacity: 0.85;
+  margin-top: 4px;
+}
+
 
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
@@ -319,30 +367,63 @@ function handleCardClick(card){
   renderStudyDiv(lvl);
 }
 
-function renderStudyDiv(level){
-  studyDiv.innerHTML="";
-  if(!level){ studyDiv.innerHTML="<p class='title'>Nivel no encontrado</p>"; return; }
+function renderStudyDiv(level) {
+  studyDiv.innerHTML = "";
+  if (!level) {
+    studyDiv.innerHTML = "<p class='title'>Nivel no encontrado</p>";
+    return;
+  }
 
   const title = document.createElement("p");
-  title.className="title"; title.textContent=level.name||"Nivel";
+  title.className = "title";
+  title.textContent = level.name || "Nivel";
   studyDiv.appendChild(title);
 
-  const table=document.createElement("table"); table.className="study-table";
-  const thead=document.createElement("thead");
-  const headerRow=document.createElement("tr");
-  ["Español","Japonés"].forEach(t=>{ const th=document.createElement("th"); th.textContent=t; headerRow.appendChild(th); });
-  thead.appendChild(headerRow); table.appendChild(thead);
+  // Contenedor general de pares
+  const listContainer = document.createElement("div");
+  listContainer.className = "study-list";
 
-  const tbody=document.createElement("tbody");
-  (level.items||[]).forEach(it=>{
-    const tr=document.createElement("tr");
-    [it.q, Array.isArray(it.a)?it.a.join(", "):it.a].forEach(val=>{
-      const td=document.createElement("td"); td.textContent=val||""; tr.appendChild(td);
-    });
-    tbody.appendChild(tr);
+  (level.items || []).forEach(it => {
+    const itemDiv = document.createElement("div");
+    itemDiv.className = "study-item";
+
+    // Español (pregunta)
+    const qDiv = document.createElement("div");
+    qDiv.className = "study-q";
+    qDiv.textContent = it.q ?? "";
+    itemDiv.appendChild(qDiv);
+
+    // Japonés (respuesta)
+    const aDiv = document.createElement("div");
+    aDiv.className = "study-a";
+
+    if (Array.isArray(it.a)) {
+      it.a.forEach(val => {
+        const line = document.createElement("div");
+        line.textContent = val ?? "";
+        aDiv.appendChild(line);
+      });
+    } else {
+      const line = document.createElement("div");
+      line.textContent = it.a ?? "";
+      aDiv.appendChild(line);
+    }
+
+    // Romaji opcional
+    if (it.r) {
+      const romaji = document.createElement("div");
+      romaji.textContent = it.r;
+      romaji.className = "romaji";
+      aDiv.appendChild(romaji);
+    }
+
+    itemDiv.appendChild(aDiv);
+    listContainer.appendChild(itemDiv);
   });
-  table.appendChild(tbody); studyDiv.appendChild(table);
+
+  studyDiv.appendChild(listContainer);
 }
+
 
 //CREAR URL DE PRACTICA
 document.querySelector("#practiceButton").onclick = () => {
