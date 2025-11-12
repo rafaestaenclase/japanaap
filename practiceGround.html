@@ -124,11 +124,36 @@ main{
 .correct-circle.show{ opacity:1; transform: translate(-50%,-50%) scale(1); animation: glowPulse .6s ease forwards; }
 @keyframes glowPulse { 50% { filter: drop-shadow(0 0 18px rgba(255,255,255,0.06)); } }
 
+/* Final actions container (aparece al terminar) */
+#completionActions{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+  width:100%;
+  max-width:640px;
+  flex-direction: column;
+}
+.action-btn{
+  padding:10px 14px;
+  min-width:160px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.04);
+  background: var(--card-bg-strong);
+  color:var(--fg);
+  cursor:pointer;
+  font-weight:600;
+  transition: transform .12s, background .12s;
+}
+.action-btn:hover{ transform: translateY(-3px); background: rgba(255,255,255,0.12); }
+
 /* responsive */
 @media (max-width:600px){
   main{ padding:16px; margin-top:72px }
   #question{ font-size:2.2rem }
   #answer{ font-size:1.05rem }
+  .action-btn{ min-width:130px; font-size:14px }
 }
 </style>
 </head>
@@ -138,12 +163,15 @@ main{
   <h1 id="pageTitle">Práctica <span class="subsection"></span></h1>
 </header>
 
-<main>
+<main id="mainContent">
   <div id="question"></div>
   <input id="answer" placeholder="Escribe en japonés" autocomplete="off" />
   <div id="feedback" aria-live="polite"></div>
   <div id="progressPills" role="progressbar" aria-label="Progreso"></div>
   <button id="showAnswerBtn">Ver respuesta</button>
+
+  <!-- Aquí aparecerán las acciones al completar -->
+  <div id="completionActions" aria-hidden="true" style="display:none;"></div>
 </main>
 
 <div class="correct-circle" id="correctCircle">〇</div>
@@ -161,9 +189,11 @@ const questionEl = document.getElementById("question");
 const correctCircle = document.getElementById("correctCircle");
 const showAnswerBtn = document.getElementById("showAnswerBtn");
 const progressPills = document.getElementById("progressPills");
+const completionActions = document.getElementById("completionActions");
 
 const params = new URLSearchParams(location.search);
-const { play, exam, level: playingLevel } = Object.fromEntries(params);
+const { play, exam, level: playingLevelRaw } = Object.fromEntries(params);
+const playingLevel = playingLevelRaw !== undefined ? Number(playingLevelRaw) : undefined;
 
 /* Reconstruir ALL_LISTS desde allLists.js (compatibilidad) */
 const ALL_LISTS = [];
@@ -262,6 +292,64 @@ function showQuestion(){
   updatePills(index);
 }
 
+function buildCompletionUI() {
+  // limpia acciones previas
+  completionActions.innerHTML = "";
+  completionActions.style.display = "flex";
+  completionActions.setAttribute('aria-hidden', 'false');
+
+  // Encontrar quizList y nivel actual (si vienen)
+  const quizList = play ? ALL_LISTS.find(l => l.listName === play) : null;
+  const levelIndex = (quizList && playingLevel !== undefined) ? Number(playingLevel) : null;
+
+  // Botón repetir nivel (si venías de un nivel o no)
+  const repeatBtn = document.createElement('button');
+  repeatBtn.className = 'action-btn';
+  repeatBtn.textContent = 'Repetir este nivel';
+  repeatBtn.onclick = () => {
+    // recargar la misma URL para repetir
+    location.href = location.pathname + location.search;
+  };
+  completionActions.appendChild(repeatBtn);
+
+  // Botón nivel anterior (si existe)
+  if (quizList && levelIndex !== null && levelIndex > 0 && quizList.levels[levelIndex - 1]) {
+    const prevName = quizList.levels[levelIndex - 1].name || `Nivel ${levelIndex}`;
+    const prevBtn = document.createElement('button');
+    prevBtn.className = 'action-btn';
+    prevBtn.textContent = `Nivel anterior · ${prevName}`;
+    prevBtn.onclick = () => {
+      const params = new URLSearchParams(location.search);
+      params.set('level', String(levelIndex - 1));
+      params.set('play', quizList.listName);
+      location.href = `${location.pathname}?${params.toString()}`;
+    };
+    completionActions.appendChild(prevBtn);
+  }
+
+  // Botón siguiente nivel (si existe)
+  if (quizList && levelIndex !== null && quizList.levels[levelIndex + 1]) {
+    const nextName = quizList.levels[levelIndex + 1].name || `Nivel ${levelIndex + 2}`;
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'action-btn';
+    nextBtn.textContent = `Siguiente nivel · ${nextName}`;
+    nextBtn.onclick = () => {
+      const params = new URLSearchParams(location.search);
+      params.set('level', String(levelIndex + 1));
+      params.set('play', quizList.listName);
+      location.href = `${location.pathname}?${params.toString()}`;
+    };
+    completionActions.appendChild(nextBtn);
+  }
+
+  // Botón volver al índice siempre disponible
+  const indexBtn = document.createElement('button');
+  indexBtn.className = 'action-btn';
+  indexBtn.textContent = 'Volver al índice';
+  indexBtn.onclick = () => location.href = 'index.html';
+  completionActions.appendChild(indexBtn);
+}
+
 function nextQuestion(){
   index++;
   if (index < filteredQuizList.length) {
@@ -273,7 +361,15 @@ function nextQuestion(){
     answerEl.style.display = "none";
     showAnswerBtn.style.display = "none";
     correctCircle.classList.add("show");
-    document.onclick = () => location.href = "index.html";
+
+    // construiremos la UI de acciones (repetir, prev, next) y la mostramos
+    setTimeout(()=> {
+      correctCircle.classList.remove("show");
+      buildCompletionUI();
+    }, 420);
+
+    // quitar el document.onclick que antes redirigía
+    document.onclick = null;
   }
 }
 
