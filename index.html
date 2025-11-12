@@ -242,7 +242,7 @@ button {
 <body>
   <div id="studyDiv"></div>
   <div id="actionDiv">
-    <div>Practicar</div>
+    <div id="practiceButton">Practicar</div>
     <div>Añadir a favoritos</div>
     <div>Ver solo favoritos</div>
   </div>
@@ -344,16 +344,10 @@ function renderStudyDiv(level){
 }
 
 //CREAR URL DE PRACTICA
-const practiceBtn = document.querySelector("#actionDiv > :first-child");
-
-practiceBtn.addEventListener("click", go);
-practiceBtn.addEventListener("touchstart", go);
-
-function go(e){
-  e.preventDefault();
-  if(!selected) return;
+document.querySelector("#practiceButton").onclick = () => {
+  if (!selected) return;
   location.href = `practiceGround.html?play=${encodeURIComponent(selected.dataset.listName)}&level=${encodeURIComponent(selected.dataset.index)}`;
-}
+};
 
 function showGanbatte(){ if(!studyDiv.innerHTML.trim()) studyDiv.innerHTML="<h1 class='title'>がんばって</h1><h3 style='font-weight:bold;padding-left:10px;margin-top:0px'>Ánimo</h3>"; }
 
