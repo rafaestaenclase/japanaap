@@ -4,558 +4,410 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
 <title>Práctica</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-/* Estilos mejorados para que coincidan con index.html
-  --------------------------------------------------
-*/
-* {
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-    outline: none;
+:root{
+  --bg: #0B0B0E;
+  --panel: rgba(255,255,255,0.03);
+  --panel-strong: rgba(255,255,255,0.10);
+  --fg: #E8E8E8;
+  --muted: #bdbdbd;
+  --border: #33363a;
+  --accent: #888;
+  --accent-strong: #3498db;
+  --success: #27ae60;
+  --glass: rgba(255,255,255,0.02);
 }
 
-body {
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background: #fefff3;
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-    color: #2c3e50;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    min-height: 100vh;
+/* Reset básico */
+*{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; user-select: none; outline: none; }
+html,body{ height:100%; margin:0; padding:0; }
+body{
+  font-family: "Noto Sans JP", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
 }
 
-header {
-    width: 100%;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background: #fefff3;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 100;
+/* Header */
+header{
+  width:100%;
+  padding:10px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:fixed;
+  top:0; left:0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+  z-index:100;
+}
+header h1{ margin:0; font-size:clamp(1.2rem,4vw,1.6rem); color:var(--fg) }
+.subsection{ font-weight:400; font-size:0.85rem; color:var(--muted); margin-left:8px; }
+
+/* Back button */
+.back-btn{
+  height:40px; width:40px; font-size:1.1rem; font-weight:600; border:none; background:transparent;
+  border-radius:8px; margin-right:10px; cursor:pointer; color:var(--fg);
+  display:flex; align-items:center; justify-content:center;
+  transition: background .15s, transform .12s;
+  border:1px solid rgba(255,255,255,0.03);
+}
+.back-btn:hover{ background: rgba(255,255,255,0.02); transform:translateY(-2px) }
+
+/* Main layout */
+main{
+  width:100%;
+  max-width:720px;
+  padding:20px;
+  margin-top:80px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:18px;
 }
 
-header h1 {
-    margin: 0;
-    font-size: clamp(1.2rem, 5vw, 2rem);
-    color: #34495e;
+/* Question */
+#question{
+  font-size: clamp(1.6rem,6vw,2.8rem);
+  margin-bottom:0;
+  text-align:center;
+  line-height:1.25;
+  width:100%;
+  max-width:700px;
+  color:var(--fg);
 }
 
-.subsection {
-    font-weight: normal;
-    font-size: 0.7em;
-    color: #7f8c8d;
+/* Answer input — estilo adaptado al index */
+#answer{
+  width:100%;
+  padding:12px 14px;
+  font-size:1.3rem;
+  text-align:center;
+  background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.04);
+  border-radius:10px;
+  color:var(--fg);
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.4);
+  transition: border-color .18s, box-shadow .18s, transform .12s;
+  caret-color: var(--accent-strong);
+}
+#answer:focus{
+  border-color: var(--accent-strong);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.6), inset 0 0 10px rgba(0,0,0,0.5);
+  transform: translateY(-2px);
 }
 
-.back-btn {
-    height: 40px;
-    width: 40px;
-    font-size: 1.5rem;
-    font-weight: 600;
-    border: none;
-    background: #17171712;
-    border: solid 1px #bdc3c7;
-    border-radius: 50%;
-    margin-right: 10px;
-    cursor: pointer;
-    color: #34495e;
-    transition: background-color 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+/* Feedback text */
+#feedback{ font-size:0.95rem; color: #ff6b6b; min-height:1.2em; text-align:center; }
 
-.back-btn:hover {
-    background: #ecf0f1;
+/* Botón mostrar respuesta */
+#showAnswerBtn{
+  height:48px; padding:0 20px; font-weight:600; border:none; border-radius:12px;
+  color:#fff; background:var(--accent-strong); cursor:pointer; font-size:16px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+  transition: background .15s, transform .12s;
 }
+#showAnswerBtn:hover{ background:#2f80b6; transform: translateY(-3px) }
 
-main {
-    width: 100%;
-    max-width: 600px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 80px;
-    flex-grow: 1;
-}
+/* Progress pills (adapted colors) */
+#progressPills{ display:flex; gap:8px; justify-content:center; width:100%; max-width:90vw; margin-top:6px; }
+.pill{ position:relative; width:20px; height:20px; background: rgba(255,255,255,0.02); border-radius:50%; border:1px solid rgba(255,255,255,0.04); overflow:hidden; }
+.pill-fill{ position:absolute; top:0; left:0; bottom:0; width:0%; background: var(--success); border-radius:50% 0 0 50%; transition: width .28s; }
+.pill.filled .pill-fill{ width:100%; border-radius:50%; box-shadow: 0 0 10px rgba(39,174,96,0.2); }
 
-#question {
-    font-size: clamp(1.8rem, 5vw, 3rem);
-    margin-bottom: 20px;
-    text-align: center;
-    transition: color 0.3s ease;
-    word-break: break-word;
-    line-height: 1.3;
-}
+/* vibrate & animations */
+@keyframes vibrate { 10%,30%,50%{transform:translateX(-4px)} 20%,40%,60%{transform:translateX(4px)} }
+.pill.vibrate{ animation: vibrate .6s linear }
 
-#answer {
-    width: 100%;
-    padding: 12px;
-    font-size: 1.5rem;
-    text-align: center;
-    border: 2px solid #bdc3c7;
-    border-radius: 8px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    background: #fff;
-    color: #2c3e50;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+/* Correct circle (success animation) */
+.correct-circle{
+  font-size: clamp(4rem, 20vw, 10rem);
+  color: var(--success);
+  opacity:0; transform: translate(-50%,-50%) scale(0.8);
+  filter: drop-shadow(0 0 6px var(--success));
+  transition: opacity .25s, transform .25s;
+  position: fixed; top:50%; left:50%; z-index:50; pointer-events:none; user-select:none;
 }
+.correct-circle.show{ opacity:1; transform: translate(-50%,-50%) scale(1); animation: glowPulse .8s ease forwards; }
+@keyframes glowPulse { 50% { filter: drop-shadow(0 0 20px rgba(39,174,96,0.9)); } }
 
-#answer:focus {
-    border-color: #3498db;
-    box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
-}
-
-#feedback {
-    margin-top: 10px;
-    font-size: 1rem;
-    color: red;
-}
-
-#showAnswerBtn {
-    height: 48px;
-    padding: 0 20px;
-    font-weight: 600;
-    border: none;
-    border-radius: 12px;
-    color: #fff;
-    background: #3498db;
-    cursor: pointer;
-    font-size: 16px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-    transition: background-color 0.2s, transform 0.2s;
-    margin-top: 20px;
-}
-
-#showAnswerBtn:hover {
-    background: #2980b9;
-    transform: translateY(-2px);
-}
-
-/* ---------- PROGRESS PILLS ---------- */
-#progressPills {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    margin: 30px auto;
-    max-width: 90vw;
-    user-select: none;
-}
-
-.pill {
-    position: relative;
-    width: 20px;
-    height: 20px;
-    background: #ecf0f1;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 1px solid #bdc3c7;
-}
-
-.pill-fill {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 0%;
-    background: #27ae60;
-    border-radius: 50% 0 0 50%;
-    transition: width 0.3s;
-}
-
-.pill.filled .pill-fill {
-    width: 100%;
-    border-radius: 50%;
-    box-shadow: 0 0 8px #2ecc71;
-}
-
-@keyframes vibrate {
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
-    20%, 40%, 60%, 80% { transform: translateX(4px); }
-}
-
-.pill.vibrate {
-    animation: vibrate .6s linear;
-}
-
-/* ---------- ANIMACIONES DE ÉXITO ---------- */
-.correct-circle {
-    font-size: clamp(4rem, 20vw, 10rem);
-    color: #27ae60;
-    opacity: 0;
-    transform: scale(0.7);
-    filter: drop-shadow(0 0 5px #27ae60);
-    transition: opacity 0.3s, transform 0.3s;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.7);
-    z-index: 10;
-    user-select: none;
-    pointer-events: none;
-}
-
-.correct-circle.show {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-    animation: glowPulse .8s ease forwards;
-}
-
-@keyframes glowPulse {
-    50% {
-        filter: drop-shadow(0 0 20px #2ecc71);
-    }
-}
-
-.correct-circle::before,
-.correct-circle::after,
-.correct-circle span {
-    content: "";
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    background: #2ecc71;
-    border-radius: 50%;
-    box-shadow: 0 0 8px #2ecc71;
-    opacity: 0;
-    animation: sparkle .8s ease forwards;
-}
-
-.correct-circle::before {
-    top: 10%;
-    left: 15%;
-    animation-delay: .1s;
-}
-
-.correct-circle::after {
-    top: 25%;
-    right: 15%;
-    animation-delay: .3s;
-}
-
-.correct-circle span {
-    bottom: 15%;
-    left: 50%;
-    transform: translateX(-50%);
-    animation-delay: .5s;
-}
-
-@keyframes sparkle {
-    0%, 100% {
-        opacity: 0;
-        transform: scale(.3);
-    }
-    50% {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
-
-/* Añadir un poco de espacio en la parte inferior para dispositivos móviles */
-@media (max-width: 600px) {
-    main {
-        padding-bottom: 80px;
-    }
-}
+/* small responsiveness */
+@media (max-width:600px){ main{ padding:18px; margin-top:72px } #answer{ font-size:1.1rem } #question{ font-size:2.2rem } }
 </style>
 </head>
 <body>
 <header>
-    <button id="exitBtn" class="back-btn">←</button>
+  <div style="display:flex;align-items:center;">
+    <button id="exitBtn" class="back-btn" title="Volver">←</button>
     <h1 id="pageTitle">Práctica <span class="subsection"></span></h1>
+  </div>
 </header>
 
 <main>
-    <div class="question" id="question"></div>
-    <input id="answer" placeholder="Escribe en japonés" autocomplete="off" autofocus />
-    <div id="feedback"></div>
-    <div id="progressPills"></div>
-    <button id="showAnswerBtn">Ver respuesta</button>
+  <div id="question"></div>
+  <input id="answer" placeholder="Escribe en japonés" autocomplete="off" />
+  <div id="feedback" aria-live="polite"></div>
+  <div id="progressPills" role="progressbar" aria-label="Progreso"></div>
+  <button id="showAnswerBtn">Ver respuesta</button>
 </main>
 
 <div class="correct-circle" id="correctCircle">〇</div>
 
-
-<!--Añadir lista-->
+<!-- lista y sonidos -->
 <script src="js/allLists.js"></script>
 
 <script>
+/* ------------------ Navegación ------------------ */
 document.getElementById("exitBtn").onclick = () => location.href = "index.html";
 
+/* ------------------ Helpers y params ------------------ */
 const answerEl = document.getElementById("answer");
+const feedbackEl = document.getElementById("feedback");
+const questionEl = document.getElementById("question");
+const correctCircle = document.getElementById("correctCircle");
+const showAnswerBtn = document.getElementById("showAnswerBtn");
+const progressPills = document.getElementById("progressPills");
 
-document.body.onclick = e => {
-    if (e.target !== answerEl) answerEl.focus();
-};
-
-
-/* ---------- PARAMS & LIST ---------- */
 const params = new URLSearchParams(location.search);
-
 const { play, exam, level: playingLevel } = Object.fromEntries(params);
 
-
-//AÑADIR LISTA
-  const ALL_LISTS = [];
-  for (const prop in window) {
-      if (prop.endsWith("List") && window[prop] !== null && window[prop] !== undefined) {
-          ALL_LISTS.push(window[prop]);
-      }
+/* Construir ALL_LISTS desde js/allLists.js (compatibilidad con tu carga) */
+const ALL_LISTS = [];
+for (const prop in window) {
+  if (prop.endsWith("List") && window[prop] !== null && window[prop] !== undefined) {
+    ALL_LISTS.push(window[prop]);
   }
+}
 
+/* Selección/filtrado de preguntas */
 let filteredQuizList = [];
-let section = "";
-let subSection = "";
+let section = "", subSection = "";
 
-function shuffle(arr) {
-    for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-}
+function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]] } return arr; }
+function setPageTitle(main, sub=""){ document.getElementById("pageTitle").innerHTML = sub ? `${main} <span class="subsection">[${sub}]</span>` : main; }
 
-function setPageTitle(main, sub = "") {
-    document.getElementById("pageTitle").innerHTML = sub
-        ? `${main} <span class="subsection">[${sub}]</span>`
-        : main;
-}
-
+/* Cargar preguntas según params (compatible con exam y play como antes) */
 if (exam) {
-    const selections = exam.split(",");
-    const subLists = [];
-    const names = [];
+  // comportamiento exam (igual al tuyo): dividir preguntas entre niveles especificados
+  const selections = exam.split(",");
+  const subLists = [];
+  const names = [];
 
-    selections.forEach(sel => {
-        const [listName, levelStr] = sel.split("-");
-        const current = ALL_LISTS.find(l => l.listName === listName);
-
-        if (!current) return;
-        if (!section) section = current.listName;
-
-        const levelData = current.levels.find(l => l.level == levelStr);
-
-        if (levelData) {
-            subLists.push(levelData.items.map(it => ({
-                ...it,
-                origin: current.listName,
-                sublevel: levelData.name
-            })));
-            names.push(`${current.listName}: ${levelData.name}`);
-        }
-    });
-
-    const maxQ = 10;
-    const total = subLists.length;
-    const base = Math.floor(maxQ / total);
-    const resto = maxQ % total;
-
-    subLists.forEach((lista, i) => {
-        filteredQuizList.push(...shuffle(lista).slice(0, base + (i < resto ? 1 : 0)));
-    });
-
-    shuffle(filteredQuizList);
-    setPageTitle("Examen", names.join(", "));
-} else if (play) {
-    const quizList = ALL_LISTS.find(l => l.listName === play);
-    console.log(quizList);
-    if (quizList && playingLevel) {
-        filteredQuizList = shuffle(quizList.levels[playingLevel].items);
-        section = quizList.listName;
-        subSection = quizList.levels[playingLevel].name;
-        setPageTitle(section, subSection);
+  selections.forEach(sel => {
+    const [listName, levelStr] = sel.split("-");
+    const current = ALL_LISTS.find(l => l.listName === listName);
+    if (!current) return;
+    if (!section) section = current.listName;
+    const levelData = current.levels.find(l => String(l.level) == String(levelStr) || l.name === levelStr);
+    if (levelData) {
+      subLists.push(levelData.items.map(it => ({ ...it, origin: current.listName, sublevel: levelData.name })));
+      names.push(`${current.listName}: ${levelData.name}`);
     }
+  });
+
+  const maxQ = 10;
+  const total = subLists.length || 1;
+  const base = Math.floor(maxQ / total);
+  const resto = maxQ % total;
+
+  subLists.forEach((lista, i) => {
+    filteredQuizList.push(...shuffle(lista).slice(0, base + (i < resto ? 1 : 0)));
+  });
+
+  shuffle(filteredQuizList);
+  setPageTitle("Examen", names.join(", "));
+} else if (play) {
+  const quizList = ALL_LISTS.find(l => l.listName === play);
+  if (quizList && playingLevel !== undefined) {
+    const levelIndex = Number(playingLevel);
+    filteredQuizList = shuffle((quizList.levels[levelIndex] && quizList.levels[levelIndex].items) || []);
+    section = quizList.listName;
+    subSection = (quizList.levels[levelIndex] && quizList.levels[levelIndex].name) || "";
+    setPageTitle(section, subSection);
+  } else if (quizList) {
+    // si no viene level, tomar todas las items de todos los niveles
+    filteredQuizList = shuffle(quizList.levels.flatMap(l => l.items || []));
+    section = quizList.listName;
+    setPageTitle(section);
+  }
 }
 
-/* ---------- QUIZ LOGIC ---------- */
+/* Si no hay preguntas, mostrar message */
+if (!filteredQuizList.length) {
+  questionEl.textContent = "No hay preguntas disponibles.";
+  answerEl.style.display = "none";
+  showAnswerBtn.style.display = "none";
+}
+
+/* ------------------ Audio (preload/unlock) ------------------ */
+const correctSound = new Audio("./sounds/small-bell-ring-01a.mp3");
+const pillSound = new Audio("./sounds/bell-ringing-05.mp3");
+[correctSound, pillSound].forEach(a => { a.preload = "auto"; try{ a.load(); }catch{} });
+
+function unlockAudio() {
+  [correctSound, pillSound].forEach(a => {
+    a.play().then(()=>a.pause()).catch(()=>{});
+  });
+  document.removeEventListener('touchstart', unlockAudio);
+  document.removeEventListener('click', unlockAudio);
+}
+document.addEventListener('touchstart', unlockAudio, { once:true });
+document.addEventListener('click', unlockAudio, { once:true });
+
+/* ------------------ Normalización y comprobar respuesta ------------------ */
+function normalizeAnswer(str){
+  if (!str) return "";
+  return str
+    .normalize('NFC')
+    .replace(/\s+/g,"")   // eliminar espacios
+    .replace(/ー/g,"一").replace(/一/g,"ー") // mantener compat con tu regla previa
+    .trim();
+}
+
+function checkAnswer(userInput, item){
+  const normalizedInput = normalizeAnswer(userInput || "");
+  const answers = Array.isArray(item.a) ? item.a.slice() : [item.a];
+  if (item.alt) answers.push(item.alt);
+  return answers.some(ans => normalizedInput === normalizeAnswer(ans));
+}
+
+/* ------------------ Quiz flow ------------------ */
 let index = 0;
 let isChecking = false;
 let checkTimeout;
 
-const questionEl = document.getElementById("question");
-const correctCircle = document.getElementById("correctCircle");
-
-const correctSound = new Audio("./sounds/small-bell-ring-01a.mp3");
-const pillSound = new Audio("./sounds/bell-ringing-05.mp3");
-
-[correctSound, pillSound].forEach(a => {
-    a.preload = "auto";
-    a.load();
-});
-
-function unlockAudio() {
-    [correctSound, pillSound].forEach(a => {
-        a.play().then(() => a.pause()).catch(() => {});
-    });
-    document.removeEventListener('touchstart', unlockAudio);
-    document.removeEventListener('click', unlockAudio);
+function showQuestion(){
+  const it = filteredQuizList[index];
+  if (!it) return;
+  questionEl.textContent = it.q || "";
+  feedbackEl.textContent = "";
+  answerEl.value = "";
+  // mostrar sublevel si existe
+  const sub = document.querySelector("#pageTitle .subsection");
+  if (sub) {
+    if (it.sublevel) sub.textContent = `[${it.origin || section}: ${it.sublevel}]`;
+    else sub.textContent = subSection ? `[${subSection}]` : "";
+  }
+  answerEl.focus();
+  updatePills(index);
 }
 
-document.addEventListener('touchstart', unlockAudio, { once: true });
-document.addEventListener('click', unlockAudio, { once: true });
-
-function showQuestion() {
-    const item = filteredQuizList[index];
-    if (!item) return;
-    questionEl.textContent = item.q;
-    answerEl.value = "";
-    const sub = document.querySelector("#pageTitle .subsection");
-    if (item.sublevel) sub.textContent = `[${item.origin}: ${item.sublevel}]`;
-}
-
-function nextQuestion() {
-    index++;
-    updatePills(index);
-
-    if (index < filteredQuizList.length) {
-        showQuestion();
-    } else {
-        questionEl.textContent = "¡Completado!";
-        answerEl.style.display = "none";
-        correctCircle.classList.add("show", "complete");
-        document.onclick = () => location.href = "index.html";
-        hideShowAnswer();
-    }
-}
-
-function normalizeAnswer(str) {
-    return str
-        .normalize('NFC')
-        .replace(/ー/g, "一")
-        .replace(/一/g, "ー")
-        .replace(/ぺッ/g, "ペッ")
-        .replace(/ペッ/g, "ぺッ")
-        .replace(/へ/g, "ヘ")
-        .replace(/ヘ/g, "へ")
-        .replace(/\s+/g, "") // <-- eliminar TODOS los espacios
-        .trim();
-}
-
-function checkAnswer(userInput, item) {
-    const normalizedInput = normalizeAnswer(userInput);
-
-    // item.a puede ser un array con varias alternativas
-    const answers = Array.isArray(item.a) ? item.a : [item.a];
-
-    // También incluir posibles alternativos con alt: true
-    if (item.alt) answers.push(item.alt);
-
-    return answers.some(ans => normalizedInput === normalizeAnswer(ans));
-}
-
-
-answerEl.addEventListener("input", () => {
-    if (isChecking) return;
-    clearTimeout(checkTimeout);
-    const ans = answerEl.value.trim();
-    if (!ans) return;
-
-    const currentItem = filteredQuizList[index];
-
-    if (checkAnswer(ans, currentItem)) {
-        isChecking = true;
-        showCorrect();
-        return;
-    }
-
-    checkTimeout = setTimeout(() => {}, 2000);
-});
-
-function showCorrect() {
-    questionEl.style.color = "green";
-    correctCircle.classList.add("show");
-    const span = document.createElement("span");
-    correctCircle.appendChild(span);
-    correctSound.currentTime = 0;
-    correctSound.play();
+/* Avanzar a siguiente pregunta */
+function nextQuestion(){
+  index++;
+  if (index < filteredQuizList.length) {
     resetShowAnswer();
-    setTimeout(() => {
-        correctCircle.classList.remove("show");
-        span.remove();
-        questionEl.style.color = "";
-        nextQuestion();
-        isChecking = false;
-    }, 800);
-}
-
-showQuestion();
-
-/* ---------- SHOW ANSWER ---------- */
-const showAnswerBtn = document.getElementById("showAnswerBtn");
-
-function showAnswer() {
-    const it = filteredQuizList[index];
-    if (!it) hideShowAnswer();
-    else showAnswerBtn.textContent = it.a + (it.r ? `\n${it.r}` : "");
-}
-
-function resetShowAnswer() {
-    showAnswerBtn.textContent = "Ver respuesta";
-}
-
-function hideShowAnswer() {
+    showQuestion();
+  } else {
+    updatePills(index);
+    // finalizado
+    questionEl.textContent = "¡Completado!";
+    answerEl.style.display = "none";
     showAnswerBtn.style.display = "none";
+    correctCircle.classList.add("show");
+    // al click volver a index
+    document.onclick = () => location.href = "index.html";
+  }
 }
 
-showAnswerBtn.onclick = showAnswer;
+/* Mostrar animación de correcto */
+function showCorrect(){
+  feedbackEl.textContent = "";
+  questionEl.style.color = "var(--success)";
+  correctCircle.classList.add("show");
+  try { correctSound.currentTime = 0; correctSound.play(); } catch(e){}
+  // breve delay para animación
+  setTimeout(()=> {
+    correctCircle.classList.remove("show");
+    questionEl.style.color = "";
+    nextQuestion();
+    isChecking = false;
+  }, 700);
+}
 
+/* Input: comprobar en vivo (con debounce/timeout ligero) */
+answerEl.addEventListener('input', () => {
+  if (!filteredQuizList.length) return;
+  if (isChecking) return;
+  clearTimeout(checkTimeout);
+  const val = answerEl.value;
+  if (!val.trim()) { feedbackEl.textContent = ""; return; }
+  const current = filteredQuizList[index];
+  if (checkAnswer(val, current)) {
+    isChecking = true;
+    showCorrect();
+    return;
+  }
+  // no inmediato: puedes añadir micro-feedback si quieres
+  checkTimeout = setTimeout(()=>{ /* placeholder para debounce */ }, 300);
+});
 
-/* ---------- PROGRESS PILLS ---------- */
+/* Mostrar respuesta al botón */
+function showAnswer(){
+  const it = filteredQuizList[index];
+  if (!it) return hideShowAnswer();
+  let text = Array.isArray(it.a) ? it.a.join(" / ") : it.a;
+  if (it.r) text += `\n${it.r}`;
+  showAnswerBtn.textContent = text;
+}
+function resetShowAnswer(){ showAnswerBtn.textContent = "Ver respuesta"; }
+function hideShowAnswer(){ showAnswerBtn.style.display = "none"; }
+showAnswerBtn.addEventListener('click', showAnswer);
+
+/* ------------------ Progress pills ------------------ */
 const totalItems = filteredQuizList.length;
 const maxPills = 5;
-const blockSize = Math.ceil(totalItems / maxPills);
+const blockSize = totalItems ? Math.ceil(totalItems / maxPills) : 1;
 const totalPills = Math.ceil(totalItems / blockSize);
-
-const progressPills = document.getElementById("progressPills");
 progressPills.innerHTML = "";
-
-for (let i = 0; i < totalPills; i++) {
-    const p = document.createElement("div");
-    p.className = "pill";
-    p.innerHTML = '<div class="pill-fill"></div>';
-    progressPills.appendChild(p);
+for (let i=0;i<totalPills;i++){
+  const p = document.createElement('div');
+  p.className = 'pill';
+  p.innerHTML = '<div class="pill-fill"></div>';
+  progressPills.appendChild(p);
 }
 
-function animatePill(pill) {
-    navigator.vibrate?.(300);
-    pill.classList.add("vibrate");
-    setTimeout(() => pill.classList.remove("vibrate"), 600);
-    pillSound.currentTime = 0;
-    pillSound.play();
+function animatePill(pill){
+  navigator.vibrate?.(30);
+  pill.classList.add('vibrate');
+  setTimeout(()=>pill.classList.remove('vibrate'), 600);
+  try { pillSound.currentTime = 0; pillSound.play(); } catch(e){}
 }
 
-function updatePills(cur) {
-    const pills = progressPills.children;
-    const pillIndex = Math.floor(cur / blockSize);
-    const progress = (cur % blockSize) / blockSize;
-
-    [...pills].forEach((p, i) => {
-        const f = p.querySelector(".pill-fill");
-        if (i < pillIndex) {
-            f.style.width = "100%";
-            p.classList.add("filled");
-        } else if (i === pillIndex) {
-            f.style.width = (progress * 100) + "%";
-            p.classList.remove("filled");
-        } else {
-            f.style.width = "0%";
-            p.classList.remove("filled");
-        }
-    });
-
-    if (cur % blockSize === 0 && cur !== 0) {
-        animatePill(pills[pillIndex - 1]);
+function updatePills(cur){
+  const pills = Array.from(progressPills.children);
+  const pillIndex = Math.floor(cur / blockSize);
+  const progress = blockSize ? ((cur % blockSize) / blockSize) : 1;
+  pills.forEach((p,i) => {
+    const f = p.querySelector('.pill-fill');
+    if (i < pillIndex) {
+      f.style.width = '100%';
+      p.classList.add('filled');
+    } else if (i === pillIndex) {
+      f.style.width = (progress*100) + '%';
+      p.classList.remove('filled');
+    } else {
+      f.style.width = '0%';
+      p.classList.remove('filled');
     }
+  });
+  if (cur % blockSize === 0 && cur !== 0) {
+    const target = pills[Math.max(0, pillIndex-1)];
+    if (target) animatePill(target);
+  }
 }
+
+/* ------------------ Init flow ------------------ */
+showQuestion();
+
+/* Focus behaviour: si haces click fuera, enfocar input */
+document.body.addEventListener('click', (e) => { if (e.target !== answerEl) answerEl.focus(); });
+
 </script>
 </body>
 </html>
