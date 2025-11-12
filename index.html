@@ -5,368 +5,226 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
 <title>Practicar Japonés</title>
 <style>
+:root{
+  --bg: #0B0B0E;
+  --fg: #E8E8E8;
+  --muted: #bdbdbd;
+  --card-bg: rgba(255,255,255,0.02);
+  --card-bg-strong: rgba(255,255,255,0.10);
+  --border: #3a3a3a;
+  --accent: #888;
+}
+
 /* 1. Reset & Accesibilidad */
-* {
-  -webkit-tap-highlight-color: transparent;
-  box-sizing: border-box;
-  font-size: 15px;
-  color: #E8E8E8;
-  outline: none;
-  user-select: none;
-}
-
-/* Ocultar scrollbar de todos los elementos scrollables */
-#studyDiv::-webkit-scrollbar,
-#sectionsContainer::-webkit-scrollbar {
-  display: none; /* Chrome, Edge, Safari */
-}
-
-#studyDiv,
-#sectionsContainer {
-  -ms-overflow-style: none;  /* IE y Edge */
-  scrollbar-width: none;     /* Firefox */
-  overflow: auto; /* mantener scroll funcional */
-}
-
+*{ -webkit-tap-highlight-color: transparent; box-sizing: border-box; font-size:15px; color:var(--fg); outline:none; user-select:none }
+html,body{height:100%; margin:0; padding:0}
 body {
   font-family: "Noto Sans JP", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 400;
-  margin: 0;
-  padding: 0;
-  background: #0B0B0E;
-  line-height: 1.55;
+  background: var(--bg);
+  line-height:1.55;
 }
 
-button {
-  touch-action: manipulation;
-  cursor: pointer;
-  border: none;
-  background: none;
-  transition: 0.2s;
+/* Ocultar scrollbar de todos los elementos scrollables (agrupado) */
+#studyDiv, #sectionsContainer {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  overflow: auto;
 }
+#studyDiv::-webkit-scrollbar, #sectionsContainer::-webkit-scrollbar { display: none }
+
+/* Botones */
+button, [role="button"]{ touch-action: manipulation; cursor: pointer; border: none; background: none; transition: .2s }
 
 /* Layout principal */
 #studyDiv {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 75vh;
-  width: 50%;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 8px;
+  position: fixed; top:0; left:0; height:75vh; width:50%; z-index:1;
+  display:flex; flex-direction:column; align-items:flex-start; padding:8px;
 }
-
-#studyDiv .title {
-  font-size: 1.2rem;
-  margin: 0 0 8px 10px;
-  font-weight: 600;
-}
+#studyDiv .title{ font-size:1.2rem; margin:0 0 8px 10px; font-weight:600 }
 
 #sectionsContainer {
-  position: fixed;
-  width: 50%;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  overflow: auto;
-  padding-top: 30vh;
-  padding-bottom: 40px;
+  position: fixed; width:50%; top:0; bottom:0; right:0; overflow:auto;
+  padding-top:30vh; padding-bottom:40px;
+}
+
+.category-block {
+  margin-bottom: 15px;
+}
+
+.category-block > h2 {
+  margin: 0px;
 }
 
 /* Secciones */
-.section {
-  width: 100%;
-  border-radius: 6px;
-  padding: 4px 8px;
-  position: relative;
+.section{ width:100%; border-radius:6px; padding:2px 6px; position:relative }
+.section-title{
+  display:flex; justify-content:space-between; align-items:center; cursor:pointer;
+  text-decoration:underline; text-underline-offset:6px; font-weight:600; letter-spacing:.4px;
 }
 
 /* Grid de niveles */
-.level-grid {
-  display: block;
-  height: 0;
-  overflow: hidden;
-  opacity: 0;
-  transform: translateY(-6px);
+.level-grid{
+  display:block; height:0; overflow:hidden; opacity:0; transform:translateY(-6px);
   transition: height 350ms cubic-bezier(.4,0,.2,1), opacity 260ms ease, transform 320ms cubic-bezier(.4,0,.2,1);
-  margin-top: 8px;
-  padding-left: 28px;
-  position: relative;
+  margin-top:8px; padding-left:28px; position:relative;
 }
-
-.level-grid.expanded {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  height: auto; /* JS ajusta scrollHeight */
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.level-grid.expanded::before {
-  content: "";
-  position: absolute;
-  left: 5px;
-  top: 0;
-  bottom: 12px;
-  width: 2px;
-  background: #5c5c5c;
-  border-radius: 2px;
-  opacity: 0.8;
+.level-grid.expanded{ display:flex; flex-direction:column; gap:8px; height:auto; opacity:1; transform:translateY(0) }
+.level-grid.expanded::before{
+  content:""; position:absolute; left:5px; top:0; bottom:12px; width:2px; background:#5c5c5c; border-radius:2px; opacity:.8;
 }
 
 /* Tarjetas */
-.level-card {
-  padding: 10px 8px;
-  margin-left: 0;
-  border-radius: 6px;
-  text-align: left;
-  font-size: 0.95rem;
-  position: relative;
-  cursor: pointer;
-  transition: all 0.18s;
-  width: calc(100% - 28px);
-  background: rgba(255, 255, 255, 0.02);
+.level-card{
+  padding:10px 8px; margin-left:0; border-radius:6px; text-align:left; font-size:.95rem;
+  position:relative; cursor:pointer; transition:all .18s; width:calc(100% - 28px); background:var(--card-bg);
 }
+.level-card::before{ content:""; position:absolute; left:-15px; top:50%; transform:translateY(-50%); width:12px; height:2px; background:#6d6d6d; border-radius:2px; opacity:.9 }
+.level-card.selected{ background:var(--card-bg-strong); box-shadow: inset 0 0 8px rgba(255,255,255,0.12); border-left:3px solid var(--accent) }
+.level-card h3{ margin:0; font-size:15px; font-weight:500; letter-spacing:.3px }
 
-.level-card::before {
-  content: "";
-  position: absolute;
-  left: -15px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 12px;
-  height: 2px;
-  background: #6d6d6d;
-  border-radius: 2px;
-  opacity: 0.9;
+/* Lista de estudio (nuevo formato sin tabla) */
+.study-list{ display:flex; flex-direction:column; gap:10px; width:100% }
+.study-item{ background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:6px; line-height:1.4 }
+.study-q{ font-weight:400; color:var(--fg); margin-bottom:4px; font-size:13px; background:rgba(255,255,255,0.10); padding:8px }
+.study-a{ color:var(--muted); font-size:.95rem; margin-left:12px; padding:2px 0 4px 0 }
+.study-a > div{ margin:2px 0; font-size:16px }
+.romaji{ font-style:italic; opacity:.85; margin-top:4px }
+
+/* Acción inferior */
+#actionDiv{
+  position:fixed; padding-top:8px; bottom:0; left:0; width:50%; height:calc(25vh - 8px); display:flex; gap:8px; flex-wrap:wrap;
+  align-content:center; flex-direction:column; z-index:10;
 }
-
-.level-card.selected {
-  background: rgba(255, 255, 255, 0.10);
-  box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.12);
-  border-left: 3px solid #888;
-}
-
-.level-card h3 {
-  margin: 0;
-  font-size: 15px;
-  font-weight: 500;
-  letter-spacing: 0.3px;
-}
-
-/* Sección título */
-.section-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  text-decoration: underline;
-  text-underline-offset: 6px;
-  font-weight: 600;
-  letter-spacing: 0.4px;
-}
-
-.section-title span.arrow {
-  display: inline-block;
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 7px solid #E6E6E6;
-  transition: transform 300ms ease;
-}
-
-.section-title.expanded span.arrow {
-  transform: rotate(180deg);
-}
-
-/* Tabla */
-.study-table {
-  width: 100%;
-  margin-top: 4px;
-  border-collapse: collapse;
-  overflow: hidden;
-  display: block;
-}
-
-.study-table > * {
-  max-width: 100%;
-}
-
-.study-table th, .study-table td {
-  border: 1px solid #3a3a3a;
-  padding: 8px;
-  text-align: left;
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.study-table th {
-  background: rgba(255, 255, 255, 0.08);
-  font-weight: 600;
-}
-
-.study-table td:last-child {
-  font-weight: 500;
-}
-
-#actionDiv {
-  position: fixed;
-  padding-top: 8px;
-  bottom: 0;
-  left: 0;
-  width: 50%;
-  height: calc(25vh - 8px);
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  align-content: center;
-  flex-direction: column;
-  z-index: 10;
-}
-
-#actionDiv > * {
-  margin: 0;
-  width: 90%;
-  font-size: 15px;
-  font-weight: 500;
-  letter-spacing: 0.3px;
-  background: rgba(255, 255, 255, 0.10);
-  border-radius: 6px;
-  padding: 5px;
-  text-align: center;
-}
-
-/* Nuevo formato sin tabla */
-.study-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-}
-
-.study-item {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid #3a3a3a;
-  border-radius: 6px;
-  line-height: 1.4;
-}
-
-.study-q {
-  font-weight: 400;
-  color: #E8E8E8;
-  margin-bottom: 4px;
-  font-size: 13px;
-  background: rgba(255, 255, 255, 0.10);
-  padding: 8px;
-}
-
-.study-a {
-  color: #bdbdbd;
-  font-size: 0.95rem;
-  margin-left: 12px;
-  padding: 2px;
-  padding-bottom: 4px;
-}
-
-.study-a > div {
-  margin: 2px 0;
-  font-size: 16px;
-}
-
-.romaji {
-  font-style: italic;
-  opacity: 0.85;
-  margin-top: 4px;
-}
-
+#actionDiv > *{ margin:0; width:90%; font-size:15px; font-weight:500; letter-spacing:.3px; background:rgba(255,255,255,0.10); border-radius:6px; padding:5px; text-align:center }
 
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div id="studyDiv"></div>
-  <div id="actionDiv">
-    <div id="practiceButton">Practicar</div>
-    <div>Añadir a favoritos</div>
-    <div>Ver solo favoritos</div>
+  <div id="studyDiv" aria-live="polite"></div>
+
+  <div id="actionDiv" role="toolbar" aria-label="Acciones">
+    <div id="practiceButton" role="button" tabindex="0">Practicar</div>
+    <div id="addFav" role="button" tabindex="0">Añadir a favoritos</div>
+    <div id="showFav" role="button" tabindex="0">Ver solo favoritos</div>
   </div>
-  <div id="sectionsContainer"></div>
+
+  <div id="sectionsContainer" ></div>
+
 <script src="./js/allLists.js"></script>
 <script>
-const $ = id => document.getElementById(id);
-const ALL_LISTS = Object.values(window).filter(l => l?.levels && l.name);
-
+/* ---------- Utilidades ---------- */
+const $ = sel => document.getElementById(sel);
+const ALL_LISTS = Object.values(window).filter(l => l?.levels && (l.name || l.listName));
 const container = $("sectionsContainer");
 const studyDiv = $("studyDiv");
-let selected = null;
-let currentCategory = null;
+const practiceBtn = $("practiceButton");
+let selectedCard = null;
 
-function createGrid(listObj, parent) {
-  const section = document.createElement("div");
-  section.id = listObj.listName || listObj.name.replace(/\s+/g,'_');
-  section.className = `section ${listObj.category||''}`;
-
-  const title = document.createElement("div");
-  title.className = "section-title";
-  title.textContent = listObj.name || "Sin nombre";
-  const grid = document.createElement("div");
-  grid.className = "level-grid";
-
-  (listObj.levels||[]).forEach((lvl, i) => {
-    const levelCard = document.createElement("div");
-    levelCard.className = "level-card";
-    levelCard.dataset.listName = listObj.listName || listObj.name;
-    levelCard.dataset.index = i;
-    const h = document.createElement('h3');
-    h.textContent = lvl.name || `Nivel ${i+1}`;
-    levelCard.appendChild(h);
-    levelCard.onclick = () => handleCardClick(levelCard);
-    grid.appendChild(levelCard);
-  });
-
-  title.onclick = () => {
-    const expanded = grid.classList.toggle("expanded");
-    grid.style.height = expanded ? grid.scrollHeight + "px" : "0px";
-  };
-
-  section.append(title, grid);
-  parent.appendChild(section);
+/* Crear elemento con clases y texto de forma breve */
+function el(tag, { cls, text, attrs } = {}) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text !== undefined) e.textContent = text;
+  if (attrs) Object.entries(attrs).forEach(([k,v]) => e.setAttribute(k,v));
+  return e;
 }
 
+/* ---------- Crear estructura (usa fragment para eficiencia) ---------- */
+function createGrid(listObj) {
+  const section = el('div', { cls: 'section' });
+  section.id = listObj.listName || (listObj.name || 'sin_nombre').replace(/\s+/g,'_');
+
+  const title = el('div', { cls: 'section-title', text: listObj.name || "Sin nombre" });
+
+  const grid = el('div', { cls: 'level-grid' });
+
+  (listObj.levels || []).forEach((lvl, i) => {
+    const card = el('div', { cls: 'level-card' });
+    card.dataset.listName = listObj.listName || listObj.name || '';
+    card.dataset.index = String(i);
+    card.setAttribute('role','button');
+    card.setAttribute('tabindex','0');
+    const h = el('h3', { text: lvl.name || `Nivel ${i+1}` });
+    card.appendChild(h);
+    grid.appendChild(card);
+  });
+
+  title.addEventListener('click', () => toggleGrid(grid, title));
+  section.appendChild(title);
+  section.appendChild(grid);
+  return section;
+}
+
+/* Toggle con height para animación */
+function toggleGrid(gridEl, titleEl) {
+  const expanded = gridEl.classList.toggle('expanded');
+  if (expanded) {
+    // Forzar cálculo del scrollHeight para transición suave
+    requestAnimationFrame(() => { gridEl.style.height = gridEl.scrollHeight + 'px'; titleEl.classList.add('expanded') });
+  } else {
+    gridEl.style.height = '0px';
+    titleEl.classList.remove('expanded');
+  }
+}
+
+/* Inicializar secciones por categoría (usa fragment) */
 function initSectionsOnly() {
-  const categories = [...new Set(ALL_LISTS.map(l => l.category||'default'))];
+  const categories = [...new Set(ALL_LISTS.map(l => l.category || 'default'))];
+  const frag = document.createDocumentFragment();
+
   categories.forEach(cat => {
-    const catDiv = document.createElement("div");
-    catDiv.className = "category-block";
+    const catDiv = el('div', { cls: 'category-block' });
     catDiv.dataset.category = cat;
 
-    const h2 = document.createElement("h2");
-    h2.textContent = cat === "write" ? "✍️ Escritura" :
-                     cat === "vocabulary" ? "📖 Vocabulario" :
-                     cat === "grammar" ? "🧩 Gramática" : cat;
+    const h2 = el('h2', { text:
+      cat === "write" ? "✍️ Escritura" :
+      cat === "vocabulary" ? "📖 Vocabulario" :
+      cat === "grammar" ? "🧩 Gramática" : cat
+    });
     catDiv.appendChild(h2);
 
-    ALL_LISTS.filter(l => (l.category||'default')===cat).forEach(l => createGrid(l, catDiv));
-    container.appendChild(catDiv);
+    ALL_LISTS.filter(l => (l.category || 'default') === cat).forEach(l => {
+      catDiv.appendChild(createGrid(l));
+    });
+
+    frag.appendChild(catDiv);
   });
+
+  container.appendChild(frag);
 }
 
-function handleCardClick(card){
-  const deselect = selected===card;
-  if(selected) selected.classList.remove("selected");
-  if(deselect){ selected=null; studyDiv.innerHTML=""; showGanbatte(); return;}
-  card.classList.add("selected"); selected=card;
+/* ---------- Manejo de selección (delegación) ---------- */
+container.addEventListener('click', (e) => {
+  const card = e.target.closest('.level-card');
+  if (!card) return;
+  handleCardClick(card);
+});
+/* Soporte teclado (Enter/Space) para las cards */
+container.addEventListener('keydown', (e) => {
+  const card = e.target.closest('.level-card');
+  if (!card) return;
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleCardClick(card); }
+});
 
-  const lvl = ALL_LISTS.find(l=>l.listName===card.dataset.listName||l.name===card.dataset.listName)
-             ?.levels[card.dataset.index];
+function handleCardClick(card){
+  const deselect = selectedCard === card;
+  if (selectedCard) selectedCard.classList.remove('selected');
+  if (deselect) { selectedCard = null; studyDiv.innerHTML = ''; showGanbatte(); return; }
+
+  card.classList.add('selected');
+  selectedCard = card;
+
+  // CORRECCIÓN: buscar por listName comparando explícitamente
+  const targetListName = card.dataset.listName;
+  const listObj = ALL_LISTS.find(l => (l.listName === targetListName) || (l.name === targetListName));
+  const levelIndex = Number(card.dataset.index || 0);
+  const lvl = listObj?.levels?.[levelIndex];
+
   renderStudyDiv(lvl);
 }
 
+/* ---------- Render del panel de estudio ---------- */
 function renderStudyDiv(level) {
   studyDiv.innerHTML = "";
   if (!level) {
@@ -374,46 +232,26 @@ function renderStudyDiv(level) {
     return;
   }
 
-  const title = document.createElement("p");
-  title.className = "title";
-  title.textContent = level.name || "Nivel";
+  const title = el('p', { cls: 'title', text: level.name || "Nivel" });
   studyDiv.appendChild(title);
 
-  // Contenedor general de pares
-  const listContainer = document.createElement("div");
-  listContainer.className = "study-list";
+  const listContainer = el('div', { cls: 'study-list' });
 
   (level.items || []).forEach(it => {
-    const itemDiv = document.createElement("div");
-    itemDiv.className = "study-item";
+    const itemDiv = el('div', { cls: 'study-item' });
 
-    // Español (pregunta)
-    const qDiv = document.createElement("div");
-    qDiv.className = "study-q";
-    qDiv.textContent = it.q ?? "";
+    const qDiv = el('div', { cls: 'study-q', text: it.q ?? "" });
     itemDiv.appendChild(qDiv);
 
-    // Japonés (respuesta)
-    const aDiv = document.createElement("div");
-    aDiv.className = "study-a";
-
+    const aDiv = el('div', { cls: 'study-a' });
     if (Array.isArray(it.a)) {
-      it.a.forEach(val => {
-        const line = document.createElement("div");
-        line.textContent = val ?? "";
-        aDiv.appendChild(line);
-      });
+      it.a.forEach(val => aDiv.appendChild(el('div', { text: val ?? "" })));
     } else {
-      const line = document.createElement("div");
-      line.textContent = it.a ?? "";
-      aDiv.appendChild(line);
+      aDiv.appendChild(el('div', { text: it.a ?? "" }));
     }
 
-    // Romaji opcional
     if (it.r) {
-      const romaji = document.createElement("div");
-      romaji.textContent = it.r;
-      romaji.className = "romaji";
+      const romaji = el('div', { cls: 'romaji', text: it.r });
       aDiv.appendChild(romaji);
     }
 
@@ -424,15 +262,23 @@ function renderStudyDiv(level) {
   studyDiv.appendChild(listContainer);
 }
 
+/* ---------- Acciones inferiores ---------- */
+practiceBtn.addEventListener('click', () => {
+  if (!selectedCard) return;
+  const params = new URLSearchParams({
+    play: selectedCard.dataset.listName,
+    level: selectedCard.dataset.index
+  });
+  location.href = `practiceGround.html?${params.toString()}`;
+});
 
-//CREAR URL DE PRACTICA
-document.querySelector("#practiceButton").onclick = () => {
-  if (!selected) return;
-  location.href = `practiceGround.html?play=${encodeURIComponent(selected.dataset.listName)}&level=${encodeURIComponent(selected.dataset.index)}`;
-};
+/* Placeholders para otras acciones (puedes implementar) */
+$("addFav").addEventListener('click', () => alert('Añadir a favoritos (pendiente)'));
+$("showFav").addEventListener('click', () => alert('Ver solo favoritos (pendiente)'));
 
-function showGanbatte(){ if(!studyDiv.innerHTML.trim()) studyDiv.innerHTML="<h1 class='title'>がんばって</h1><h3 style='font-weight:bold;padding-left:10px;margin-top:0px'>Ánimo</h3>"; }
+function showGanbatte(){ if(!studyDiv.innerHTML.trim()) studyDiv.innerHTML = "<h1 class='title'>がんばって</h1><h3 style='font-weight:bold;padding-left:10px;margin-top:0px'>Ánimo</h3>"; }
 
+/* ---------- Init ---------- */
 initSectionsOnly();
 showGanbatte();
 </script>
