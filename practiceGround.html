@@ -263,14 +263,73 @@ document.addEventListener('click', unlockAudio, { once:true });
 /* Normalización y comprobación */
 function normalizeAnswer(str){
   if (!str) return "";
-  return str.normalize('NFC').replace(/\s+/g,"").replace(/ー/g,"一").replace(/一/g,"ー").trim();
+  return str
+  .normalize('NFC')
+  .replace(/\s+/g,"")
+  .replace(/ヘ/g,"へ")
+  .replace(/ー/g,"一")
+  .replace(/一/g,"ー")
+  .trim();
 }
+
+/* Normalización y comprobación (mejorada para aceptar romaji) */
+function normalizeRomaji(str){
+  if(!str) return "";
+  // quitar espacios y guiones, pasar a minúsculas
+  let s = String(str).trim().toLowerCase().replace(/[-\s]+/g,"");
+  // eliminar diacríticos / macrones (ō,ū,ā → o,u,a)
+  s = s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  // también reemplazar caracteres latino-extendidos por su base (por si hay ō en NFKC)
+  s = s.replace(/ō/g,'o').replace(/ō/g,'o').replace(/ū/g,'u').replace(/ā/g,'a').replace(/ē/g,'e').replace(/í/g,'i').replace(/ú/g,'u');
+  // opcional: normalizar ō→ou o ō→o depende de tu preferencia; aquí dejamos la versión simple (quita macrones)
+  return s;
+}
+
+function normalizeKanaOrRomaji(str){
+  if(!str) return "";
+  // Si contiene letras latinas (romaji), normalizamos como romaji
+  const hasLatin = /[A-Za-z]/.test(str);
+  if(hasLatin) return normalizeRomaji(str);
+  return normalizeAnswer(String(str));
+}
+
 function checkAnswer(userInput, item){
-  const normalizedInput = normalizeAnswer(userInput || "");
+  const normalizedInput = normalizeKanaOrRomaji(userInput || "");
+  // Preparar respuestas desde item.a (kana/kanji) y posibles alternativos
   const answers = Array.isArray(item.a) ? item.a.slice() : [item.a];
   if (item.alt) answers.push(item.alt);
-  return answers.some(ans => normalizedInput === normalizeAnswer(ans));
+
+  // Añadir romaji si existe en item.r (o item.romaji)
+  const romajiStr = item.r || item.romaji || "";
+  const romajiList = romajiStr ? romajiStr.split(/[,\/]+/).map(s=>s.trim()).filter(Boolean) : [];
+
+  // Comprobar kana/kanji normalizados
+  const matchesKana = answers.some(ans => {
+    const normAns = normalizeKanaOrRomaji(ans);
+    if (!normAns) return false;
+    return normalizedInput === normAns;
+  });
+
+  if (matchesKana) return true;
+
+  // Si la entrada del usuario es romaji (o el item tiene romaji), comparar romaji normalizado
+  const inputLooksRomaji = /[A-Za-z]/.test(userInput || "");
+  if (inputLooksRomaji && romajiList.length){
+    const normalizedInputRomaji = normalizeRomaji(userInput);
+    return romajiList.some(r => normalizeRomaji(r) === normalizedInputRomaji);
+  }
+
+  // Además intentar comparar romaji de las respuestas si por alguna razón las respuestas contienen romaji
+  // (por ejemplo si en item.a ya hay romaji)
+  for(const ans of answers){
+    if (/[A-Za-z]/.test(ans)){
+      if (normalizeRomaji(ans) === normalizedInput) return true;
+    }
+  }
+
+  return false;
 }
+
 
 /* Quiz flow */
 let index = 0;
