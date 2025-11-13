@@ -5,9 +5,12 @@ const scriptFiles = [
   "write/katakanaList.js",
   "vocabulary/vocabularyBasicList.js",
   "vocabulary/countingAndTimeList.js",
+  "vocabulary/adjectiveAndAdverbList.js",
   "grammar/particleList.js",
   "grammar/verbConjugationList.js",
-  "grammar/demonstrativesList.js"
+  "grammar/demonstrativesList.js",
+
+
 ];
 
 const scriptDir = (() => {
