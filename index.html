@@ -72,6 +72,7 @@ button, [role="button"]{ touch-action: manipulation; cursor: pointer; border: no
 .level-grid.expanded::before{
   content:""; position:absolute; left:5px; top:0; bottom:12px; width:2px; background:#5c5c5c; border-radius:2px; opacity:.8;
 }
+.level-card.fav::before { background: #ffca28 !important; }
 
 /* Tarjetas */
 .level-card{
@@ -119,167 +120,159 @@ const container = $("sectionsContainer");
 const studyDiv = $("studyDiv");
 const practiceBtn = $("practiceButton");
 let selectedCard = null;
+let showingOnlyFavs = false;
 
-/* Crear elemento con clases y texto de forma breve */
-function el(tag, { cls, text, attrs } = {}) {
-  const e = document.createElement(tag);
-  if (cls) e.className = cls;
-  if (text !== undefined) e.textContent = text;
-  if (attrs) Object.entries(attrs).forEach(([k,v]) => e.setAttribute(k,v));
-  return e;
-}
+/* ---------- Favoritos ---------- */
+const FAV_KEY = 'jp_study_favorites_v1';
+const SHOW_FAV_KEY = 'jp_study_showOnlyFavs';
+function favKey(listName, levelIndex) { return `${listName}::${levelIndex}`; }
+function loadFavorites() { try { const raw = localStorage.getItem(FAV_KEY); return raw ? JSON.parse(raw) : []; } catch(e){ return []; } }
+function saveFavorites(arr) { try { localStorage.setItem(FAV_KEY, JSON.stringify(arr)); } catch(e) {} }
+function getFavoritesSet() { return new Set(loadFavorites()); }
+function isFavorite(listName, levelIndex) { return getFavoritesSet().has(favKey(listName, levelIndex)); }
+function addFavorite(listName, levelIndex) { const set = getFavoritesSet(); set.add(favKey(listName, levelIndex)); saveFavorites([...set]); }
+function removeFavorite(listName, levelIndex) { const set = getFavoritesSet(); set.delete(favKey(listName, levelIndex)); saveFavorites([...set]); }
+function updateCardFavState(card) { const ln = card.dataset.listName; const idx = card.dataset.index; if (isFavorite(ln, idx)) card.classList.add('fav'); else card.classList.remove('fav'); }
+function updateAllCardsFavState() { Array.from(container.querySelectorAll('.level-card')).forEach(updateCardFavState); }
 
-/* ---------- Crear estructura (usa fragment para eficiencia) ---------- */
+/* ---------- Crear elemento ---------- */
+function el(tag, { cls, text, attrs } = {}) { const e = document.createElement(tag); if(cls)e.className=cls; if(text!==undefined)e.textContent=text; if(attrs)Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v)); return e; }
+
+/* ---------- Crear grid ---------- */
 function createGrid(listObj) {
   const section = el('div', { cls: 'section' });
   section.id = listObj.listName || (listObj.name || 'sin_nombre').replace(/\s+/g,'_');
-
   const title = el('div', { cls: 'section-title', text: listObj.name || "Sin nombre" });
-
   const grid = el('div', { cls: 'level-grid' });
-
-  (listObj.levels || []).forEach((lvl, i) => {
-    const card = el('div', { cls: 'level-card' });
+  (listObj.levels || []).forEach((lvl,i)=>{
+    const card = el('div',{cls:'level-card'});
     card.dataset.listName = listObj.listName || listObj.name || '';
     card.dataset.index = String(i);
-    card.setAttribute('role','button');
-    card.setAttribute('tabindex','0');
-    const h = el('h3', { text: lvl.name || `Nivel ${i+1}` });
-    card.appendChild(h);
+    card.setAttribute('role','button'); card.setAttribute('tabindex','0');
+    const h = el('h3',{text:lvl.name||`Nivel ${i+1}`}); card.appendChild(h);
+    updateCardFavState(card);
+    attachCardEvents(card); // <-- Importante
     grid.appendChild(card);
   });
-
-  title.addEventListener('click', () => toggleGrid(grid, title));
-  section.appendChild(title);
-  section.appendChild(grid);
+  title.addEventListener('click',()=>toggleGrid(grid,title));
+  section.appendChild(title); section.appendChild(grid);
   return section;
 }
 
-/* Toggle con height para animación */
-function toggleGrid(gridEl, titleEl) {
-  const expanded = gridEl.classList.toggle('expanded');
-  if (expanded) {
-    // Forzar cálculo del scrollHeight para transición suave
-    requestAnimationFrame(() => { gridEl.style.height = gridEl.scrollHeight + 'px'; titleEl.classList.add('expanded') });
-  } else {
-    gridEl.style.height = '0px';
-    titleEl.classList.remove('expanded');
-  }
-}
+/* ---------- Toggle grid ---------- */
+function toggleGrid(gridEl,titleEl){ const expanded = gridEl.classList.toggle('expanded'); if(expanded){ requestAnimationFrame(()=>{gridEl.style.height=gridEl.scrollHeight+'px'; titleEl.classList.add('expanded');}); } else { gridEl.style.height='0px'; titleEl.classList.remove('expanded');} }
 
-/* Inicializar secciones por categoría (usa fragment) */
-function initSectionsOnly() {
-  const categories = [...new Set(ALL_LISTS.map(l => l.category || 'default'))];
-  const frag = document.createDocumentFragment();
-
-  categories.forEach(cat => {
-    const catDiv = el('div', { cls: 'category-block' });
-    catDiv.dataset.category = cat;
-
-    const h2 = el('h2', { text:
-      cat === "write" ? "✍️ Escritura" :
-      cat === "vocabulary" ? "📖 Vocabulario" :
-      cat === "grammar" ? "🧩 Gramática" : cat
-    });
-    catDiv.appendChild(h2);
-
-    ALL_LISTS.filter(l => (l.category || 'default') === cat).forEach(l => {
-      catDiv.appendChild(createGrid(l));
-    });
-
+/* ---------- Inicializar secciones ---------- */
+function initSectionsOnly(){
+  const categories=[...new Set(ALL_LISTS.map(l=>l.category||'default'))];
+  const frag=document.createDocumentFragment();
+  categories.forEach(cat=>{
+    const catDiv=el('div',{cls:'category-block'}); catDiv.dataset.category=cat;
+    const h2=el('h2',{text: cat==='write'?'✍️ Escritura':cat==='vocabulary'?'📖 Vocabulario':cat==='grammar'?'🧩 Gramática':cat}); catDiv.appendChild(h2);
+    ALL_LISTS.filter(l=>(l.category||'default')===cat).forEach(l=>catDiv.appendChild(createGrid(l)));
     frag.appendChild(catDiv);
   });
-
   container.appendChild(frag);
 }
 
-/* ---------- Manejo de selección (delegación) ---------- */
-container.addEventListener('click', (e) => {
-  const card = e.target.closest('.level-card');
-  if (!card) return;
-  handleCardClick(card);
-});
-/* Soporte teclado (Enter/Space) para las cards */
-container.addEventListener('keydown', (e) => {
-  const card = e.target.closest('.level-card');
-  if (!card) return;
-  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleCardClick(card); }
-});
-
-function handleCardClick(card){
-  const deselect = selectedCard === card;
-  if (selectedCard) selectedCard.classList.remove('selected');
-  if (deselect) { selectedCard = null; studyDiv.innerHTML = ''; showGanbatte(); return; }
-
-  card.classList.add('selected');
-  selectedCard = card;
-
-  // CORRECCIÓN: buscar por listName comparando explícitamente
-  const targetListName = card.dataset.listName;
-  const listObj = ALL_LISTS.find(l => (l.listName === targetListName) || (l.name === targetListName));
-  const levelIndex = Number(card.dataset.index || 0);
-  const lvl = listObj?.levels?.[levelIndex];
-
-  renderStudyDiv(lvl);
+/* ---------- Manejo de selección ---------- */
+function attachCardEvents(card){
+  card.addEventListener('click',()=>handleCardClick(card));
+  card.addEventListener('keydown',(e)=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); card.click(); } });
 }
 
-/* ---------- Render del panel de estudio ---------- */
-function renderStudyDiv(level) {
-  studyDiv.innerHTML = "";
-  if (!level) {
-    studyDiv.innerHTML = "<p class='title'>Nivel no encontrado</p>";
-    return;
-  }
+function handleCardClick(card){
+  const deselect = selectedCard===card;
+  if(selectedCard) selectedCard.classList.remove('selected');
+  if(deselect){ selectedCard=null; studyDiv.innerHTML=''; showGanbatte(); return; }
+  card.classList.add('selected'); selectedCard=card;
+  const ln=card.dataset.listName;
+  const listObj=ALL_LISTS.find(l=>(l.listName===ln)||(l.name===ln));
+  const lvl=listObj?.levels?.[Number(card.dataset.index||0)];
+  renderStudyDiv(lvl);
+  $("addFav").textContent=isFavorite(ln,card.dataset.index)?'Quitar de favoritos':'Añadir a favoritos';
+}
 
-  const title = el('p', { cls: 'title', text: level.name || "Nivel" });
-  studyDiv.appendChild(title);
-
-  const listContainer = el('div', { cls: 'study-list' });
-
-  (level.items || []).forEach(it => {
-    const itemDiv = el('div', { cls: 'study-item' });
-
-    const qDiv = el('div', { cls: 'study-q', text: it.q ?? "" });
-    itemDiv.appendChild(qDiv);
-
-    const aDiv = el('div', { cls: 'study-a' });
-    if (Array.isArray(it.a)) {
-      it.a.forEach(val => aDiv.appendChild(el('div', { text: val ?? "" })));
-    } else {
-      aDiv.appendChild(el('div', { text: it.a ?? "" }));
-    }
-
-    if (it.r) {
-      const romaji = el('div', { cls: 'romaji', text: it.r });
-      aDiv.appendChild(romaji);
-    }
-
-    itemDiv.appendChild(aDiv);
-    listContainer.appendChild(itemDiv);
+/* ---------- Render panel de estudio ---------- */
+function renderStudyDiv(level){
+  studyDiv.innerHTML='';
+  if(!level){ studyDiv.innerHTML="<p class='title'>Nivel no encontrado</p>"; return; }
+  const title=el('p',{cls:'title',text:level.name||"Nivel"}); studyDiv.appendChild(title);
+  const listContainer=el('div',{cls:'study-list'});
+  (level.items||[]).forEach(it=>{
+    const itemDiv=el('div',{cls:'study-item'});
+    const qDiv=el('div',{cls:'study-q',text:it.q??""}); itemDiv.appendChild(qDiv);
+    const aDiv=el('div',{cls:'study-a'});
+    if(Array.isArray(it.a)) it.a.forEach(val=>aDiv.appendChild(el('div',{text:val??""})));
+    else aDiv.appendChild(el('div',{text:it.a??""}));
+    if(it.r) aDiv.appendChild(el('div',{cls:'romaji',text:it.r}));
+    itemDiv.appendChild(aDiv); listContainer.appendChild(itemDiv);
   });
-
   studyDiv.appendChild(listContainer);
 }
 
 /* ---------- Acciones inferiores ---------- */
-practiceBtn.addEventListener('click', () => {
-  if (!selectedCard) return;
-  const params = new URLSearchParams({
-    play: selectedCard.dataset.listName,
-    level: selectedCard.dataset.index
-  });
-  location.href = `practiceGround.html?${params.toString()}`;
+practiceBtn.addEventListener('click',()=>{
+  if(!selectedCard)return;
+  const params=new URLSearchParams({play:selectedCard.dataset.listName,level:selectedCard.dataset.index});
+  location.href=`practiceGround.html?${params.toString()}`;
 });
 
-/* Placeholders para otras acciones (puedes implementar) */
-$("addFav").addEventListener('click', () => alert('Añadir a favoritos (pendiente)'));
-$("showFav").addEventListener('click', () => alert('Ver solo favoritos (pendiente)'));
+$("addFav").addEventListener('click',()=>{
+  if(!selectedCard){ alert('Selecciona primero una tarjeta'); return; }
+  const ln=selectedCard.dataset.listName; const idx=selectedCard.dataset.index;
+  if(isFavorite(ln,idx)){ removeFavorite(ln,idx); selectedCard.classList.remove('fav'); $("addFav").textContent='Añadir a favoritos'; }
+  else { addFavorite(ln,idx); selectedCard.classList.add('fav'); $("addFav").textContent='Quitar de favoritos'; }
+  if(showingOnlyFavs) renderFavoritesView();
+});
 
-function showGanbatte(){ if(!studyDiv.innerHTML.trim()) studyDiv.innerHTML = "<h1 class='title'>がんばって</h1><h3 style='font-weight:bold;padding-left:10px;margin-top:0px'>Ánimo</h3>"; }
+$("showFav").addEventListener('click',()=>{
+  showingOnlyFavs=!showingOnlyFavs;
+  localStorage.setItem(SHOW_FAV_KEY, showingOnlyFavs ? '1' : '0'); // <--- Guardamos el estado
+  $("showFav").textContent=showingOnlyFavs?'Ver todo':'Ver solo favoritos';
+  selectedCard=null; studyDiv.innerHTML=''; showGanbatte();
+  if(showingOnlyFavs) renderFavoritesView();
+  else { container.innerHTML=''; initSectionsOnly(); updateAllCardsFavState(); }
+});
+
+/* ---------- Render solo favoritos ---------- */
+function renderFavoritesView(){
+  container.innerHTML='';
+  const favKeys=loadFavorites();
+  if(!favKeys.length){ container.appendChild(el('div',{cls:'category-block',text:'No hay favoritos aún.'})); return; }
+  const frag=document.createDocumentFragment();
+  favKeys.forEach(key=>{
+    const [listName, idxStr]=key.split('::'); const idx=Number(idxStr);
+    const listObj=ALL_LISTS.find(l=>l.listName===listName||l.name===listName);
+    if(!listObj) return; const level=listObj.levels[idx]; if(!level) return;
+    const section=el('div',{cls:'section'});
+    const title=el('div',{cls:'section-title',text:`${listObj.name||listObj.listName} · ${level.name||`Nivel ${idx+1}`}`});
+    section.appendChild(title);
+    const grid=el('div',{cls:'level-grid expanded'}); grid.style.height='auto';
+    const card=el('div',{cls:'level-card fav',attrs:{role:'button',tabindex:'0'}});
+    card.dataset.listName=listObj.listName||listObj.name; card.dataset.index=String(idx);
+    card.innerHTML=`<h3>${level.name||`Nivel ${idx+1}`}</h3>`;
+    attachCardEvents(card); // <-- Asegura selección
+    grid.appendChild(card); section.appendChild(grid); frag.appendChild(section);
+  });
+  container.appendChild(frag);
+}
+
+/* ---------- Mensaje inicial ---------- */
+function showGanbatte(){ if(!studyDiv.innerHTML.trim()) studyDiv.innerHTML="<h1 class='title'>がんばって</h1><h3 style='font-weight:bold;padding-left:10px;margin-top:0px'>Ánimo</h3>"; }
 
 /* ---------- Init ---------- */
-initSectionsOnly();
-showGanbatte();
+window.addEventListener('DOMContentLoaded',()=>{
+  const savedFav = localStorage.getItem(SHOW_FAV_KEY);
+  showingOnlyFavs = savedFav==='1';
+  $("showFav").textContent = showingOnlyFavs ? 'Ver todo' : 'Ver solo favoritos';
+  if(showingOnlyFavs) renderFavoritesView();
+  else initSectionsOnly();
+  updateAllCardsFavState();
+  showGanbatte();
+});
 </script>
+
+
 </body>
 </html>
