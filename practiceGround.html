@@ -502,6 +502,18 @@ function updatePills(cur){
 /* Init */
 showQuestion();
 document.body.addEventListener('click', (e)=>{ if (e.target !== answerEl) answerEl.focus(); });
+
+
+//repetir con el espacio space repeat
+document.addEventListener("keydown", function(e) {
+  if (e.code === "Space" || e.key === " ") {
+    e.preventDefault(); // evita que la página haga scroll
+    location.href = location.pathname + location.search;
+  }
+});
+
+
+
 </script>
 </body>
 </html>
