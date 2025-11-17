@@ -371,6 +371,16 @@ function buildCompletionUI() {
   };
   completionActions.appendChild(repeatBtn);
 
+  // habilita repetir con el espacio space repeat
+  document.addEventListener("keydown", function(e) {
+    if (e.code === "Space" || e.key === " ") {
+      e.preventDefault(); // evita que la página haga scroll
+      location.href = location.pathname + location.search;
+    }
+  });
+
+
+
   // Botón nivel anterior (si existe)
   if (quizList && levelIndex !== null && levelIndex > 0 && quizList.levels[levelIndex - 1]) {
     const prevName = quizList.levels[levelIndex - 1].name || `Nivel ${levelIndex}`;
@@ -503,14 +513,6 @@ function updatePills(cur){
 showQuestion();
 document.body.addEventListener('click', (e)=>{ if (e.target !== answerEl) answerEl.focus(); });
 
-
-//repetir con el espacio space repeat
-document.addEventListener("keydown", function(e) {
-  if (e.code === "Space" || e.key === " ") {
-    e.preventDefault(); // evita que la página haga scroll
-    location.href = location.pathname + location.search;
-  }
-});
 
 
 
