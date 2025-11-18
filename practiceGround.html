@@ -129,15 +129,14 @@ main{
   display:flex;
   gap:10px;
   margin-top:10px;
-  flex-wrap:wrap;
+  flex-wrap:nowrap;
   justify-content:center;
   width:100%;
   max-width:640px;
-  flex-direction: column;
+  flex-direction: row;
 }
 .action-btn{
   padding:10px 14px;
-  min-width:160px;
   border-radius:10px;
   border:1px solid rgba(255,255,255,0.04);
   background: var(--card-bg-strong);
@@ -145,6 +144,7 @@ main{
   cursor:pointer;
   font-weight:600;
   transition: transform .12s, background .12s;
+  width: 30%;
 }
 .action-btn:hover{ transform: translateY(-3px); background: rgba(255,255,255,0.12); }
 
@@ -153,7 +153,16 @@ main{
   main{ padding:16px; margin-top:72px }
   #question{ font-size:2.2rem }
   #answer{ font-size:1.05rem }
-  .action-btn{ min-width:130px; font-size:14px }
+}
+
+#actionBtnMid{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+#actionBtnMid > * {
+  width: 100%;
 }
 </style>
 </head>
@@ -190,6 +199,8 @@ const correctCircle = document.getElementById("correctCircle");
 const showAnswerBtn = document.getElementById("showAnswerBtn");
 const progressPills = document.getElementById("progressPills");
 const completionActions = document.getElementById("completionActions");
+const actionBtnMid = document.createElement("div");
+actionBtnMid.id = "actionBtnMid";
 
 const params = new URLSearchParams(location.search);
 const { play, exam, level: playingLevelRaw } = Object.fromEntries(params);
@@ -369,9 +380,9 @@ function buildCompletionUI() {
     // recargar la misma URL para repetir
     location.href = location.pathname + location.search;
   };
-  completionActions.appendChild(repeatBtn);
+  actionBtnMid.appendChild(repeatBtn);
 
-  // habilita repetir con el espacio space repeat
+  // habilitar repetir con el espacio space repeat
   document.addEventListener("keydown", function(e) {
     if (e.code === "Space" || e.key === " ") {
       e.preventDefault(); // evita que la página haga scroll
@@ -381,11 +392,15 @@ function buildCompletionUI() {
 
 
 
-  // Botón nivel anterior (si existe)
+  // Botón nivel anterior (si existe) quiero que los botones si existan para mantener estructura aunque no se vean
+  const prevBtn = document.createElement('button');
+  prevBtn.className = 'action-btn';
+  
+  completionActions.appendChild(prevBtn);
+  completionActions.appendChild(actionBtnMid);
+
   if (quizList && levelIndex !== null && levelIndex > 0 && quizList.levels[levelIndex - 1]) {
     const prevName = quizList.levels[levelIndex - 1].name || `Nivel ${levelIndex}`;
-    const prevBtn = document.createElement('button');
-    prevBtn.className = 'action-btn';
     prevBtn.textContent = `Nivel anterior · ${prevName}`;
     prevBtn.onclick = () => {
       const params = new URLSearchParams(location.search);
@@ -393,14 +408,31 @@ function buildCompletionUI() {
       params.set('play', quizList.listName);
       location.href = `${location.pathname}?${params.toString()}`;
     };
-    completionActions.appendChild(prevBtn);
+
+    // ⬇️ ATAJO CON LA TECLA Q
+    document.addEventListener("keydown", function(e) {
+      if (e.key.toLowerCase() === "q") {
+        e.preventDefault();
+
+        const params = new URLSearchParams(location.search);
+        params.set("level", String(levelIndex - 1));
+        params.set("play", quizList.listName);
+
+        location.href = `${location.pathname}?${params.toString()}`;
+      }
+    });
   }
 
+  
+ 
+
   // Botón siguiente nivel (si existe)
+  const nextBtn = document.createElement('button');
+    nextBtn.className = 'action-btn';
+   completionActions.appendChild(nextBtn);
+
   if (quizList && levelIndex !== null && quizList.levels[levelIndex + 1]) {
     const nextName = quizList.levels[levelIndex + 1].name || `Nivel ${levelIndex + 2}`;
-    const nextBtn = document.createElement('button');
-    nextBtn.className = 'action-btn';
     nextBtn.textContent = `Siguiente nivel · ${nextName}`;
     nextBtn.onclick = () => {
       const params = new URLSearchParams(location.search);
@@ -408,7 +440,21 @@ function buildCompletionUI() {
       params.set('play', quizList.listName);
       location.href = `${location.pathname}?${params.toString()}`;
     };
-    completionActions.appendChild(nextBtn);
+    
+
+    // ⬇️ ATAJO CON LA TECLA E (siguiente nivel)
+    document.addEventListener("keydown", function(e) {
+      if (e.key.toLowerCase() === "e") {
+        e.preventDefault();
+
+        const params = new URLSearchParams(location.search);
+        params.set("level", String(levelIndex + 1));
+        params.set("play", quizList.listName);
+
+        location.href = `${location.pathname}?${params.toString()}`;
+      }
+    });
+
   }
 
   // Botón volver al índice siempre disponible
@@ -416,7 +462,7 @@ function buildCompletionUI() {
   indexBtn.className = 'action-btn';
   indexBtn.textContent = 'Volver al índice';
   indexBtn.onclick = () => location.href = 'index.html';
-  completionActions.appendChild(indexBtn);
+  actionBtnMid.appendChild(indexBtn);
 }
 
 function nextQuestion(){
