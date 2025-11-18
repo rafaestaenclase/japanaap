@@ -136,29 +136,59 @@ var countingAndTimeList = {
     },
     {
       level: 8,
-      name: "Expresiones de tiempo relativo",
+      name: "Días relativos",
       items: [
         { q: "hoy", a: ["きょう", "今日"], r: "kyou" },
         { q: "ayer", a: ["きのう", "昨日"], r: "kinou" },
         { q: "anteayer", a: ["おととい", "一昨日"], r: "ototoi" },
         { q: "mañana", a: ["あした", "明日"], r: "ashita" },
-        { q: "pasado mañana", a: ["あさって", "明後日"], r: "asatte" },
+        { q: "pasado mañana", a: ["あさって", "明後日"], r: "asatte" }
+      ]
+    },
+    {
+      level: 9,
+      name: "Semanas relativas",
+      items: [
         { q: "esta semana", a: ["こんしゅう", "今週"], r: "konshuu" },
         { q: "la semana pasada", a: ["せんしゅう", "先週"], r: "senshuu" },
-        { q: "la semana que viene", a: ["らいしゅう", "来週"], r: "raishuu" },
+        { q: "la semana que viene", a: ["らいしゅう", "来週"], r: "raishuu" }
+      ]
+    },
+    {
+      level: 10,
+      name: "Meses relativos",
+      items: [
         { q: "este mes", a: ["こんげつ", "今月"], r: "kongetsu" },
         { q: "el mes pasado", a: ["せんげつ", "先月"], r: "sengetsu" },
         { q: "el mes que viene", a: ["らいげつ", "来月"], r: "raigetsu" },
-        { q: "este año", a: ["ことし", "今年"], r: "kotoshi" },
         { q: "hace 2 meses", a: ["にかげつまえ", "二か月前"], r: "ni kagetsu mae" },
-        { q: "dentro de 2 meses", a: ["にかげつご", "二か月後"], r: "ni kagetsu go" },
+        { q: "dentro de 2 meses", a: ["にかげつご", "二か月後"], r: "ni kagetsu go" }
+      ]
+    },
+    {
+      level: 11,
+      name: "Años relativos",
+      items: [
+        { q: "este año", a: ["ことし", "今年"], r: "kotoshi" },
         { q: "hace 1 año", a: ["いちねんまえ", "一年前"], r: "ichi nen mae" },
-        { q: "dentro de 1 año", a: ["いちねんご", "一年後"], r: "ichi nen go" },
+        { q: "dentro de 1 año", a: ["いちねんご", "一年後"], r: "ichi nen go" }
+      ]
+    },
+    {
+      level: 12,
+      name: "Tiempo general",
+      items: [
         { q: "hace mucho tiempo", a: ["ずっとまえ", "ずっと前"], r: "zutto mae" },
         { q: "en el pasado", a: ["かこに", "過去に"], r: "kako ni" },
-        { q: "en el futuro", a: ["しょうらい", "将来"], r: "shourai" },
-        { q: "esta tarde", a: ["こんばん", "今晩"], r: "konban" },
+        { q: "en el futuro", a: ["しょうらい", "将来"], r: "shourai" }
+      ]
+    },
+    {
+      level: 13,
+      name: "Momentos del día",
+      items: [
         { q: "esta mañana", a: ["けさ", "今朝"], r: "kesa" },
+        { q: "esta tarde", a: ["こんばん", "今晩"], r: "konban" },
         { q: "esta noche", a: ["よる", "夜"], r: "yoru" },
         { q: "hace un momento", a: ["さっき", "先ほど"], r: "sakki / sakihodo" },
         { q: "dentro de un rato", a: ["あとで", "後で"], r: "ato de" },
@@ -166,6 +196,5 @@ var countingAndTimeList = {
         { q: "ahora mismo", a: ["いま", "今"], r: "ima" }
       ]
     }
-
   ]
 };
