@@ -3,12 +3,19 @@
 const scriptFiles = [
   "write/hiraganaList.js",
   "write/katakanaList.js",
+
+
   "vocabulary/vocabularyBasicList.js",
   "vocabulary/countingAndTimeList.js",
   "vocabulary/adjectiveAndAdverbList.js",
+
+
   "grammar/particleList.js",
   "grammar/verbConjugationList.js",
   "grammar/demonstrativesList.js",
+
+  "kanji/KanjiCountingAndTimeList.js",
+  
 
 
 ];
