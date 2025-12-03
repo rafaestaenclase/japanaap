@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Selector con Rueda</title>
+
+<style>
+  * { margin:0; padding:0; box-sizing: border-box; }
+
+  body {
+    font-family: sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .container {
+    width: 100vw;
+    height: 50%;
+    display: flex;
+    flex-direction: row;
+  }
+
+  #itemList { width: 30%; }
+  #itemContentList { width: 70%; }
+
+  ul { list-style: none; padding: 0; margin: 0 0 40px 0; }
+  li { padding: 10px 0; font-size: 1.2rem; }
+  .selected { font-weight: bold; color: #0077ff; }
+
+  #controller {
+    width: 100vw;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .wheel {
+    height: 80vw;
+    width: 80vw;
+    border-radius: 50%;
+    background: #ddd;
+    cursor: grab;
+    transition: transform 0.2s ease;
+  }
+  .wheel:active { cursor: grabbing; }
+</style>
+</head>
+
+<body>
+<div class="container">
+  <ul id="itemList"></ul>
+  <ul id="itemContentList"></ul>
+</div>
+
+<div id="controller">
+  <div class="wheel" id="wheel"></div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const itemList = document.getElementById('itemList');
+  const itemContentList = document.getElementById('itemContentList');
+  const wheel = document.getElementById('wheel');
+
+  const items = [
+    { name: "Elemento 1", content: "Contenido 1" },
+    { name: "Elemento 2", content: "Contenido 2" },
+    { name: "Elemento 3", content: "Contenido 3" },
+    { name: "Elemento 4", content: "Contenido 4" },
+    { name: "Elemento 5", content: "Contenido 5" }
+  ];
+
+  // Genera la lista de nombres
+  const populateList = () => {
+    itemList.innerHTML = '';
+    items.forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = item.name;
+      itemList.appendChild(li);
+    });
+  };
+
+  // Muestra el contenido del item seleccionado
+  const updateItemContentList = (selectedItemIndex) => {
+    itemContentList.innerHTML = ''; // vaciar contenido previo
+    const liContent = document.createElement('li');
+    liContent.textContent = items[selectedItemIndex].content;
+    itemContentList.appendChild(liContent);
+  };
+
+  populateList();
+
+  let listItems = document.querySelectorAll('#itemList li');
+  let index = 0, rot = 0, dragging = false, lastAngle = 0;
+  const step = 360 / listItems.length;
+
+  const updateUI = () => {
+    listItems.forEach((li, i) => li.classList.toggle('selected', i === index));
+    updateItemContentList(index);
+  };
+
+  updateUI();
+
+  const getTouchAngle = e => {
+    const touch = e.touches[0];
+    const r = wheel.getBoundingClientRect();
+    return Math.atan2(touch.clientY - (r.top + r.height / 2),
+                      touch.clientX - (r.left + r.width / 2)) * 180 / Math.PI;
+  };
+
+  wheel.addEventListener('touchstart', e => {
+    e.preventDefault(); 
+    dragging = true;
+    lastAngle = getTouchAngle(e);
+  });
+
+  wheel.addEventListener('touchmove', e => {
+    if (!dragging) return;
+    e.preventDefault();
+    const angle = getTouchAngle(e);
+    let delta = angle - lastAngle;
+    delta = (delta + 540) % 360 - 180;
+    rot += delta;
+    lastAngle = angle;
+    wheel.style.transform = `rotate(${rot}deg)`;
+    if (Math.abs(rot) >= step) {
+      const steps = Math.trunc(rot / step);
+      index = (index + steps + listItems.length) % listItems.length;
+      updateUI();
+      rot -= steps * step;
+    }
+  });
+
+  wheel.addEventListener('touchend', e => {
+    dragging = false;
+    wheel.style.transform = `rotate(0deg)`;
+    rot = 0;
+  });
+});
+</script>
+</body>
+</html>
